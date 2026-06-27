@@ -1,0 +1,37 @@
+# Design reference — large files, not needed in the codebase
+design_handoff_aia_app/
+
+# Expo / React Native
+aia-app/node_modules/
+aia-app/.expo/
+aia-app/dist/
+aia-app/web-build/
+aia-app/expo-env.d.ts
+aia-app/.expo-home/
+aia-app/.metro-health-check*
+aia-app/.kotlin/
+aia-app/ios/
+aia-app/android/
+aia-app/*.jks
+aia-app/*.p8
+aia-app/*.p12
+aia-app/*.key
+aia-app/*.mobileprovision
+aia-app/*.orig.*
+aia-app/*.tsbuildinfo
+aia-app/npm-debug.*
+aia-app/yarn-debug.*
+aia-app/yarn-error.*
+
+# Claude / agent tooling
+aia-app/.claude/
+aia-app/AGENTS.md
+aia-app/CLAUDE.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local env
+.env
+.env*.local

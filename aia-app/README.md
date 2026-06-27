@@ -1,0 +1,165 @@
+# AIA+ Mobile App
+
+A high-fidelity React Native + Expo implementation of the AIA+ insurance app redesign, focused on **Premium Management** — helping users understand, manage, and keep paying their premiums.
+
+## Quick Start
+
+### Prerequisites
+- Node.js 18+
+- [Expo Go](https://expo.dev/go) installed on your phone (iOS or Android)
+- Or an Android/iOS simulator/emulator
+
+### Run on your phone (Expo Go)
+
+```bash
+cd aia-app
+npm install          # already done if you cloned this
+npx expo start
+```
+
+Scan the QR code that appears in the terminal with:
+- **iOS**: Camera app → scan → tap the banner
+- **Android**: Expo Go app → scan QR
+
+### Run on a simulator
+
+```bash
+npx expo start --ios        # macOS only
+npx expo start --android    # requires Android Studio + emulator
+npx expo start --web        # browser preview (limited native features)
+```
+
+> **Note on fonts**: The app loads Plus Jakarta Sans, Anuphan, and IBM Plex Mono from Google Fonts on first launch — there may be a brief loading screen on cold start.
+
+---
+
+## Project Structure
+
+```
+aia-app/
+├── App.tsx                      # Entry point — loads fonts, wraps in SafeAreaProvider
+├── src/
+│   ├── tokens/                  # Design system
+│   │   ├── colors.ts            # Full AIA palette (primary #D31145, semantic colors)
+│   │   ├── typography.ts        # Font families + size scale
+│   │   ├── spacing.ts           # Padding, gap, radius constants
+│   │   └── shadows.ts           # Platform-specific card/button shadows
+│   │
+│   ├── store/
+│   │   └── index.ts             # Zustand store (auth, policy, language, billing freq)
+│   │
+│   ├── components/              # Shared components
+│   │   ├── Card.tsx             # White card with shadow
+│   │   ├── PrimaryButton.tsx    # Red primary / outline / ghost variants
+│   │   ├── StatusPill.tsx       # Semantic colored pills (amber/success/risk/info/mono)
+│   │   ├── ListRow.tsx          # Icon + title + subtitle + chevron row
+│   │   ├── SectionGroup.tsx     # Labelled white card group with dividers
+│   │   ├── BarChart.tsx         # Simple vertical bar chart (View-based)
+│   │   ├── ScreenLayout.tsx     # Scrollable screen wrapper with safe-area padding
+│   │   └── Text.tsx             # Typography component with Thai/Latin font switching
+│   │
+│   ├── navigation/
+│   │   ├── types.ts             # All TypeScript param list types
+│   │   ├── RootNavigator.tsx    # Login ↔ Main switch
+│   │   ├── TabNavigator.tsx     # 5-tab bottom bar
+│   │   ├── HomeStack.tsx        # Home + Premium Management + Payment flow + System
+│   │   ├── PolicyStack.tsx      # Policy + docs + coverage + Vitality
+│   │   ├── ClaimsStack.tsx      # 6-step e-claims flow
+│   │   └── AccountStack.tsx     # Account + Support + FAQ
+│   │
+│   └── screens/
+│       ├── LoginScreen.tsx
+│       ├── HomeScreen.tsx
+│       ├── PlaceholderScreen.tsx
+│       ├── premium/             # Premium Management hub + all tools
+│       ├── payment/             # 7-step payment flow
+│       ├── policy/              # Policy, docs, coverage, Vitality
+│       ├── claims/              # 6-step e-claims flow
+│       ├── assistant/           # AI chat assistant
+│       ├── account/             # Account settings + profile
+│       ├── support/             # Support, FAQ, change freq, contact
+│       └── system/              # Empty states, loading, error, offline screens
+```
+
+---
+
+## Screens (54 implemented)
+
+| Section | Screens |
+|---|---|
+| Auth | Login |
+| Home | Home |
+| Premium Management | PremiumMgmt · Affordability · Value · Illustration · AdjustPlan · Costs · Recommend · History · HistoryFiltered |
+| Payment (7-step) | PaySelect · PayCoverage · PayReview · PayMethod · PayCard · PayQr · PaySuccess · PayChecking · PayProcessing |
+| Policy | Policy · PolicyDocs · CoverageDetail · Vitality |
+| Claims (6-step) | ClaimStart · ClaimDetails · ClaimAmount · ClaimDocs · ClaimPayment · ClaimReview · ClaimSuccess · ClaimHistory · ClaimSubmitting · ClaimDeclined |
+| AI Assistant | Assistant · AssistantTyping · AssistantAction |
+| Account | Account · ProfileEdit |
+| Support | Support · FaqList · FaqSearch · FaqAnswer · ChangeFreq · FreqConfirm · ContactAgent |
+| Empty States | EmptyClaims · EmptyHistory · EmptyPolicies |
+| System | PayFailed · SearchLoading · GenericError · Offline · SessionTimeout |
+
+---
+
+## Tech Stack
+
+| Package | Version | Purpose |
+|---|---|---|
+| expo | ~56.0 | Managed workflow |
+| react-native | 0.85 | Core framework |
+| @react-navigation/native | ^7 | Navigation container |
+| @react-navigation/native-stack | ^7 | Stack navigator |
+| @react-navigation/bottom-tabs | ^7 | Tab bar |
+| react-native-screens | 4.25 | Native screen optimization |
+| react-native-safe-area-context | ~5.7 | Safe area insets |
+| expo-font | ~56 | Font loading |
+| @expo-google-fonts/* | ^0.4 | Plus Jakarta Sans, Anuphan, IBM Plex Mono |
+| @expo/vector-icons | bundled | MaterialIcons (flat red, no chips) |
+| expo-linear-gradient | ~56 | Hero card gradients |
+| @react-native-community/slider | 5.2 | AdjustPlan coverage slider |
+| zustand | ^5 | Lightweight global state |
+
+---
+
+## Design Tokens
+
+All tokens are in `src/tokens/`. Key values:
+
+```ts
+primary:    '#D31145'   // AIA red — buttons, active tab, all icons
+primaryDeep:'#9E0E34'   // Gradient end, pressed states
+screenBg:   '#F4F4F6'   // Page background
+card:       '#FFFFFF'   // Card surface
+ink:        '#16161C'   // Headings / dark hero text
+success:    '#1B9E5A'   // Paid, safe, approved
+amber:      '#E8821A'   // Due dates, caution
+```
+
+**Icon rule**: All icons are flat `#D31145` with **no colored background chip**. Only semantic pills (due-date amber, paid green, risk red) and status circles keep their colors.
+
+---
+
+## Mock Data
+
+All data is hardcoded in `src/store/index.ts`. Policy defaults:
+
+```
+Policy: AIA Health Happy
+Sum assured: ฿2,000,000
+Monthly premium: ฿4,250
+Annual premium: ฿51,000
+Due date: 25 มิ.ย.
+Income: ฿38,000/month
+```
+
+Replace with real API calls at the 🔌 markers in each screen.
+
+---
+
+## Known Gaps (from design spec)
+
+- **i18n copy**: Language toggle in Account screen switches fonts (Thai ↔ Latin) but copy strings are hardcoded in Thai. Wire `useAppStore(s => s.language)` into a strings file to complete EN mode.
+- **Real API**: All 🔌 endpoints (auth, policy data, payment processing, illustration engine, claims submission) need wiring to AIA's backend services.
+- **Ad banners**: Home carousel uses placeholder gradient cards. Replace with remote images from AIA's campaign CMS.
+- **AIA Marketplace**: The coverage upsell deep-link opens a placeholder — wire to AIA Marketplace URL.
+- **Bar charts**: Using View-based bars. `react-native-svg` is installed if richer charts are needed.
