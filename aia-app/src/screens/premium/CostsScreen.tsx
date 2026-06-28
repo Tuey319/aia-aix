@@ -39,6 +39,7 @@ const FREQ_OPTIONS: FreqOption[] = [
     labelTh: 'รายเดือน',
     perPeriod: 4250,
     note: '12 งวด/ปี',
+    badge: 'ถูกสุด',
   },
   {
     id: 'quarterly',

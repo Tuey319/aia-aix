@@ -90,25 +90,11 @@ export function PremiumMgmtScreen() {
         {/* 4. Adjust group */}
         <SectionGroup label={s.premiumMgmt.groupAdjust}>
           <ListRow icon="tune" title={s.premiumMgmt.rowAdjustPlan} subtitle={s.premiumMgmt.rowAdjustPlanSub} onPress={() => navigation.navigate('AdjustPlan')} />
-          <ListRow icon="trending-up" title={s.premiumMgmt.rowCosts} subtitle={s.premiumMgmt.rowCostsSub} onPress={() => navigation.navigate('Costs')} />
+          <ListRow icon="show-chart" title={s.premiumMgmt.rowCosts} subtitle={s.premiumMgmt.rowCostsSub} onPress={() => navigation.navigate('Costs')} />
           <ListRow icon="auto-awesome" title={s.premiumMgmt.rowRecommend} subtitle={s.premiumMgmt.rowRecommendSub} onPress={() => navigation.navigate('Recommend')} badge={s.premiumMgmt.badgeNew} />
         </SectionGroup>
 
-        {/* 5. Vitality promo */}
-        <TouchableOpacity activeOpacity={0.85} style={{ borderRadius: radius.card, overflow: 'hidden', ...cardShadow }}>
-          <View style={{ backgroundColor: colors.primaryDeep, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-            <View style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' }}>
-              <MaterialIcons name="favorite" size={24} color={colors.white} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.white, marginBottom: 2 }}>{s.premiumMgmt.vitalityTitle}</Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>{s.premiumMgmt.vitalitySub}</Text>
-            </View>
-            <MaterialIcons name="chevron-right" size={20} color="rgba(255,255,255,0.6)" />
-          </View>
-        </TouchableOpacity>
-
-        {/* 6. History group */}
+        {/* 5. History group */}
         <SectionGroup label={s.premiumMgmt.groupHistory}>
           <ListRow icon="receipt-long" title={s.premiumMgmt.rowHistory} subtitle={s.premiumMgmt.rowHistorySub} onPress={() => navigation.navigate('History')} />
         </SectionGroup>

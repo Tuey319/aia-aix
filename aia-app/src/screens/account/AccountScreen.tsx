@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -38,68 +38,40 @@ export function AccountScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      {/* Top-level header */}
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: screenPadding,
-          paddingTop: 12,
-          paddingBottom: 16,
-          justifyContent: 'space-between',
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: fontFamily.anuphan.bold,
-            fontSize: fontSize.titleLg,
-            color: colors.ink,
-          }}
-        >
-          {s.tabs.account}
-        </Text>
-        <TouchableOpacity hitSlop={12} onPress={() => {}}>
-          <MaterialIcons name="notifications-none" size={26} color={colors.ink} />
-        </TouchableOpacity>
-      </View>
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: screenPadding,
           paddingBottom: insets.bottom + 32,
-          gap: cardGap,
         }}
       >
-        {/* Profile header card */}
+        {/* Profile header — full-width, no card, padding from edge */}
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={() => navigation.navigate('ProfileEdit')}
           style={{
-            backgroundColor: colors.card,
-            borderRadius: radius.cardLg,
-            padding: 18,
             flexDirection: 'row',
             alignItems: 'center',
+            paddingHorizontal: screenPadding,
+            paddingTop: 20,
+            paddingBottom: 20,
             gap: 14,
-            ...cardShadow,
           }}
         >
-          {/* Avatar */}
+          {/* Red circle avatar with icon */}
           <View
             style={{
-              width: 56,
-              height: 56,
-              borderRadius: 28,
+              width: 52,
+              height: 52,
+              borderRadius: 26,
               backgroundColor: colors.primary,
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <MaterialIcons name="person" size={30} color={colors.white} />
+            <MaterialIcons name="person" size={28} color={colors.white} />
           </View>
 
-          <View style={{ flex: 1, gap: 3 }}>
+          <View style={{ flex: 1, gap: 2 }}>
             <Text
               style={{
                 fontFamily: fontFamily.anuphan.bold,
@@ -116,133 +88,141 @@ export function AccountScreen() {
                 color: colors.primary,
               }}
             >
-              {s.account.viewProfile}
+              {s.account.viewProfile} {'›'}
             </Text>
           </View>
-
-          <MaterialIcons name="chevron-right" size={20} color={colors.textTertiary} />
         </TouchableOpacity>
 
-        {/* Section: ตั้งค่าทั่วไป */}
-        <SectionGroup label={s.account.generalSection}>
-          {/* Language row */}
-          <ListRow
-            icon="language"
-            title={s.account.language}
-            showChevron={false}
-            right={
-              <View style={{ flexDirection: 'row', gap: 6 }}>
-                <TouchableOpacity
-                  onPress={() => setLanguage('en')}
+        <View style={{ paddingHorizontal: screenPadding, gap: cardGap }}>
+          {/* Section: ตั้งค่าทั่วไป */}
+          <SectionGroup label={s.account.generalSection}>
+            {/* Language row */}
+            <ListRow
+              icon="language"
+              title={s.account.language}
+              showChevron={false}
+              right={
+                <View
                   style={{
-                    paddingHorizontal: 14,
-                    paddingVertical: 5,
+                    flexDirection: 'row',
+                    gap: 4,
+                    backgroundColor: colors.hairline2,
                     borderRadius: radius.pill,
-                    backgroundColor: language === 'en' ? colors.primary : colors.screenBg,
+                    padding: 3,
                   }}
                 >
-                  <Text
+                  <TouchableOpacity
+                    onPress={() => setLanguage('en')}
                     style={{
-                      fontFamily: fontFamily.jakarta.semiBold,
-                      fontSize: fontSize.caption,
-                      color: language === 'en' ? colors.white : colors.textSecondary,
+                      paddingHorizontal: 14,
+                      paddingVertical: 5,
+                      borderRadius: radius.pill,
+                      backgroundColor: language === 'en' ? colors.primary : 'transparent',
                     }}
                   >
-                    EN
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setLanguage('th')}
-                  style={{
-                    paddingHorizontal: 14,
-                    paddingVertical: 5,
-                    borderRadius: radius.pill,
-                    backgroundColor: language === 'th' ? colors.primary : colors.screenBg,
-                  }}
-                >
-                  <Text
+                    <Text
+                      style={{
+                        fontFamily: fontFamily.jakarta.semiBold,
+                        fontSize: fontSize.caption,
+                        color: language === 'en' ? colors.white : colors.textSecondary,
+                      }}
+                    >
+                      EN
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => setLanguage('th')}
                     style={{
-                      fontFamily: fontFamily.anuphan.semiBold,
-                      fontSize: fontSize.caption,
-                      color: language === 'th' ? colors.white : colors.textSecondary,
+                      paddingHorizontal: 14,
+                      paddingVertical: 5,
+                      borderRadius: radius.pill,
+                      backgroundColor: language === 'th' ? colors.primary : 'transparent',
                     }}
                   >
-                    ไทย
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            }
-          />
+                    <Text
+                      style={{
+                        fontFamily: fontFamily.anuphan.semiBold,
+                        fontSize: fontSize.caption,
+                        color: language === 'th' ? colors.white : colors.textSecondary,
+                      }}
+                    >
+                      ไทย
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              }
+            />
 
-          {/* Face ID row */}
-          <ListRow
-            icon="face"
-            title={s.account.faceId}
-            showChevron={false}
-            right={
-              <Switch
-                value={faceIdEnabled}
-                onValueChange={setFaceIdEnabled}
-                trackColor={{ false: colors.hairline2, true: colors.primary }}
-                thumbColor={colors.white}
-              />
-            }
-          />
+            {/* Face ID row */}
+            <ListRow
+              icon="face"
+              title={s.account.faceId}
+              showChevron={false}
+              right={
+                <Switch
+                  value={faceIdEnabled}
+                  onValueChange={setFaceIdEnabled}
+                  trackColor={{ false: colors.hairline2, true: colors.primary }}
+                  thumbColor={colors.white}
+                />
+              }
+            />
 
-          {/* PIN row */}
-          <ListRow
-            icon="lock-outline"
-            title={s.account.changePin}
+            {/* PIN row */}
+            <ListRow
+              icon="lock-outline"
+              title={s.account.changePin}
+              onPress={() => {}}
+            />
+
+            {/* Password row */}
+            <ListRow
+              icon="vpn-key"
+              title={s.account.changePassword}
+              onPress={() => {}}
+            />
+          </SectionGroup>
+
+          {/* Section: เกี่ยวกับ AIA+ */}
+          <SectionGroup label={s.account.aboutSection}>
+            <ListRow
+              icon="phone"
+              title={s.account.contact}
+              onPress={() => navigation.navigate('ContactAgent')}
+            />
+            <ListRow
+              icon="help-outline"
+              title={s.account.faq}
+              onPress={() => navigation.navigate('FaqList')}
+            />
+            <ListRow
+              icon="description"
+              title={s.account.terms}
+              onPress={() => {}}
+            />
+          </SectionGroup>
+
+          {/* Logout — red text, centred, at bottom */}
+          <TouchableOpacity
             onPress={() => {}}
-          />
-
-          {/* Password row */}
-          <ListRow
-            icon="vpn-key"
-            title={s.account.changePassword}
-            onPress={() => {}}
-          />
-        </SectionGroup>
-
-        {/* Section: เกี่ยวกับ AIA+ */}
-        <SectionGroup label={s.account.aboutSection}>
-          <ListRow
-            icon="phone"
-            title={s.account.contact}
-            onPress={() => navigation.navigate('ContactAgent')}
-          />
-          <ListRow
-            icon="help-outline"
-            title={s.account.faq}
-            onPress={() => navigation.navigate('FaqList')}
-          />
-          <ListRow
-            icon="description"
-            title={s.account.terms}
-            onPress={() => {}}
-          />
-        </SectionGroup>
-
-        {/* Logout button */}
-        <TouchableOpacity
-          onPress={() => {}}
-          activeOpacity={0.7}
-          style={{
-            alignItems: 'center',
-            paddingVertical: 16,
-            marginTop: 4,
-          }}
-        >
-          <Text
+            activeOpacity={0.7}
             style={{
-              fontFamily: fontFamily.anuphan.semiBold,
-              fontSize: fontSize.title,
-              color: colors.primary,
+              alignItems: 'center',
+              paddingVertical: 18,
+              marginTop: 4,
             }}
           >
-            {s.account.logout}
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.semiBold,
+                fontSize: fontSize.title,
+                color: colors.primary,
+              }}
+            >
+              {s.account.logout}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

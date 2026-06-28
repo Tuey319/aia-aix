@@ -97,7 +97,7 @@ export function PaySelectScreen() {
             backgroundColor: colors.card,
             borderRadius: radius.card,
             padding: 16,
-            gap: 12,
+            gap: 8,
             borderWidth: 2,
             borderColor: selected === 0 ? colors.primary : colors.hairline2,
             ...cardShadow,
@@ -127,35 +127,39 @@ export function PaySelectScreen() {
                 />
               )}
             </View>
-            <Text
-              style={{
-                fontFamily: fontFamily.anuphan.semiBold,
-                fontSize: fontSize.bodyMd,
-                color: selected === 0 ? colors.ink : colors.inkBody2,
-                flex: 1,
-              }}
-            >
-              AIA สมาร์ท เวลท์ (ยูนิต ลิงค์)
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
+            <View style={{ flex: 1, gap: 2 }}>
+              <Text
+                style={{
+                  fontFamily: fontFamily.anuphan.semiBold,
+                  fontSize: fontSize.bodyMd,
+                  color: selected === 0 ? colors.ink : colors.inkBody2,
+                }}
+              >
+                AIA สมาร์ท เวลท์ (ยูนิต ลิงค์)
+              </Text>
+              <Text
+                style={{
+                  fontFamily: fontFamily.jakarta.regular,
+                  fontSize: fontSize.caption,
+                  color: colors.textSecondary,
+                }}
+              >
+                U-2291-8844
+              </Text>
+            </View>
             <Text
               style={{
                 fontFamily: fontFamily.jakarta.bold,
-                fontSize: 22,
+                fontSize: fontSize.bodyMd,
                 color: selected === 0 ? colors.ink : colors.inkBody2,
-                letterSpacing: -0.5,
+                letterSpacing: -0.3,
               }}
             >
               ฿13,930
             </Text>
+          </View>
+
+          <View style={{ paddingLeft: 30 }}>
             <StatusPill label="ครบกำหนดใน 16 วัน" variant="amber" />
           </View>
         </TouchableOpacity>
@@ -216,9 +220,10 @@ export function PaySelectScreen() {
               fontFamily: fontFamily.jakarta.regular,
               fontSize: fontSize.caption,
               color: colors.textSecondary,
+              marginLeft: 30,
             }}
           >
-            เลขกรมธรรม์ P-8842-8891
+            P-8842-8891
           </Text>
 
           {/* Premium breakdown rows */}
@@ -248,7 +253,7 @@ export function PaySelectScreen() {
                 style={{
                   fontFamily: fontFamily.anuphan.regular,
                   fontSize: fontSize.body,
-                  color: colors.success,
+                  color: colors.primary,
                 }}
               >
                 ส่วนลด Vitality
@@ -257,7 +262,7 @@ export function PaySelectScreen() {
                 style={{
                   fontFamily: fontFamily.jakarta.medium,
                   fontSize: fontSize.body,
-                  color: colors.success,
+                  color: colors.primary,
                 }}
               >
                 -1,267.20
