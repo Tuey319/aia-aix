@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   View,
   Text,
@@ -17,8 +16,8 @@ import {
   radius,
   screenPadding,
   cardGap,
-  cardShadow,
 } from '../../tokens';
+import { cardShadow } from '../../tokens/shadows';
 import { SectionGroup } from '../../components/SectionGroup';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -128,7 +127,7 @@ export function VitalityScreen() {
             ...cardShadow,
           }}
         >
-          {/* Status row */}
+          {/* "สถานะ Gold" label + Gold badge */}
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <Text
               style={{
@@ -137,7 +136,7 @@ export function VitalityScreen() {
                 color: 'rgba(255,255,255,0.75)',
               }}
             >
-              สถานะเงิน
+              สถานะ Gold
             </Text>
             <View
               style={{
@@ -160,33 +159,51 @@ export function VitalityScreen() {
             </View>
           </View>
 
-          {/* Big points */}
-          <View>
+          {/* Big points — "12,400 คะแนน" on one line */}
+          <Text
+            style={{
+              fontFamily: fontFamily.jakarta.extraBold,
+              fontSize: 38,
+              color: colors.white,
+              letterSpacing: -1,
+              lineHeight: 44,
+            }}
+          >
+            {CURRENT_POINTS.toLocaleString('en-US')}{' '}
             <Text
               style={{
-                fontFamily: fontFamily.jakarta.extraBold,
-                fontSize: 40,
-                color: colors.white,
-                letterSpacing: -1,
-                lineHeight: 44,
-              }}
-            >
-              {CURRENT_POINTS.toLocaleString('en-US')}
-            </Text>
-            <Text
-              style={{
-                fontFamily: fontFamily.anuphan.regular,
-                fontSize: fontSize.bodyMd,
-                color: 'rgba(255,255,255,0.75)',
-                marginTop: 2,
+                fontFamily: fontFamily.anuphan.semiBold,
+                fontSize: 22,
+                color: 'rgba(255,255,255,0.85)',
+                letterSpacing: 0,
               }}
             >
               คะแนน
             </Text>
-          </View>
+          </Text>
 
           {/* Progress bar to next tier */}
           <View style={{ gap: 8 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+              <Text
+                style={{
+                  fontFamily: fontFamily.anuphan.regular,
+                  fontSize: fontSize.caption,
+                  color: 'rgba(255,255,255,0.7)',
+                }}
+              >
+                ระดับถัดไป
+              </Text>
+              <Text
+                style={{
+                  fontFamily: fontFamily.anuphan.semiBold,
+                  fontSize: fontSize.caption,
+                  color: colors.white,
+                }}
+              >
+                เหลืออีก {(NEXT_TIER - CURRENT_POINTS).toLocaleString('en-US')}
+              </Text>
+            </View>
             <View
               style={{
                 height: 8,
@@ -204,35 +221,10 @@ export function VitalityScreen() {
                 }}
               />
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.regular,
-                  fontSize: fontSize.caption,
-                  color: 'rgba(255,255,255,0.7)',
-                }}
-              >
-                {CURRENT_POINTS.toLocaleString('en-US')} คะแนน
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.semiBold,
-                  fontSize: fontSize.caption,
-                  color: colors.white,
-                }}
-              >
-                เหลืออีก {(NEXT_TIER - CURRENT_POINTS).toLocaleString('en-US')} → Platinum
-              </Text>
-            </View>
           </View>
 
-          {/* Discount row */}
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 10,
-            }}
-          >
+          {/* Two mini panels: discount this year / max discount */}
+          <View style={{ flexDirection: 'row', gap: 10 }}>
             <View
               style={{
                 flex: 1,
@@ -292,9 +284,9 @@ export function VitalityScreen() {
           </View>
         </View>
 
-        {/* Earn more points */}
+        {/* Earn more points section */}
         <SectionGroup label="สะสมคะแนนเพิ่ม">
-          {EARN_ITEMS.map((item) => (
+          {EARN_ITEMS.map((item, index) => (
             <TouchableOpacity
               key={item.title}
               activeOpacity={0.75}
@@ -305,6 +297,8 @@ export function VitalityScreen() {
                 paddingVertical: 14,
                 paddingHorizontal: 16,
                 gap: 12,
+                borderTopWidth: index > 0 ? 1 : 0,
+                borderTopColor: colors.hairline,
               }}
             >
               <MaterialIcons name={item.icon} size={22} color={colors.success} />
