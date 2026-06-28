@@ -25,7 +25,7 @@ function TabLabel({ label, focused }: { label: string; focused: boolean }) {
 function CenterTabIcon({ focused }: { focused: boolean }) {
   return (
     <View style={{ width: 44, height: 44, borderRadius: 13, backgroundColor: focused ? colors.primary : colors.hairline2, alignItems: 'center', justifyContent: 'center', marginBottom: 2 }}>
-      <MaterialIcons name="healing" size={22} color={focused ? colors.white : colors.textSecondary} />
+      <MaterialIcons name="favorite" size={20} color={focused ? colors.white : colors.textSecondary} />
     </View>
   );
 }
@@ -77,7 +77,7 @@ export function TabNavigator() {
         component={ClaimsStack}
         options={{
           tabBarIcon: ({ focused }) => <CenterTabIcon focused={focused} />,
-          tabBarLabel: ({ focused }) => <TabLabel label={s.tabs.claims} focused={focused} />,
+          tabBarLabel: ({ focused }) => <TabLabel label="Vitality" focused={focused} />,
         }}
       />
       <Tab.Screen
