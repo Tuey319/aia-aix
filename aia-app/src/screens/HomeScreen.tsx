@@ -185,12 +185,12 @@ export function HomeScreen() {
   }
 
   const SERVICES = [
-    { icon: 'payment' as const,          label: s.home.svcPay,     screen: 'PaySelect' as const },
-    { icon: 'shield' as const,           label: s.home.svcCard,    screen: 'PaySelect' as const },
-    { icon: 'local-hospital' as const,   label: s.home.svcClaim,   screen: 'PaySelect' as const },
-    { icon: 'location-on' as const,      label: s.home.svcAddress, screen: 'PaySelect' as const },
-    { icon: 'download' as const,         label: s.home.svcDocs,    screen: 'PaySelect' as const },
-    { icon: 'smart-toy' as const,        label: s.home.svcAll,     screen: 'Assistant' as const },
+    { icon: 'payment' as const,        label: s.home.svcPay,     screen: 'PaySelect' as const },
+    { icon: 'shield' as const,         label: s.home.svcCard,    screen: 'PaySelect' as const },
+    { icon: 'local-hospital' as const, label: s.home.svcClaim,   screen: 'PaySelect' as const },
+    { icon: 'emoji-events' as const,   label: 'รางวัลของฉัน',     screen: 'BadgeCollection' as const },
+    { icon: 'download' as const,       label: s.home.svcDocs,    screen: 'PaySelect' as const },
+    { icon: 'smart-toy' as const,      label: 'ผู้ช่วย AI',       screen: 'Assistant' as const },
   ];
 
   return (
@@ -321,8 +321,28 @@ export function HomeScreen() {
           ))}
         </View>
 
+        {/* ── AI Celebration banner ─────────────────────────────── */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Celebration')}
+          activeOpacity={0.88}
+          style={{ marginHorizontal: screenPadding, marginTop: 14 }}
+        >
+          <View style={{ backgroundColor: colors.ink, borderRadius: 16, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' }}>
+              <MaterialIcons name="emoji-events" size={22} color={colors.white} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.white }}>AI Celebration 🎉</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>ดูเหรียญรางวัลและการเดินทางของคุณ</Text>
+            </View>
+            <View style={{ backgroundColor: colors.primary, borderRadius: 99, paddingHorizontal: 8, paddingVertical: 3 }}>
+              <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 9, color: colors.white }}>ใหม่</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
         {/* ── Finance Hub ──────────────────────────────────────── */}
-        <View style={{ paddingHorizontal: screenPadding, marginTop: 20 }}>
+        <View style={{ paddingHorizontal: screenPadding, marginTop: 14 }}>
           {/* Section header */}
           <View
             style={{
