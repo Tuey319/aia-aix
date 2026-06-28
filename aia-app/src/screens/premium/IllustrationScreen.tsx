@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -8,7 +7,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../../navigation/types';
 import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { StatusPill } from '../../components/StatusPill';
 import { BarChart } from '../../components/BarChart';
 import { useAppStore } from '../../store';
 
@@ -27,10 +25,9 @@ interface ValueRowProps {
   iconColor: string;
   label: string;
   value: string;
-  isEstimate?: boolean;
 }
 
-function ValueRow({ icon, iconColor, label, value, isEstimate }: ValueRowProps) {
+function ValueRow({ icon, iconColor, label, value }: ValueRowProps) {
   return (
     <View
       style={{
@@ -107,7 +104,7 @@ export function IllustrationScreen() {
           gap: cardGap,
         }}
       >
-        {/* Hero Dark Card */}
+        {/* Dark gradient hero card */}
         <LinearGradient
           colors={[colors.ink, '#2a1020']}
           start={{ x: 0, y: 0 }}
@@ -118,7 +115,7 @@ export function IllustrationScreen() {
             gap: 14,
           }}
         >
-          {/* Policy type label */}
+          {/* Policy name + type */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <View
               style={{
@@ -143,7 +140,7 @@ export function IllustrationScreen() {
             </Text>
           </View>
 
-          {/* Sum Assured */}
+          {/* "ทุนประกันชีวิต" label + big amount */}
           <View>
             <Text
               style={{
@@ -165,11 +162,11 @@ export function IllustrationScreen() {
                 letterSpacing: -1.2,
               }}
             >
-              ฿{(policy.sumAssured / 1000000).toFixed(0)},000,000
+              ฿{policy.sumAssured.toLocaleString('en-US')}
             </Text>
           </View>
 
-          {/* Chips */}
+          {/* Two chips */}
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <View
               style={{
@@ -212,13 +209,13 @@ export function IllustrationScreen() {
                   color: colors.white,
                 }}
               >
-                ครบกำหนดสัญญา อายุ 90 ปี
+                ครบกำหนด อายุ 90 ปี
               </Text>
             </View>
           </View>
         </LinearGradient>
 
-        {/* Premium Section */}
+        {/* Premium section */}
         <View
           style={{
             backgroundColor: colors.card,
@@ -241,23 +238,25 @@ export function IllustrationScreen() {
             </Text>
           </View>
           <View style={{ height: 1, backgroundColor: colors.hairline, marginHorizontal: 16 }} />
-          <ValueRow
-            icon="event-repeat"
-            iconColor={colors.primary}
-            label="เบี้ยประกันต่อปี"
-            value={`฿${policy.annualPremium.toLocaleString('en-US')}`}
-          />
-          <View style={{ height: 1, backgroundColor: colors.hairline, marginHorizontal: 16 }} />
-          <ValueRow
-            icon="savings"
-            iconColor={colors.primary}
-            label={`เบี้ยรวมตลอดสัญญา 20 ปี`}
-            value={`฿${totalPremium20yr.toLocaleString('en-US')}`}
-          />
+          <View style={{ paddingHorizontal: 16 }}>
+            <ValueRow
+              icon="event-repeat"
+              iconColor={colors.primary}
+              label="เบี้ยประกันต่อปี"
+              value={`฿${policy.annualPremium.toLocaleString('en-US')}`}
+            />
+            <View style={{ height: 1, backgroundColor: colors.hairline }} />
+            <ValueRow
+              icon="savings"
+              iconColor={colors.primary}
+              label="เบี้ยรวมตลอดสัญญา (ชำระ 20 ปี)"
+              value={`฿${totalPremium20yr.toLocaleString('en-US')}`}
+            />
+          </View>
           <View style={{ height: 8 }} />
         </View>
 
-        {/* Value & Benefits Section */}
+        {/* Value & Benefits section with "Illustration" amber badge */}
         <View
           style={{
             backgroundColor: colors.card,
@@ -287,7 +286,7 @@ export function IllustrationScreen() {
             >
               มูลค่าและผลประโยชน์ (ประมาณการ)
             </Text>
-            {/* Illustration badge */}
+            {/* Amber "Illustration" badge */}
             <View
               style={{
                 backgroundColor: colors.goldTint,
@@ -332,18 +331,11 @@ export function IllustrationScreen() {
               label="มูลค่าครบกำหนด อายุ 90"
               value="฿2,650,000"
             />
-            <View style={{ height: 1, backgroundColor: colors.hairline }} />
-            <ValueRow
-              icon="show-chart"
-              iconColor={colors.success}
-              label="ผลตอบแทนรวม (ประมาณการ)"
-              value="+฿1,630,000"
-            />
           </View>
           <View style={{ height: 8 }} />
         </View>
 
-        {/* Cash Value Bar Chart */}
+        {/* Bar chart across 5 age points */}
         <View
           style={{
             backgroundColor: colors.card,
@@ -382,6 +374,7 @@ export function IllustrationScreen() {
             labelColor={colors.amberDeep}
           />
 
+          {/* Disclaimer note */}
           <View
             style={{
               backgroundColor: colors.goldTint,
@@ -404,7 +397,7 @@ export function IllustrationScreen() {
         </View>
       </ScrollView>
 
-      {/* Sticky Footer Button */}
+      {/* Sticky footer button */}
       <View
         style={{
           position: 'absolute',

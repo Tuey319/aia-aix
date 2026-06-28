@@ -15,6 +15,7 @@ export function GenericErrorScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top', 'bottom']}>
+      {/* Centered content */}
       <View
         style={{
           flex: 1,
@@ -23,14 +24,26 @@ export function GenericErrorScreen() {
           paddingHorizontal: screenPadding,
         }}
       >
-        <MaterialIcons name="sentiment-dissatisfied" size={60} color={colors.textTertiary} />
+        {/* Sad face icon in light grey circle */}
+        <View
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 40,
+            backgroundColor: colors.hairline2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 20,
+          }}
+        >
+          <MaterialIcons name="sentiment-dissatisfied" size={44} color={colors.textTertiary} />
+        </View>
 
         <Text
           style={{
             fontFamily: fontFamily.anuphan.bold,
             fontSize: fontSize.titleLg,
             color: colors.ink,
-            marginTop: 20,
             marginBottom: 10,
             textAlign: 'center',
           }}
@@ -45,13 +58,22 @@ export function GenericErrorScreen() {
             color: colors.textSecondary,
             textAlign: 'center',
             lineHeight: 22,
-            marginBottom: 36,
           }}
         >
           เราไม่สามารถดำเนินการตามคำขอของคุณได้ในขณะนี้{'\n'}โปรดลองอีกครั้ง
         </Text>
+      </View>
 
-        {/* Retry button */}
+      {/* Bottom buttons */}
+      <View
+        style={{
+          paddingHorizontal: screenPadding,
+          paddingBottom: insets.bottom + 16,
+          paddingTop: 12,
+          gap: 10,
+        }}
+      >
+        {/* Retry — red filled */}
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           activeOpacity={0.82}
@@ -59,10 +81,8 @@ export function GenericErrorScreen() {
             backgroundColor: colors.primary,
             borderRadius: radius.button,
             height: 52,
-            width: '100%',
             alignItems: 'center',
             justifyContent: 'center',
-            marginBottom: 12,
             ...primaryButtonShadow,
           }}
         >
@@ -77,25 +97,21 @@ export function GenericErrorScreen() {
           </Text>
         </TouchableOpacity>
 
-        {/* Back home outline button */}
+        {/* Back home — ghost text only */}
         <TouchableOpacity
           onPress={() => navigation.navigate('Home')}
-          activeOpacity={0.82}
+          activeOpacity={0.7}
           style={{
-            borderWidth: 1.5,
-            borderColor: colors.primary,
-            borderRadius: radius.button,
-            height: 52,
-            width: '100%',
+            height: 48,
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
           <Text
             style={{
-              color: colors.primary,
-              fontFamily: fontFamily.anuphan.bold,
-              fontSize: fontSize.title,
+              color: colors.textSecondary,
+              fontFamily: fontFamily.anuphan.medium,
+              fontSize: fontSize.bodyMd,
             }}
           >
             กลับหน้าหลัก

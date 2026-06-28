@@ -57,6 +57,15 @@ const PAYMENTS: PaymentRecord[] = [
     amount: 8000,
     type: 'policy',
   },
+  {
+    id: '5',
+    month: 'เมษายน 2569',
+    policyName: 'AIA Health Happy',
+    date: '17 เม.ย.',
+    method: 'PromptPay',
+    amount: 4250,
+    type: 'bill',
+  },
 ];
 
 const FILTER_LABELS: { key: FilterType; label: string }[] = [
@@ -86,7 +95,7 @@ export function HistoryScreen() {
   });
 
   const totalPaid = PAYMENTS.reduce((sum, p) => sum + p.amount, 0);
-  const onTimeCount = PAYMENTS.length;
+  const onTimeCount = 6; // 6 instalments on-time per screenshot
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -249,19 +258,8 @@ function PaymentRow({ record }: { record: PaymentRecord }) {
         gap: 12,
       }}
     >
-      {/* Check icon */}
-      <View
-        style={{
-          width: 34,
-          height: 34,
-          borderRadius: 10,
-          backgroundColor: colors.successTint,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <MaterialIcons name="check-circle" size={20} color={colors.success} />
-      </View>
+      {/* Green check circle */}
+      <MaterialIcons name="check-circle" size={22} color={colors.success} />
 
       {/* Info */}
       <View style={{ flex: 1, gap: 2 }}>

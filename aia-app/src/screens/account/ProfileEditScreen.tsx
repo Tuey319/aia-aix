@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import {
   radius,
   screenPadding,
   cardGap,
+  cardPadding,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 
@@ -28,29 +29,11 @@ export function ProfileEditScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
 
-  const [phone, setPhone] = useState('081 234 5678');
-  const [email, setEmail] = useState('user@email.com');
-  const [address, setAddress] = useState('');
-
-  const inputStyle = {
-    fontFamily: fontFamily.jakarta.regular,
-    fontSize: fontSize.bodyMd,
-    color: colors.ink,
-    backgroundColor: colors.card,
-    borderRadius: radius.input,
-    borderWidth: 1,
-    borderColor: colors.hairline2,
-    paddingHorizontal: 14,
-    paddingVertical: 13,
-  } as const;
-
-  const labelStyle = {
-    fontFamily: fontFamily.anuphan.medium,
-    fontSize: fontSize.caption,
-    color: colors.textSecondary,
-    marginBottom: 6,
-    marginLeft: 2,
-  } as const;
+  const [phone, setPhone] = useState('081-234-5678');
+  const [email, setEmail] = useState('somchai@email.com');
+  const [address, setAddress] = useState('88/12 ถนนสุขุมวิท แขวงคลองเตย กรุงเทพฯ\n10110');
+  const [emailFocused, setEmailFocused] = useState(true);
+  const emailRef = useRef<TextInput>(null);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -87,103 +70,228 @@ export function ProfileEditScreen() {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            paddingHorizontal: screenPadding,
             paddingBottom: insets.bottom + 100,
-            gap: cardGap,
           }}
         >
-          {/* Profile photo */}
-          <View style={{ alignItems: 'center', paddingVertical: 20, gap: 10 }}>
+          {/* Profile avatar + policy no */}
+          <View style={{ alignItems: 'center', paddingVertical: 24, gap: 6 }}>
             <View
               style={{
-                width: 88,
-                height: 88,
-                borderRadius: 44,
+                width: 72,
+                height: 72,
+                borderRadius: 36,
                 backgroundColor: colors.primary,
                 alignItems: 'center',
                 justifyContent: 'center',
                 ...cardShadow,
               }}
             >
-              <MaterialIcons name="person" size={48} color={colors.white} />
-            </View>
-            <TouchableOpacity activeOpacity={0.7} onPress={() => {}}>
               <Text
                 style={{
-                  fontFamily: fontFamily.anuphan.semiBold,
-                  fontSize: fontSize.bodyMd,
-                  color: colors.primary,
+                  fontFamily: fontFamily.anuphan.bold,
+                  fontSize: 30,
+                  color: colors.white,
                 }}
               >
-                แก้ไขรูปภาพ
+                ส
               </Text>
-            </TouchableOpacity>
+            </View>
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.regular,
+                fontSize: fontSize.caption,
+                color: colors.textSecondary,
+                marginTop: 4,
+              }}
+            >
+              P-8842-8891
+            </Text>
           </View>
+
+          {/* Section label */}
+          <Text
+            style={{
+              fontFamily: fontFamily.anuphan.semiBold,
+              fontSize: fontSize.caption,
+              color: colors.textSecondary,
+              paddingHorizontal: screenPadding,
+              paddingBottom: 8,
+            }}
+          >
+            ข้อมูลติดต่อ
+          </Text>
 
           {/* Form card */}
           <View
             style={{
               backgroundColor: colors.card,
+              marginHorizontal: screenPadding,
               borderRadius: radius.card,
-              padding: 18,
-              gap: 18,
               ...cardShadow,
+              gap: 0,
             }}
           >
-            {/* Phone */}
-            <View>
-              <Text style={labelStyle}>หมายเลขโทรศัพท์</Text>
-              <TextInput
-                style={inputStyle}
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-                placeholderTextColor={colors.textTertiary}
-              />
+            {/* Phone row — display value + pencil icon */}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: cardPadding,
+                paddingVertical: 14,
+                gap: 12,
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.anuphan.regular,
+                    fontSize: fontSize.caption,
+                    color: colors.textSecondary,
+                    marginBottom: 2,
+                  }}
+                >
+                  หมายเลขโทรศัพท์
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.anuphan.medium,
+                    fontSize: fontSize.bodyMd,
+                    color: colors.ink,
+                  }}
+                >
+                  {phone}
+                </Text>
+              </View>
+              <TouchableOpacity hitSlop={12} onPress={() => {}}>
+                <MaterialIcons name="edit" size={18} color={colors.primary} />
+              </TouchableOpacity>
             </View>
 
-            {/* Email */}
-            <View>
-              <Text style={labelStyle}>อีเมล</Text>
-              <TextInput
-                style={inputStyle}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                placeholderTextColor={colors.textTertiary}
-              />
+            <View style={{ height: 1, backgroundColor: colors.hairline2, marginHorizontal: cardPadding }} />
+
+            {/* Email — active TextInput with red border */}
+            <View
+              style={{
+                paddingHorizontal: cardPadding,
+                paddingVertical: 14,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: fontFamily.anuphan.regular,
+                  fontSize: fontSize.caption,
+                  color: colors.textSecondary,
+                  marginBottom: 6,
+                }}
+              >
+                อีเมล
+              </Text>
+              <View
+                style={{
+                  borderWidth: 1.5,
+                  borderColor: emailFocused ? colors.primary : colors.hairline2,
+                  borderRadius: radius.input,
+                  paddingHorizontal: 12,
+                  paddingVertical: 10,
+                  backgroundColor: colors.card,
+                }}
+              >
+                <TextInput
+                  ref={emailRef}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  onFocus={() => setEmailFocused(true)}
+                  onBlur={() => setEmailFocused(false)}
+                  style={{
+                    fontFamily: fontFamily.anuphan.regular,
+                    fontSize: fontSize.bodyMd,
+                    color: colors.ink,
+                    padding: 0,
+                  }}
+                  placeholderTextColor={colors.textTertiary}
+                />
+              </View>
             </View>
 
-            {/* Address */}
-            <View>
-              <Text style={labelStyle}>ที่อยู่จัดส่งเอกสาร</Text>
-              <TextInput
-                style={[inputStyle, { height: 80, textAlignVertical: 'top' }]}
-                value={address}
-                onChangeText={setAddress}
-                multiline
-                numberOfLines={3}
-                placeholder="กรอกที่อยู่..."
-                placeholderTextColor={colors.textTertiary}
-              />
+            <View style={{ height: 1, backgroundColor: colors.hairline2, marginHorizontal: cardPadding }} />
+
+            {/* Address row — display value + pencil icon */}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                paddingHorizontal: cardPadding,
+                paddingVertical: 14,
+                gap: 12,
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.anuphan.regular,
+                    fontSize: fontSize.caption,
+                    color: colors.textSecondary,
+                    marginBottom: 2,
+                  }}
+                >
+                  ที่อยู่จัดส่งเอกสาร
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.anuphan.regular,
+                    fontSize: fontSize.bodyMd,
+                    color: colors.ink,
+                    lineHeight: 20,
+                  }}
+                >
+                  {address}
+                </Text>
+              </View>
+              <TouchableOpacity hitSlop={12} onPress={() => {}} style={{ marginTop: 2 }}>
+                <MaterialIcons name="edit" size={18} color={colors.primary} />
+              </TouchableOpacity>
             </View>
+          </View>
+
+          {/* Amber info note */}
+          <View
+            style={{
+              marginHorizontal: screenPadding,
+              marginTop: cardGap,
+              backgroundColor: colors.amberTint,
+              borderRadius: radius.card,
+              flexDirection: 'row',
+              alignItems: 'flex-start',
+              padding: 12,
+              gap: 10,
+            }}
+          >
+            <MaterialIcons name="info-outline" size={18} color={colors.amber} style={{ marginTop: 1 }} />
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.regular,
+                fontSize: fontSize.caption,
+                color: colors.amberDeeper,
+                flex: 1,
+                lineHeight: 18,
+              }}
+            >
+              การเปลี่ยนข้อมูลจะต้องยืนยันที่ทุกกรมธรรม์ของคุณ
+            </Text>
           </View>
         </ScrollView>
 
         {/* Save button */}
         <View
           style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
             backgroundColor: colors.screenBg,
             paddingHorizontal: screenPadding,
             paddingTop: 12,
             paddingBottom: insets.bottom + 12,
             borderTopWidth: 1,
-            borderTopColor: colors.hairline,
+            borderTopColor: colors.hairline2,
           }}
         >
           <TouchableOpacity

@@ -49,15 +49,29 @@ export function EmptyClaimsScreen() {
           justifyContent: 'center',
           paddingHorizontal: screenPadding,
           paddingBottom: 80,
+          gap: 0,
         }}
       >
-        <MaterialIcons name="inbox" size={80} color={colors.textTertiary} />
+        {/* Icon in light grey circle */}
+        <View
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 40,
+            backgroundColor: colors.hairline2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 20,
+          }}
+        >
+          <MaterialIcons name="inbox" size={40} color={colors.textTertiary} />
+        </View>
+
         <Text
           style={{
             fontFamily: fontFamily.anuphan.bold,
             fontSize: fontSize.titleLg,
             color: colors.ink2,
-            marginTop: 20,
             marginBottom: 10,
             textAlign: 'center',
           }}
