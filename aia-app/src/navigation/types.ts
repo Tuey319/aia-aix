@@ -46,6 +46,9 @@ export type HomeStackParamList = {
   SessionTimeout: undefined;
   // AI Celebration (Delight Mak)
   Celebration: undefined;
+  CelebrationDetail: undefined;
+  RewardPrivilege: undefined;
+  AICelebrationHub: undefined;
   BadgeCollection: undefined;
   ProtectionJourney: undefined;
   GratitudeLetter: undefined;

@@ -123,20 +123,20 @@ export function CelebrationScreen() {
           {/* Action buttons */}
           <View style={{ width: '100%', gap: 10 }}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('BadgeCollection')}
+              onPress={() => navigation.navigate('CelebrationDetail')}
               activeOpacity={0.82}
               style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 50, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}
             >
-              <MaterialIcons name="emoji-events" size={18} color={colors.white} />
-              <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>ดูเหรียญรางวัลของฉัน</Text>
+              <MaterialIcons name="celebration" size={18} color={colors.white} />
+              <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>ดูรายละเอียดการฉลอง</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate('GratitudeLetter')}
+              onPress={() => navigation.navigate('RewardPrivilege')}
               activeOpacity={0.82}
               style={{ borderWidth: 1.5, borderColor: colors.primary, borderRadius: radius.button, height: 46, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }}
             >
-              <MaterialIcons name="mail" size={18} color={colors.primary} />
-              <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold, fontSize: 14 }}>อ่านจดหมายจาก AI 💌</Text>
+              <MaterialIcons name="card-giftcard" size={18} color={colors.primary} />
+              <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold, fontSize: 14 }}>ดูสิทธิพิเศษของคุณ 🎁</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.7} style={{ paddingVertical: 8, alignItems: 'center' }}>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.textSecondary }}>กลับหน้าหลัก</Text>

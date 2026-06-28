@@ -546,7 +546,7 @@ export function HomeScreen() {
 
         {/* ── AI Celebration section (below fold) ──────────────── */}
         <TouchableOpacity
-          onPress={() => navigation.navigate('Celebration')}
+          onPress={() => navigation.navigate('AICelebrationHub')}
           activeOpacity={0.88}
           style={{ marginHorizontal: screenPadding, marginBottom: 8 }}
         >
