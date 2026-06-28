@@ -5,14 +5,23 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, screenPadding } from '../tokens';
 
+const STEP_SUBTITLES: Record<number, string> = {
+  1: 'รายละเอียดการเคลม',
+  2: 'เอกสารแนบ/ยืนยันตัวตน',
+  3: 'บัญชีรับเงิน',
+  4: 'ตรวจสอบก่อนส่ง',
+};
+
 interface ClaimStepHeaderProps {
-  step: number;   // 1-4
-  total?: number; // defaults to 4
+  step: number;    // 1-4
+  total?: number;  // defaults to 4
   title: string;
+  subtitle?: string;
 }
 
-export function ClaimStepHeader({ step, total = 4, title }: ClaimStepHeaderProps) {
+export function ClaimStepHeader({ step, total = 4, title, subtitle }: ClaimStepHeaderProps) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const stepSubtitle = subtitle ?? STEP_SUBTITLES[step] ?? '';
 
   return (
     <View>
@@ -33,9 +42,11 @@ export function ClaimStepHeader({ step, total = 4, title }: ClaimStepHeaderProps
           <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 13, color: colors.primary }}>
             ขั้นตอน {step} จาก {total}
           </Text>
-          <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.textSecondary }}>
-            รายละเอียดการเคลม
-          </Text>
+          {stepSubtitle ? (
+            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.textSecondary }}>
+              {stepSubtitle}
+            </Text>
+          ) : null}
         </View>
         {/* Progress track */}
         <View style={{ height: 4, backgroundColor: colors.hairline2, borderRadius: 2, overflow: 'hidden' }}>
