@@ -12,7 +12,7 @@ import {
   screenPadding,
   cardGap,
 } from '../../tokens';
-import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { cardShadow } from '../../tokens/shadows';
 import { SectionGroup } from '../../components/SectionGroup';
 import { ListRow } from '../../components/ListRow';
 
@@ -58,7 +58,7 @@ export function SupportScreen() {
           gap: cardGap,
         }}
       >
-        {/* Search bar */}
+        {/* Search bar — inline white rounded */}
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={() => navigation.navigate('FaqSearch')}
@@ -91,7 +91,7 @@ export function SupportScreen() {
           <ListRow
             icon="event-repeat"
             title="เปลี่ยนงวดการชำระเบี้ยฯ"
-            subtitle="ราย/เดือน · ราย 3 เดือน · รายปี"
+            subtitle="รายเดือน · ราย 3 เดือน / รายปี"
             onPress={() => navigation.navigate('ChangeFreq')}
           />
           <ListRow
@@ -106,9 +106,9 @@ export function SupportScreen() {
           />
         </SectionGroup>
 
-        {/* Bottom two action buttons */}
+        {/* Bottom two action buttons side-by-side */}
         <View style={{ flexDirection: 'row', gap: 12 }}>
-          {/* Chat with assistant */}
+          {/* Chat with assistant — dark */}
           <TouchableOpacity
             activeOpacity={0.82}
             onPress={() => navigation.navigate('Assistant')}
@@ -135,7 +135,7 @@ export function SupportScreen() {
             </Text>
           </TouchableOpacity>
 
-          {/* Call 1581 */}
+          {/* Call 1581 — white bordered, red text+icon */}
           <TouchableOpacity
             activeOpacity={0.82}
             onPress={() => {}}
@@ -153,12 +153,12 @@ export function SupportScreen() {
               ...cardShadow,
             }}
           >
-            <MaterialIcons name="phone" size={18} color={colors.ink2} />
+            <MaterialIcons name="phone" size={18} color={colors.primary} />
             <Text
               style={{
                 fontFamily: fontFamily.jakarta.bold,
                 fontSize: fontSize.bodyMd,
-                color: colors.ink2,
+                color: colors.primary,
               }}
             >
               โทร 1581

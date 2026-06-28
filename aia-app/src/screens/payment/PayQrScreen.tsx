@@ -23,7 +23,6 @@ type Nav = NativeStackNavigationProp<any>;
 
 /** Minimal fake QR grid rendered with Views */
 function FakeQrCode() {
-  // 7x7 pattern of cells, 1 = dark
   const pattern = [
     [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1],
@@ -45,14 +44,15 @@ function FakeQrCode() {
     [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1],
   ];
-  const cell = 13;
+  const cell = 12;
   return (
     <View
       style={{
         backgroundColor: colors.white,
-        padding: 12,
-        borderRadius: 12,
+        padding: 10,
+        borderRadius: 8,
         alignSelf: 'center',
+        position: 'relative',
       }}
     >
       {pattern.map((row, ri) => (
@@ -69,6 +69,30 @@ function FakeQrCode() {
           ))}
         </View>
       ))}
+      {/* AIA label overlay in center */}
+      <View
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: [{ translateX: -18 }, { translateY: -10 }],
+          backgroundColor: colors.primary,
+          borderRadius: 4,
+          paddingHorizontal: 6,
+          paddingVertical: 3,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: fontFamily.jakarta.bold,
+            fontSize: 11,
+            color: colors.white,
+            letterSpacing: 1,
+          }}
+        >
+          AIA
+        </Text>
+      </View>
     </View>
   );
 }
@@ -78,7 +102,7 @@ export function PayQrScreen() {
   const insets = useSafeAreaInsets();
 
   const infoRows = [
-    { label: 'บริษัท', value: 'เอไอเอ จำกัด' },
+    { label: 'บริษัท เอไอเอ จำกัด', value: '' },
     { label: 'ผู้ชำระเงิน', value: 'Somchai Meethong' },
     { label: 'เลขที่อ้างอิง (1/2)', value: '92XXXXXXXX' },
     { label: 'เลขที่อ้างอิง (2/2)', value: '83XXXXX' },
@@ -123,25 +147,13 @@ export function PayQrScreen() {
           gap: cardGap,
         }}
       >
-        {/* Step counter */}
-        <Text
-          style={{
-            fontFamily: fontFamily.jakarta.semiBold,
-            fontSize: fontSize.caption,
-            color: colors.textSecondary,
-            letterSpacing: 0.3,
-            marginBottom: 4,
-          }}
-        >
-          6b/7
-        </Text>
-
         {/* Title */}
         <Text
           style={{
             fontFamily: fontFamily.anuphan.bold,
             fontSize: fontSize.title,
             color: colors.ink,
+            textAlign: 'center',
           }}
         >
           QR เพื่อจ่ายผ่านบัญชีธนาคาร
@@ -152,54 +164,61 @@ export function PayQrScreen() {
           style={{
             backgroundColor: '#1A2A4A',
             borderRadius: radius.card,
-            padding: 14,
+            paddingVertical: 12,
+            paddingHorizontal: 16,
             flexDirection: 'row',
             alignItems: 'center',
-            gap: 12,
+            justifyContent: 'center',
+            gap: 10,
           }}
         >
-          <MaterialIcons name="qr-code-2" size={28} color={colors.white} />
-          <View>
+          <MaterialIcons name="qr-code-2" size={22} color={colors.white} />
+          <Text
+            style={{
+              fontFamily: fontFamily.jakarta.bold,
+              fontSize: fontSize.bodyMd,
+              color: colors.white,
+              letterSpacing: 2,
+            }}
+          >
+            THAI QR PAYMENT
+          </Text>
+        </View>
+
+        {/* PromptPay label */}
+        <View style={{ alignItems: 'center' }}>
+          <View
+            style={{
+              backgroundColor: colors.card,
+              borderRadius: radius.pill,
+              paddingHorizontal: 14,
+              paddingVertical: 5,
+              borderWidth: 1,
+              borderColor: colors.hairline2,
+            }}
+          >
             <Text
               style={{
-                fontFamily: fontFamily.jakarta.bold,
-                fontSize: fontSize.bodyMd,
-                color: colors.white,
-                letterSpacing: 1.5,
-              }}
-            >
-              THAI QR PAYMENT
-            </Text>
-            <Text
-              style={{
-                fontFamily: fontFamily.jakarta.regular,
+                fontFamily: fontFamily.jakarta.semiBold,
                 fontSize: fontSize.caption,
-                color: 'rgba(255,255,255,0.6)',
-                marginTop: 2,
+                color: colors.inkBody2,
+                letterSpacing: 0.5,
               }}
             >
-              PromptPay · พร้อมเพย์
+              PromptPay
             </Text>
           </View>
         </View>
 
-        {/* QR code card */}
-        <View
-          style={{
-            backgroundColor: colors.card,
-            borderRadius: radius.card,
-            padding: 20,
-            alignItems: 'center',
-            gap: 16,
-            ...cardShadow,
-          }}
-        >
+        {/* QR code centered */}
+        <View style={{ alignItems: 'center' }}>
           <FakeQrCode />
           <Text
             style={{
               fontFamily: fontFamily.anuphan.semiBold,
-              fontSize: fontSize.bodyMd,
-              color: colors.inkBody,
+              fontSize: fontSize.body,
+              color: colors.textSecondary,
+              marginTop: 10,
             }}
           >
             สแกน QR เพื่อชำระเงิน
@@ -215,11 +234,46 @@ export function PayQrScreen() {
             ...cardShadow,
           }}
         >
-          {infoRows.map((row, i) => (
+          {/* Amount row prominent */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.regular,
+                fontSize: fontSize.body,
+                color: colors.textSecondary,
+              }}
+            >
+              จำนวนเงิน (บาท)
+            </Text>
+            <Text
+              style={{
+                fontFamily: fontFamily.jakarta.bold,
+                fontSize: 18,
+                color: colors.ink,
+                letterSpacing: -0.5,
+              }}
+            >
+              17,380.00
+            </Text>
+          </View>
+
+          {/* Info rows */}
+          {[
+            { label: 'บริษัท', value: 'AIA Thailand' },
+            { label: 'ผู้ชำระเงิน', value: 'Somchai Meethong' },
+            { label: 'เลขที่อ้างอิง (1/2)', value: '92XXXXXXXX' },
+            { label: 'เลขที่อ้างอิง (2/2)', value: '83XXXXX' },
+          ].map((row, i) => (
             <View key={i}>
-              {i > 0 && (
-                <View style={{ height: 1, backgroundColor: colors.hairline, marginHorizontal: 16 }} />
-              )}
+              <View style={{ height: 1, backgroundColor: colors.hairline, marginHorizontal: 16 }} />
               <View
                 style={{
                   flexDirection: 'row',
@@ -251,98 +305,41 @@ export function PayQrScreen() {
             </View>
           ))}
 
-          {/* Mobile banking icons row */}
+          {/* Mobile banking note */}
           <View style={{ height: 1, backgroundColor: colors.hairline, marginHorizontal: 16 }} />
           <View
             style={{
               paddingHorizontal: 16,
-              paddingVertical: 12,
+              paddingVertical: 10,
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 8,
+              gap: 6,
             }}
           >
+            <MaterialIcons name="smartphone" size={14} color={colors.textSecondary} />
             <Text
               style={{
                 fontFamily: fontFamily.anuphan.regular,
-                fontSize: fontSize.body,
+                fontSize: fontSize.caption,
                 color: colors.textSecondary,
-                marginRight: 4,
               }}
             >
-              ชำระผ่าน
+              Payvia mobile banking apps
             </Text>
-            {/* Bank icon placeholders */}
-            {['SCB', 'KTB', 'BBL', 'BAY'].map((bank) => (
-              <View
-                key={bank}
-                style={{
-                  backgroundColor: colors.pageBg,
-                  borderRadius: 6,
-                  paddingHorizontal: 6,
-                  paddingVertical: 3,
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: fontFamily.jakarta.bold,
-                    fontSize: 10,
-                    color: colors.inkBody2,
-                  }}
-                >
-                  {bank}
-                </Text>
-              </View>
-            ))}
           </View>
         </View>
 
-        {/* Amount */}
-        <View style={{ alignItems: 'center', gap: 4, paddingVertical: 8 }}>
-          <Text
-            style={{
-              fontFamily: fontFamily.jakarta.bold,
-              fontSize: 36,
-              color: colors.ink,
-              letterSpacing: -1,
-            }}
-          >
-            17,380.00
-          </Text>
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.regular,
-              fontSize: fontSize.body,
-              color: colors.textSecondary,
-            }}
-          >
-            บาท
-          </Text>
-        </View>
-
         {/* Expiry */}
-        <View
+        <Text
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 6,
-            backgroundColor: colors.amberTint,
-            borderRadius: radius.icon,
-            padding: 10,
+            fontFamily: fontFamily.anuphan.regular,
+            fontSize: fontSize.caption,
+            color: colors.textSecondary,
+            textAlign: 'center',
           }}
         >
-          <MaterialIcons name="schedule" size={16} color={colors.amberDeep} />
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.medium,
-              fontSize: fontSize.body,
-              color: colors.amberDeeper,
-              flex: 1,
-            }}
-          >
-            คุณต้องทำการชำระเงินใน 16 พ.ค. 2568, 13:53 น.
-          </Text>
-        </View>
+          คุณต้องทำการชำระเงินใน 16 พ.ค. 2568, 13:53 น.
+        </Text>
 
         {/* Disclaimer */}
         <Text

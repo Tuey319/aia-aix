@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -55,7 +54,7 @@ export function ValueScreen() {
           gap: cardGap,
         }}
       >
-        {/* Green hero card */}
+        {/* Dark green hero card */}
         <View
           style={{
             backgroundColor: colors.successDeep,
@@ -65,29 +64,6 @@ export function ValueScreen() {
             ...cardShadow,
           }}
         >
-          {/* Top row: shield icon + pill */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <View
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 12,
-                backgroundColor: 'rgba(255,255,255,0.18)',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <MaterialIcons name="shield" size={22} color={colors.white} />
-            </View>
-            <StatusPill label="คุ้มครองอยู่" variant="success" />
-          </View>
-
           {/* Paid label */}
           <Text
             style={{
@@ -96,10 +72,20 @@ export function ValueScreen() {
               color: 'rgba(255,255,255,0.75)',
             }}
           >
-            คุณจ่ายเบี้ยสะสมแล้ว ฿{paidToDate.toLocaleString('en-US')} และได้รับความคุ้มครอง
+            คุณจ่ายเบี้ยสะสมแล้ว ฿{paidToDate.toLocaleString('en-US')}
+          </Text>
+          <Text
+            style={{
+              fontFamily: fontFamily.anuphan.regular,
+              fontSize: fontSize.body,
+              color: 'rgba(255,255,255,0.75)',
+              marginTop: -10,
+            }}
+          >
+            และได้รับความคุ้มครอง
           </Text>
 
-          {/* Big number */}
+          {/* Big sum assured */}
           <Text
             style={{
               fontFamily: fontFamily.jakarta.extraBold,
@@ -112,7 +98,7 @@ export function ValueScreen() {
             ฿{policy.sumAssured.toLocaleString('en-US')}
           </Text>
 
-          {/* Ratio row */}
+          {/* "คุ้มครองอยู่" pill + ratio row */}
           <View
             style={{
               backgroundColor: 'rgba(255,255,255,0.15)',
@@ -130,10 +116,12 @@ export function ValueScreen() {
                 fontFamily: fontFamily.anuphan.semiBold,
                 fontSize: fontSize.bodyMd,
                 color: colors.white,
+                flex: 1,
               }}
             >
               ทุก ฿1 ที่จ่าย = ฿{multiplier} ความคุ้มครอง
             </Text>
+            <StatusPill label="คุ้มครองอยู่" variant="success" />
           </View>
         </View>
 
@@ -156,7 +144,7 @@ export function ValueScreen() {
                 letterSpacing: 0.6,
               }}
             >
-              ความคุ้มครองที่คุณได้รับ
+              ความคุ้มครองที่คุณได้รับอยู่
             </Text>
           </View>
 
@@ -164,13 +152,15 @@ export function ValueScreen() {
 
           <CoverageRow
             icon="shield"
+            iconColor={colors.primary}
             title="คุ้มครองชีวิต"
-            subtitle="จ่ายเมื่อเสียชีวิตหรือทุพพลภาพ"
+            subtitle="จ่ายเมื่อเสียชีวิตหรือทุพพลภาพมากไป"
             value="฿2,000,000"
           />
           <View style={{ height: 1, backgroundColor: colors.hairline, marginLeft: 50 }} />
           <CoverageRow
             icon="local-hospital"
+            iconColor={colors.primary}
             title="ค่ารักษาพยาบาล"
             subtitle="ผู้ป่วยใน ผู้ป่วยนอก"
             value="฿1,000,000"
@@ -178,6 +168,7 @@ export function ValueScreen() {
           <View style={{ height: 1, backgroundColor: colors.hairline, marginLeft: 50 }} />
           <CoverageRow
             icon="favorite"
+            iconColor={colors.primary}
             title="โรคร้ายแรง"
             subtitle="เช็คมาตรฐานครบวงจร"
             value="฿500,000"
@@ -185,7 +176,7 @@ export function ValueScreen() {
           <View style={{ height: 8 }} />
         </View>
 
-        {/* Claims card */}
+        {/* Green claims card */}
         <View
           style={{
             backgroundColor: colors.successTint,
@@ -197,34 +188,51 @@ export function ValueScreen() {
             ...cardShadow,
           }}
         >
-          <MaterialIcons name="check-circle" size={28} color={colors.success} />
+          <View
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 12,
+              backgroundColor: colors.success + '22',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <MaterialIcons name="check-circle" size={26} color={colors.success} />
+          </View>
           <View style={{ flex: 1, gap: 4 }}>
             <Text
               style={{
-                fontFamily: fontFamily.anuphan.bold,
-                fontSize: fontSize.bodyMd,
+                fontFamily: fontFamily.jakarta.extraBold,
+                fontSize: 22,
                 color: colors.successDeep,
+                letterSpacing: -0.5,
               }}
             >
-              เคลมที่ได้รับสมส่วนปีนี้ ฿{claimReceived.toLocaleString('en-US')}
+              ฿{claimReceived.toLocaleString('en-US')}
             </Text>
             <StatusPill label={`${claimPct}% ของเบี้ยปีนี้`} variant="success" />
           </View>
         </View>
 
-        {/* Motivational text */}
+        {/* Motivational footer note */}
         <View
           style={{
-            paddingHorizontal: 8,
-            paddingVertical: 4,
+            backgroundColor: colors.primaryTint,
+            borderRadius: radius.card,
+            padding: 16,
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            gap: 10,
           }}
         >
+          <MaterialIcons name="favorite" size={18} color={colors.primary} style={{ marginTop: 2 }} />
           <Text
             style={{
+              flex: 1,
               fontFamily: fontFamily.anuphan.regular,
               fontSize: fontSize.bodyMd,
-              color: colors.textSecondary,
-              textAlign: 'center',
+              color: colors.ink2,
               lineHeight: 22,
             }}
           >
@@ -241,11 +249,13 @@ export function ValueScreen() {
 
 function CoverageRow({
   icon,
+  iconColor,
   title,
   subtitle,
   value,
 }: {
   icon: keyof typeof MaterialIcons.glyphMap;
+  iconColor: string;
   title: string;
   subtitle: string;
   value: string;
@@ -260,7 +270,7 @@ function CoverageRow({
         gap: 12,
       }}
     >
-      <MaterialIcons name={icon} size={22} color={colors.primary} />
+      <MaterialIcons name={icon} size={22} color={iconColor} />
       <View style={{ flex: 1, gap: 2 }}>
         <Text
           style={{

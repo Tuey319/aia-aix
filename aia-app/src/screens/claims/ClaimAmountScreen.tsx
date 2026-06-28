@@ -24,12 +24,12 @@ const KEYS = [
   '4', '5', '6',
   '7', '8', '9',
   '.', '0', 'backspace',
-];
+] as const;
 
 export function ClaimAmountScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
-  const [amount, setAmount] = useState('3200.00');
+  const [amount, setAmount] = useState('18,500');
 
   function handleKey(key: string) {
     if (key === 'backspace') {
@@ -48,10 +48,6 @@ export function ClaimAmountScreen() {
     }
     setAmount((prev) => prev + key);
   }
-
-  const displayAmount = amount.includes('.')
-    ? amount
-    : amount;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -77,7 +73,7 @@ export function ClaimAmountScreen() {
             flex: 1,
           }}
         >
-          จำนวนเงิน
+          จำนวนเงินที่เคลม
         </Text>
       </View>
 
@@ -88,51 +84,51 @@ export function ClaimAmountScreen() {
           alignItems: 'center',
           justifyContent: 'center',
           paddingHorizontal: screenPadding,
+          gap: 6,
         }}
       >
         <Text
           style={{
-            fontFamily: fontFamily.jakarta.regular,
+            fontFamily: fontFamily.anuphan.regular,
             fontSize: fontSize.caption,
             color: colors.textSecondary,
-            marginBottom: 8,
           }}
         >
-          จำนวนเงินที่เคลม
+          ระบุจำนวนเงินที่ต้องการเคลม
         </Text>
         <Text
           style={{
             fontFamily: fontFamily.jakarta.bold,
-            fontSize: 48,
+            fontSize: 44,
             color: colors.ink,
-            letterSpacing: -1.5,
+            letterSpacing: -1,
           }}
         >
-          ฿{displayAmount}
+          ฿{amount}
         </Text>
-        <View
+        <Text
           style={{
-            height: 2,
-            width: 180,
-            backgroundColor: colors.primary,
-            borderRadius: 2,
-            marginTop: 8,
+            fontFamily: fontFamily.anuphan.regular,
+            fontSize: fontSize.caption,
+            color: colors.textTertiary,
           }}
-        />
+        >
+          ยอดสูงสุดที่เคลมได้ ฿50,000
+        </Text>
       </View>
 
       {/* Keypad */}
       <View
         style={{
           paddingHorizontal: screenPadding,
-          paddingBottom: insets.bottom + 100,
+          paddingBottom: insets.bottom + 80,
         }}
       >
         <View
           style={{
             flexDirection: 'row',
             flexWrap: 'wrap',
-            gap: 12,
+            gap: 10,
           }}
         >
           {KEYS.map((key) => (
@@ -142,11 +138,14 @@ export function ClaimAmountScreen() {
               onPress={() => handleKey(key)}
               style={{
                 width: '30%',
-                height: 60,
+                aspectRatio: 1.8,
                 borderRadius: 14,
                 backgroundColor: colors.card,
                 alignItems: 'center',
                 justifyContent: 'center',
+                flexGrow: 0,
+                flexShrink: 0,
+                flexBasis: '30%',
               }}
             >
               {key === 'backspace' ? (
@@ -201,7 +200,7 @@ export function ClaimAmountScreen() {
               fontSize: 16,
             }}
           >
-            ยืนยัน
+            ถกลง
           </Text>
         </TouchableOpacity>
       </View>

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -35,12 +35,12 @@ export function AssistantScreen() {
           backgroundColor: colors.screenBg,
         }}
       >
-        {/* Robot icon */}
+        {/* Robot icon — red rounded square */}
         <View
           style={{
             width: 40,
             height: 40,
-            borderRadius: radius.icon,
+            borderRadius: 12,
             backgroundColor: colors.primary,
             alignItems: 'center',
             justifyContent: 'center',
@@ -49,47 +49,49 @@ export function AssistantScreen() {
           <MaterialIcons name="smart-toy" size={22} color={colors.white} />
         </View>
 
-        {/* Title */}
-        <Text
-          style={{
-            fontFamily: fontFamily.anuphan.bold,
-            fontSize: fontSize.titleLg,
-            color: colors.ink,
-            flex: 1,
-          }}
-        >
-          ผู้ช่วย AIA
-        </Text>
-
-        {/* Online pill */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: colors.successTint,
-            borderRadius: radius.pill,
-            paddingHorizontal: 10,
-            paddingVertical: 4,
-            gap: 5,
-          }}
-        >
-          <View
-            style={{
-              width: 7,
-              height: 7,
-              borderRadius: 99,
-              backgroundColor: colors.successDot,
-            }}
-          />
+        {/* Title + online pill stacked */}
+        <View style={{ flex: 1, gap: 2 }}>
           <Text
             style={{
-              fontFamily: fontFamily.anuphan.medium,
-              fontSize: fontSize.caption,
-              color: colors.success,
+              fontFamily: fontFamily.anuphan.bold,
+              fontSize: fontSize.titleLg,
+              color: colors.ink,
+              lineHeight: fontSize.titleLg * 1.2,
             }}
           >
-            ออนไลน์
+            ผู้ช่วย AIA
           </Text>
+          {/* Online pill */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignSelf: 'flex-start',
+              backgroundColor: colors.successTint,
+              borderRadius: radius.pill,
+              paddingHorizontal: 8,
+              paddingVertical: 2,
+              gap: 4,
+            }}
+          >
+            <View
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: colors.successDot,
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.medium,
+                fontSize: 11,
+                color: colors.success,
+              }}
+            >
+              ออนไลน์
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -110,6 +112,32 @@ export function AssistantScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
+          {/* Bot greeting bubble */}
+          <View style={{ alignItems: 'flex-start' }}>
+            <View
+              style={{
+                backgroundColor: colors.card,
+                borderRadius: 16,
+                borderBottomLeftRadius: 4,
+                paddingHorizontal: 14,
+                paddingVertical: 10,
+                maxWidth: '80%',
+                ...cardShadow,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: fontFamily.anuphan.regular,
+                  fontSize: fontSize.bodyMd,
+                  color: colors.inkBody,
+                  lineHeight: 22,
+                }}
+              >
+                สวัสดีค่ะ คุณสบาย 👋 มีอะไรให้ช่วยไหมคะ?
+              </Text>
+            </View>
+          </View>
+
           {/* User bubble */}
           <View style={{ alignItems: 'flex-end' }}>
             <View
@@ -131,12 +159,12 @@ export function AssistantScreen() {
                   lineHeight: 22,
                 }}
               >
-                เช็คว่าฉันต้องจ่ายเท่าไหร่
+                เพื่อจจวดยี้นทำไหรไครับ
               </Text>
             </View>
           </View>
 
-          {/* Bot bubble */}
+          {/* Bot reply bubble */}
           <View style={{ alignItems: 'flex-start' }}>
             <View
               style={{
@@ -165,7 +193,7 @@ export function AssistantScreen() {
               </Text>
             </View>
 
-            {/* Quick reply chips */}
+            {/* Quick reply chips — below the bot bubble */}
             <View
               style={{
                 flexDirection: 'row',
@@ -174,6 +202,19 @@ export function AssistantScreen() {
                 marginTop: 10,
               }}
             >
+              {/* Chip label */}
+              <Text
+                style={{
+                  width: '100%',
+                  fontFamily: fontFamily.anuphan.regular,
+                  fontSize: fontSize.caption,
+                  color: colors.textSecondary,
+                  marginBottom: 2,
+                }}
+              >
+                คำแนะนำ
+              </Text>
+
               <TouchableOpacity
                 onPress={() => navigation.navigate('PaySelect')}
                 activeOpacity={0.8}
@@ -183,7 +224,7 @@ export function AssistantScreen() {
                   borderRadius: radius.pill,
                   paddingHorizontal: 14,
                   paddingVertical: 7,
-                  backgroundColor: colors.primaryTint,
+                  backgroundColor: colors.white,
                 }}
               >
                 <Text
@@ -206,7 +247,7 @@ export function AssistantScreen() {
                   borderRadius: radius.pill,
                   paddingHorizontal: 14,
                   paddingVertical: 7,
-                  backgroundColor: colors.primaryTint,
+                  backgroundColor: colors.white,
                 }}
               >
                 <Text
@@ -229,7 +270,7 @@ export function AssistantScreen() {
                   borderRadius: radius.pill,
                   paddingHorizontal: 14,
                   paddingVertical: 7,
-                  backgroundColor: colors.primaryTint,
+                  backgroundColor: colors.white,
                 }}
               >
                 <Text

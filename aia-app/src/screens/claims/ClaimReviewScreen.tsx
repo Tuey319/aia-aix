@@ -25,18 +25,17 @@ type Nav = NativeStackNavigationProp<any>;
 
 const STEP = 4;
 
-const SUMMARY_ROWS = [
-  { label: 'วันที่รับบริการ', value: '12 มิ.ย. 2569', bold: false },
-  { label: 'ผู้เอาประกัน', value: 'สมชาย มีทอง', bold: false },
-  { label: 'ประเภทการเคลม', value: 'ค่ารักษาผู้ป่วยนอก', bold: false },
-  { label: 'จำนวนเงิน', value: '฿3,200.00', bold: true },
-  { label: 'บัญชีรับเงิน', value: 'ธ.ไทยพาณิชย์ xxx123', bold: false },
-];
+interface SummaryRow {
+  label: string;
+  value: string;
+}
 
-const DOCS_UPLOADED = [
-  'ใบรับรองแพทย์',
-  'ใบเสร็จค่ารักษา',
-  'บัตรประชาชน/พาสปอร์ต',
+const SUMMARY_ROWS: SummaryRow[] = [
+  { label: 'ประเภทการเคลม', value: 'ผู้ป่วยนอกเฉพาะทาง' },
+  { label: 'วันที่รักษา', value: '15 ส.ค. 2569' },
+  { label: 'ผู้เคลม', value: 'สมชาย ใจดี' },
+  { label: 'ใบเสร็จ', value: '2 ใบ' },
+  { label: 'บัญชีรับเงิน', value: 'ธ.กรุงเทพ ••••45–6' },
 ];
 
 export function ClaimReviewScreen() {
@@ -60,22 +59,10 @@ export function ClaimReviewScreen() {
           style={{
             backgroundColor: colors.card,
             borderRadius: radius.card,
-            padding: cardPadding,
-            gap: 0,
+            paddingHorizontal: cardPadding,
             ...cardShadow,
           }}
         >
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.semiBold,
-              fontSize: fontSize.bodyMd,
-              color: colors.inkBody2,
-              marginBottom: 12,
-            }}
-          >
-            รายละเอียดการเคลม
-          </Text>
-
           {SUMMARY_ROWS.map((row, index) => (
             <React.Fragment key={row.label}>
               <View
@@ -83,13 +70,13 @@ export function ClaimReviewScreen() {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  paddingVertical: 11,
+                  paddingVertical: 13,
                 }}
               >
                 <Text
                   style={{
                     fontFamily: fontFamily.anuphan.regular,
-                    fontSize: fontSize.body,
+                    fontSize: fontSize.bodyMd,
                     color: colors.textSecondary,
                   }}
                 >
@@ -97,84 +84,78 @@ export function ClaimReviewScreen() {
                 </Text>
                 <Text
                   style={{
-                    fontFamily: row.bold
-                      ? fontFamily.jakarta.bold
-                      : fontFamily.anuphan.medium,
-                    fontSize: row.bold ? 16 : fontSize.bodyMd,
-                    color: row.bold ? colors.ink : colors.ink2,
+                    fontFamily: fontFamily.anuphan.medium,
+                    fontSize: fontSize.bodyMd,
+                    color: colors.ink2,
                   }}
                 >
                   {row.value}
                 </Text>
               </View>
               {index < SUMMARY_ROWS.length - 1 && (
-                <View
-                  style={{
-                    height: 1,
-                    backgroundColor: colors.hairline2,
-                  }}
-                />
+                <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
               )}
             </React.Fragment>
           ))}
-        </View>
 
-        {/* Docs Uploaded Card */}
-        <View
-          style={{
-            backgroundColor: colors.card,
-            borderRadius: radius.card,
-            padding: cardPadding,
-            gap: 10,
-            ...cardShadow,
-          }}
-        >
-          <Text
+          {/* Divider before amount */}
+          <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
+
+          {/* Amount row — large bold */}
+          <View
             style={{
-              fontFamily: fontFamily.anuphan.semiBold,
-              fontSize: fontSize.bodyMd,
-              color: colors.inkBody2,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingVertical: 16,
             }}
           >
-            เอกสารที่อัปโหลด
-          </Text>
-
-          {DOCS_UPLOADED.map((doc) => (
-            <View
-              key={doc}
+            <Text
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 10,
+                fontFamily: fontFamily.anuphan.semiBold,
+                fontSize: fontSize.bodyMd,
+                color: colors.ink2,
               }}
             >
-              <MaterialIcons name="check-circle" size={18} color={colors.success} />
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.regular,
-                  fontSize: fontSize.bodyMd,
-                  color: colors.ink2,
-                }}
-              >
-                {doc}
-              </Text>
-            </View>
-          ))}
+              ยอดที่ยื่นเคลม
+            </Text>
+            <Text
+              style={{
+                fontFamily: fontFamily.jakarta.bold,
+                fontSize: 22,
+                color: colors.ink,
+                letterSpacing: -0.5,
+              }}
+            >
+              ฿3,200.00
+            </Text>
+          </View>
         </View>
 
-        {/* T&C */}
-        <Text
+        {/* Green success note */}
+        <View
           style={{
-            fontFamily: fontFamily.anuphan.regular,
-            fontSize: fontSize.caption,
-            color: colors.textTertiary,
-            lineHeight: 18,
-            textAlign: 'center',
-            paddingHorizontal: 8,
+            backgroundColor: colors.successTint,
+            borderRadius: radius.card,
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 14,
+            gap: 10,
           }}
         >
-          การส่งเคลมนี้ถือว่าคุณยืนยันว่าข้อมูลทั้งหมดถูกต้องและยอมรับเงื่อนไขการเคลมของ AIA
-        </Text>
+          <MaterialIcons name="check-circle" size={20} color={colors.success} />
+          <Text
+            style={{
+              fontFamily: fontFamily.anuphan.regular,
+              fontSize: fontSize.body,
+              color: colors.successDeep,
+              flex: 1,
+              lineHeight: 19,
+            }}
+          >
+            ตรวจสอบข้อมูลถูกต้องแล้ว พร้อมส่งเคลม
+          </Text>
+        </View>
       </ScrollView>
 
       {/* Sticky Bottom Button */}
@@ -192,7 +173,6 @@ export function ClaimReviewScreen() {
           activeOpacity={0.85}
           onPress={() => {
             navigation.navigate('ClaimSubmitting');
-            // Simulate processing then navigate to success
             setTimeout(() => navigation.navigate('ClaimSuccess'), 2500);
           }}
           style={{

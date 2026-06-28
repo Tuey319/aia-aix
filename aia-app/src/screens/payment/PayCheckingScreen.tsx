@@ -18,7 +18,6 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { StatusPill } from '../../components/StatusPill';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -52,7 +51,7 @@ export function PayCheckingScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      {/* Header — English, no back */}
+      {/* Header — English "Payment", no back */}
       <View
         style={{
           flexDirection: 'row',
@@ -60,7 +59,6 @@ export function PayCheckingScreen() {
           paddingHorizontal: screenPadding,
           paddingTop: 12,
           paddingBottom: 16,
-          gap: 8,
         }}
       >
         <Text
@@ -84,30 +82,17 @@ export function PayCheckingScreen() {
           alignItems: 'center',
         }}
       >
-        {/* Step counter */}
-        <Text
-          style={{
-            fontFamily: fontFamily.jakarta.semiBold,
-            fontSize: fontSize.caption,
-            color: colors.textSecondary,
-            letterSpacing: 0.3,
-            alignSelf: 'flex-start',
-            marginBottom: 4,
-          }}
-        >
-          7/7
-        </Text>
-
-        {/* Amber hourglass */}
+        {/* Amber hourglass icon */}
         <View
           style={{
-            width: 72,
-            height: 72,
-            borderRadius: 36,
+            width: 80,
+            height: 80,
+            borderRadius: 40,
             backgroundColor: colors.amberTint,
             alignItems: 'center',
             justifyContent: 'center',
-            marginVertical: 8,
+            marginTop: 8,
+            marginBottom: 4,
           }}
         >
           <MaterialIcons name="hourglass-top" size={44} color={colors.amber} />
@@ -122,7 +107,7 @@ export function PayCheckingScreen() {
             textAlign: 'center',
           }}
         >
-          ระบบกำลังตรวจสอบสถานะการชำระเงิน
+          ระบบกำลังตรวจสอบ{'\n'}สถานะการชำระเงิน
         </Text>
 
         {/* Subtitle */}
@@ -146,12 +131,12 @@ export function PayCheckingScreen() {
             alignItems: 'flex-start',
             gap: 8,
             backgroundColor: colors.infoTint,
-            borderRadius: radius.icon,
+            borderRadius: radius.card,
             padding: 12,
             alignSelf: 'stretch',
           }}
         >
-          <MaterialIcons name="info-outline" size={16} color={colors.info} />
+          <MaterialIcons name="info-outline" size={16} color={colors.info} style={{ marginTop: 1 }} />
           <Text
             style={{
               fontFamily: fontFamily.anuphan.regular,
@@ -161,8 +146,7 @@ export function PayCheckingScreen() {
               lineHeight: fontSize.caption * 1.6,
             }}
           >
-            การลงทะเบียนหักบัญชีอัตโนมัติจะมีผลภายใน 3 วันทำการ
-            ท่านจะได้รับการยืนยันทาง SMS และอีเมล
+            กรณีสมัครหักบัญชีบัตรเครดิตอัตโนมัติ (Autopay) หากชำระเงินสำเร็จ ระบบจะดำเนินการลงทะเบียนภายใน 3 วันทำการ ท่านจะได้รับการยืนยันทาง SMS และอีเมลหลังสมัคร
           </Text>
         </View>
 
@@ -176,31 +160,11 @@ export function PayCheckingScreen() {
             ...cardShadow,
           }}
         >
-          {/* Status row at top */}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              paddingHorizontal: 16,
-              paddingVertical: 13,
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: fontFamily.anuphan.regular,
-                fontSize: fontSize.body,
-                color: colors.textSecondary,
-              }}
-            >
-              สถานะ
-            </Text>
-            <StatusPill label="กำลังดำเนินการ" variant="amber" />
-          </View>
-
           {infoRows.map((row, i) => (
             <View key={i}>
-              <View style={{ height: 1, backgroundColor: colors.hairline, marginHorizontal: 16 }} />
+              {i > 0 && (
+                <View style={{ height: 1, backgroundColor: colors.hairline, marginHorizontal: 16 }} />
+              )}
               <View
                 style={{
                   flexDirection: 'row',

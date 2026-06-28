@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -21,9 +21,17 @@ import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 
 type Nav = NativeStackNavigationProp<any>;
 
+type Method = 'card' | 'qr';
+
 export function PayMethodScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const [selected, setSelected] = useState<Method | null>(null);
+
+  function handleNext() {
+    if (selected === 'card') navigation.navigate('PayCard');
+    else if (selected === 'qr') navigation.navigate('PayQr');
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -64,103 +72,80 @@ export function PayMethodScreen() {
           gap: cardGap,
         }}
       >
-        {/* Step counter */}
-        <Text
-          style={{
-            fontFamily: fontFamily.jakarta.semiBold,
-            fontSize: fontSize.caption,
-            color: colors.textSecondary,
-            letterSpacing: 0.3,
-            marginBottom: 4,
-          }}
-        >
-          4/7
-        </Text>
-
-        {/* Info card */}
+        {/* Policy + amount info card */}
         <View
           style={{
             backgroundColor: colors.card,
             borderRadius: radius.card,
             padding: 16,
-            gap: 10,
+            gap: 8,
             ...cardShadow,
           }}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <MaterialIcons name="description" size={20} color={colors.primary} />
-            <View style={{ flex: 1 }}>
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.regular,
-                  fontSize: fontSize.caption,
-                  color: colors.textSecondary,
-                }}
-              >
-                เลขกรมธรรม์
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fontFamily.jakarta.semiBold,
-                  fontSize: fontSize.bodyMd,
-                  color: colors.ink,
-                }}
-              >
-                P8842XXXXX
-              </Text>
-            </View>
+          <View style={{ gap: 2 }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.regular,
+                fontSize: fontSize.caption,
+                color: colors.textSecondary,
+              }}
+            >
+              เลขกรมธรรม์
+            </Text>
+            <Text
+              style={{
+                fontFamily: fontFamily.jakarta.semiBold,
+                fontSize: fontSize.bodyMd,
+                color: colors.ink,
+              }}
+            >
+              P8842XXXXX
+            </Text>
           </View>
 
           <View style={{ height: 1, backgroundColor: colors.hairline }} />
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            <MaterialIcons name="payments" size={20} color={colors.primary} />
-            <View style={{ flex: 1 }}>
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.regular,
-                  fontSize: fontSize.caption,
-                  color: colors.textSecondary,
-                }}
-              >
-                จำนวนเงินที่ต้องชำระ
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fontFamily.jakarta.bold,
-                  fontSize: 20,
-                  color: colors.primary,
-                  letterSpacing: -0.5,
-                }}
-              >
-                ฿17,380.00 บาท
-              </Text>
-            </View>
+          <View style={{ gap: 2 }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.regular,
+                fontSize: fontSize.caption,
+                color: colors.textSecondary,
+              }}
+            >
+              จำนวนเงินที่ต้องชำระ
+            </Text>
+            <Text
+              style={{
+                fontFamily: fontFamily.jakarta.bold,
+                fontSize: 22,
+                color: colors.primary,
+                letterSpacing: -0.5,
+              }}
+            >
+              17,380.00 บาท
+            </Text>
           </View>
-
-          <View style={{ height: 1, backgroundColor: colors.hairline }} />
 
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'flex-start',
-              gap: 8,
-              backgroundColor: colors.amberTint,
-              borderRadius: radius.icon,
-              padding: 10,
+              gap: 6,
+              marginTop: 2,
             }}
           >
-            <MaterialIcons name="info-outline" size={16} color={colors.amberDeep} />
+            <MaterialIcons name="info-outline" size={14} color={colors.textSecondary} style={{ marginTop: 1 }} />
             <Text
               style={{
                 fontFamily: fontFamily.anuphan.regular,
                 fontSize: fontSize.caption,
-                color: colors.amberDeeper,
+                color: colors.textSecondary,
                 flex: 1,
                 lineHeight: fontSize.caption * 1.5,
               }}
             >
-              ระบบจะดึงเงินออกจากบัญชีฯ เมื่อได้รับการยืนยัน
+              ระบบจะดึงเงินออกจากบัญชีฯ เมื่อได้รับการยืนยันในวันที่ทำการถัดไป
             </Text>
           </View>
         </View>
@@ -171,31 +156,43 @@ export function PayMethodScreen() {
             fontFamily: fontFamily.anuphan.bold,
             fontSize: fontSize.title,
             color: colors.ink,
-            marginTop: 4,
           }}
         >
           เลือกวิธีชำระเงิน
         </Text>
 
-        {/* Payment method cards */}
+        {/* Payment method cards — side by side */}
         <View style={{ flexDirection: 'row', gap: 12 }}>
           {/* Credit card */}
           <TouchableOpacity
             activeOpacity={0.82}
-            onPress={() => navigation.navigate('PayCard')}
+            onPress={() => setSelected('card')}
             style={{
               flex: 1,
               backgroundColor: colors.card,
               borderRadius: radius.card,
-              padding: 20,
+              paddingVertical: 24,
+              paddingHorizontal: 12,
               alignItems: 'center',
               gap: 10,
               borderWidth: 2,
-              borderColor: colors.hairline2,
+              borderColor: selected === 'card' ? colors.primary : colors.hairline2,
               ...cardShadow,
             }}
           >
-            <MaterialIcons name="credit-card" size={36} color={colors.primary} />
+            {/* Credit card icon */}
+            <View
+              style={{
+                width: 48,
+                height: 32,
+                borderRadius: 6,
+                backgroundColor: colors.primary,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <MaterialIcons name="credit-card" size={22} color={colors.white} />
+            </View>
             <Text
               style={{
                 fontFamily: fontFamily.anuphan.semiBold,
@@ -211,20 +208,21 @@ export function PayMethodScreen() {
           {/* QR code */}
           <TouchableOpacity
             activeOpacity={0.82}
-            onPress={() => navigation.navigate('PayQr')}
+            onPress={() => setSelected('qr')}
             style={{
               flex: 1,
               backgroundColor: colors.card,
               borderRadius: radius.card,
-              padding: 20,
+              paddingVertical: 24,
+              paddingHorizontal: 12,
               alignItems: 'center',
               gap: 10,
               borderWidth: 2,
-              borderColor: colors.hairline2,
+              borderColor: selected === 'qr' ? colors.primary : colors.hairline2,
               ...cardShadow,
             }}
           >
-            <MaterialIcons name="qr-code" size={36} color={colors.primary} />
+            <MaterialIcons name="qr-code-2" size={40} color={colors.inkBody2} />
             <Text
               style={{
                 fontFamily: fontFamily.anuphan.semiBold,
@@ -256,13 +254,16 @@ export function PayMethodScreen() {
       >
         <TouchableOpacity
           activeOpacity={0.82}
+          onPress={handleNext}
+          disabled={!selected}
           style={{
             backgroundColor: colors.primary,
             borderRadius: radius.button,
             height: 52,
             alignItems: 'center',
             justifyContent: 'center',
-            opacity: 0.4,
+            opacity: selected ? 1 : 0.4,
+            ...primaryButtonShadow,
           }}
         >
           <Text

@@ -25,30 +25,28 @@ type Nav = NativeStackNavigationProp<any>;
 
 const STEP = 2;
 
-interface DocSlot {
+interface DocRow {
   id: string;
   label: string;
-  optional?: boolean;
-  uploaded?: boolean;
+  uploaded: boolean;
 }
 
-const REQUIRED_DOCS: DocSlot[] = [
-  { id: 'cert', label: 'ใบรับรองแพทย์' },
-  { id: 'receipt', label: 'ใบเสร็จค่ารักษา' },
-  { id: 'xray', label: 'ผลตรวจ/ฟิล์มเอกซเรย์', optional: true },
-];
-
-const ID_DOCS: DocSlot[] = [
-  { id: 'id', label: 'บัตรประชาชน/พาสปอร์ต', uploaded: true },
+const INITIAL_DOCS: DocRow[] = [
+  { id: 'receipt', label: 'ใบเสร็จรับเงินตัวจริง', uploaded: true },
+  { id: 'expense', label: 'ใบแสดงรายการค่าใช้จ่าย', uploaded: true },
+  { id: 'cert', label: 'ใบรับรองแพทย์', uploaded: false },
 ];
 
 export function ClaimDocsScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
-  const [uploaded, setUploaded] = useState<Record<string, boolean>>({ id: true });
+  const [docs, setDocs] = useState<DocRow[]>(INITIAL_DOCS);
+  const [idUploaded, setIdUploaded] = useState(false);
 
-  function toggleUpload(id: string) {
-    setUploaded((prev) => ({ ...prev, [id]: !prev[id] }));
+  function toggleDoc(id: string) {
+    setDocs((prev) =>
+      prev.map((d) => (d.id === id ? { ...d, uploaded: !d.uploaded } : d)),
+    );
   }
 
   return (
@@ -64,29 +62,83 @@ export function ClaimDocsScreen() {
         }}
       >
         {/* Required Docs */}
-        <SectionLabel>เอกสารที่จำเป็น</SectionLabel>
         <View
           style={{
             backgroundColor: colors.card,
             borderRadius: radius.card,
-            padding: cardPadding,
-            gap: 14,
+            paddingHorizontal: cardPadding,
             ...cardShadow,
           }}
         >
-          {REQUIRED_DOCS.map((doc) => (
-            <UploadSlot
-              key={doc.id}
-              label={doc.label}
-              optional={doc.optional}
-              uploaded={!!uploaded[doc.id]}
-              onPress={() => toggleUpload(doc.id)}
-            />
+          <Text
+            style={{
+              fontFamily: fontFamily.anuphan.semiBold,
+              fontSize: fontSize.bodyMd,
+              color: colors.inkBody2,
+              paddingVertical: 14,
+            }}
+          >
+            เอกสารที่จำเป็นสำหรับการเคลมค่ารักษา
+          </Text>
+          <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
+
+          {docs.map((doc, index) => (
+            <React.Fragment key={doc.id}>
+              <TouchableOpacity
+                activeOpacity={0.75}
+                onPress={() => toggleDoc(doc.id)}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingVertical: 14,
+                  gap: 12,
+                }}
+              >
+                {/* Status icon */}
+                {doc.uploaded ? (
+                  <MaterialIcons name="check-circle" size={22} color={colors.success} />
+                ) : (
+                  <View
+                    style={{
+                      width: 22,
+                      height: 22,
+                      borderRadius: 11,
+                      borderWidth: 1.5,
+                      borderColor: colors.hairline2,
+                      backgroundColor: colors.screenBg,
+                    }}
+                  />
+                )}
+
+                <Text
+                  style={{
+                    flex: 1,
+                    fontFamily: fontFamily.anuphan.medium,
+                    fontSize: fontSize.bodyMd,
+                    color: colors.ink2,
+                  }}
+                >
+                  {doc.label}
+                </Text>
+
+                <Text
+                  style={{
+                    fontFamily: fontFamily.anuphan.medium,
+                    fontSize: fontSize.caption,
+                    color: doc.uploaded ? colors.success : colors.primary,
+                  }}
+                >
+                  {doc.uploaded ? 'แนบแล้ว' : 'แนบใหม่'}
+                </Text>
+              </TouchableOpacity>
+              {index < docs.length - 1 && (
+                <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
+              )}
+            </React.Fragment>
           ))}
         </View>
 
-        {/* Identity Docs */}
-        <SectionLabel>ยืนยันตัวตน</SectionLabel>
+        {/* ID Document */}
         <View
           style={{
             backgroundColor: colors.card,
@@ -96,14 +148,66 @@ export function ClaimDocsScreen() {
             ...cardShadow,
           }}
         >
-          {ID_DOCS.map((doc) => (
-            <UploadSlot
-              key={doc.id}
-              label={doc.label}
-              uploaded={!!uploaded[doc.id]}
-              onPress={() => toggleUpload(doc.id)}
+          <Text
+            style={{
+              fontFamily: fontFamily.anuphan.semiBold,
+              fontSize: fontSize.bodyMd,
+              color: colors.inkBody2,
+            }}
+          >
+            บัตรประชาชน / พาสปอร์ต{' '}
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.regular,
+                color: colors.textSecondary,
+              }}
+            >
+              (เพื่อยืนยันตัวตน)
+            </Text>
+          </Text>
+
+          {/* Upload box */}
+          <TouchableOpacity
+            activeOpacity={0.75}
+            onPress={() => setIdUploaded(!idUploaded)}
+            style={{
+              height: 120,
+              borderRadius: 12,
+              borderWidth: 1.5,
+              borderColor: idUploaded ? colors.success : colors.hairline2,
+              borderStyle: 'dashed',
+              backgroundColor: idUploaded ? colors.successTint : colors.screenBg,
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+            }}
+          >
+            <MaterialIcons
+              name={idUploaded ? 'check-circle' : 'credit-card'}
+              size={32}
+              color={idUploaded ? colors.success : colors.primary}
             />
-          ))}
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.medium,
+                fontSize: fontSize.body,
+                color: idUploaded ? colors.success : colors.ink2,
+              }}
+            >
+              {idUploaded ? 'อัปโหลดแล้ว' : 'ถ่าย / อัปโหลดบัตรประชาชน'}
+            </Text>
+            {!idUploaded && (
+              <Text
+                style={{
+                  fontFamily: fontFamily.anuphan.regular,
+                  fontSize: fontSize.caption,
+                  color: colors.textTertiary,
+                }}
+              >
+                รองรับ JPG, PNG, PDF
+              </Text>
+            )}
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
@@ -142,105 +246,5 @@ export function ClaimDocsScreen() {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  );
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <Text
-      style={{
-        fontFamily: fontFamily.anuphan.semiBold,
-        fontSize: fontSize.bodyMd,
-        color: colors.inkBody2,
-        marginTop: 4,
-      }}
-    >
-      {children}
-    </Text>
-  );
-}
-
-function UploadSlot({
-  label,
-  optional,
-  uploaded,
-  onPress,
-}: {
-  label: string;
-  optional?: boolean;
-  uploaded: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <TouchableOpacity
-      activeOpacity={0.75}
-      onPress={onPress}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-      }}
-    >
-      {/* Upload box */}
-      <View
-        style={{
-          width: 56,
-          height: 56,
-          borderRadius: 12,
-          borderWidth: uploaded ? 0 : 1.5,
-          borderColor: colors.hairline2,
-          borderStyle: 'dashed',
-          backgroundColor: uploaded ? colors.successTint : colors.screenBg,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <MaterialIcons
-          name={uploaded ? 'check-circle' : 'add'}
-          size={26}
-          color={uploaded ? colors.success : colors.textTertiary}
-        />
-      </View>
-
-      <View style={{ flex: 1 }}>
-        <Text
-          style={{
-            fontFamily: fontFamily.anuphan.medium,
-            fontSize: fontSize.bodyMd,
-            color: colors.ink2,
-          }}
-        >
-          {label}
-        </Text>
-        {optional && (
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.regular,
-              fontSize: fontSize.caption,
-              color: colors.textTertiary,
-              marginTop: 2,
-            }}
-          >
-            (ถ้ามี)
-          </Text>
-        )}
-        {uploaded && (
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.regular,
-              fontSize: fontSize.caption,
-              color: colors.success,
-              marginTop: 2,
-            }}
-          >
-            อัปโหลดแล้ว
-          </Text>
-        )}
-      </View>
-
-      {!uploaded && (
-        <MaterialIcons name="camera-alt" size={20} color={colors.primary} />
-      )}
-    </TouchableOpacity>
   );
 }

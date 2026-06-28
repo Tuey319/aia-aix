@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -6,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { StatusPill } from '../../components/StatusPill';
 import { ListRow } from '../../components/ListRow';
 import { useAppStore } from '../../store';
 
@@ -19,9 +17,6 @@ export function AffordabilityScreen() {
   const annualIncome = income * 12;
   const annualPremium = policy.annualPremium;
   const currentPct = ((annualPremium / annualIncome) * 100).toFixed(1);
-
-  // Track bar: 0–20%, zones: green 0–10%, amber 10–15%, red 15–20%
-  const TRACK_WIDTH_PCT = parseFloat(currentPct) / 20; // position along full track
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -69,16 +64,40 @@ export function AffordabilityScreen() {
             ...cardShadow,
           }}
         >
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.regular,
-              fontSize: fontSize.body,
-              color: colors.textSecondary,
-            }}
-          >
-            ตัวชี้วัดเบี้ยฯ สัดส่วนของรายได้ไม่ได้
-          </Text>
+          {/* Label + "พอเหมาะ" pill */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.regular,
+                fontSize: fontSize.body,
+                color: colors.textSecondary,
+                flex: 1,
+              }}
+            >
+              ตัวชี้วัดเบี้ยฯ สัดส่วนของรายได้ไม่ได้
+            </Text>
+            <View
+              style={{
+                backgroundColor: colors.amberTint,
+                borderRadius: radius.pill,
+                paddingHorizontal: 10,
+                paddingVertical: 4,
+                marginLeft: 8,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: fontFamily.anuphan.semiBold,
+                  fontSize: fontSize.caption,
+                  color: colors.amberDeep,
+                }}
+              >
+                พอเหมาะ
+              </Text>
+            </View>
+          </View>
 
+          {/* Big percentage */}
           <Text
             style={{
               fontFamily: fontFamily.jakarta.extraBold,
@@ -91,30 +110,17 @@ export function AffordabilityScreen() {
             {currentPct}%
           </Text>
 
-          {/* Track bar */}
-          <View style={{ gap: 6 }}>
-            <TrackBar currentPct={parseFloat(currentPct)} />
-            <Text
-              style={{
-                fontFamily: fontFamily.anuphan.regular,
-                fontSize: fontSize.caption,
-                color: colors.textSecondary,
-                textAlign: 'center',
-              }}
-            >
-              คงอยู่ {currentPct}%, ช่วง 7.4 - 15.2%
-            </Text>
-          </View>
+          {/* Colored track bar */}
+          <TrackBar currentPct={parseFloat(currentPct)} />
 
-          {/* Zone legend */}
-          <View style={{ flexDirection: 'row', gap: 12 }}>
-            <ZoneLegend color={colors.success} label="ปลอดภัย ≤10%" />
-            <ZoneLegend color={colors.amber} label="ระวัง 10-15%" />
-            <ZoneLegend color={colors.primary} label="เสี่ยง >15%" />
+          {/* Legend dots */}
+          <View style={{ flexDirection: 'row', gap: 16 }}>
+            <ZoneLegend color={colors.success} label={`คงอยู่ ${currentPct}%`} />
+            <ZoneLegend color={colors.amber} label="ช่วง 7.4 - 15.2%" />
           </View>
         </View>
 
-        {/* Info note */}
+        {/* Blue info note */}
         <View
           style={{
             backgroundColor: colors.infoTint,
@@ -135,12 +141,14 @@ export function AffordabilityScreen() {
               lineHeight: 18,
             }}
           >
-            เบี้ยตัวชี้วัดนี้แสดงแบบไม่ใช่วิธีคำนวณเบี้ยจริง — เป็นเครื่องมือช่วยวางแผนงบประมาณ
-            ดูรายละเอียดกรมธรรม์
+            เบี้ยตัวชี้วัดนี้แสดงแบบไม่ใช่วิธีคำนวณเบี้ยจริง — เป็นเครื่องมือช่วยวางแผนงบประมาณ{' '}
+            <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold }}>
+              ดูรายละเอียดกรมธรรม์
+            </Text>
           </Text>
         </View>
 
-        {/* Data rows */}
+        {/* Income + premium rows */}
         <View
           style={{
             backgroundColor: colors.card,
@@ -150,11 +158,13 @@ export function AffordabilityScreen() {
           }}
         >
           <DataRow
+            icon="person"
             label="รายได้ต่อปี (ประมาณ)"
             value={`฿${annualIncome.toLocaleString('en-US')}`}
           />
-          <View style={{ height: 1, backgroundColor: colors.hairline, marginLeft: 16 }} />
+          <View style={{ height: 1, backgroundColor: colors.hairline, marginLeft: 50 }} />
           <DataRow
+            icon="favorite-border"
             label="เบี้ยประกันต่อปี"
             value={`฿${annualPremium.toLocaleString('en-US')}`}
           />
@@ -192,12 +202,12 @@ export function AffordabilityScreen() {
               }}
             >
               หากรายได้เพิ่มขึ้นช้ากว่าเบี้ย อัตราส่วนจะเข้าสู่โซนระวัง
-              แนะนำให้ปรับแผนก่อนถึงจุดนั้น
+              แนะนำให้ปรับแผนก่อนถึงจุดนั้น — แต่ยังมีหลายทางเลือก
             </Text>
           </View>
         </View>
 
-        {/* Options section */}
+        {/* Action rows */}
         <View style={{ gap: 8 }}>
           <Text
             style={{
@@ -236,7 +246,7 @@ export function AffordabilityScreen() {
         </View>
       </ScrollView>
 
-      {/* Sticky footer */}
+      {/* Sticky footer – red "ปรับแผนให้พอดีงบ" button */}
       <View
         style={{
           position: 'absolute',
@@ -285,49 +295,38 @@ function TrackBar({ currentPct }: { currentPct: number }) {
   const dotPositionPct = (clampedPct / 20) * 100;
 
   return (
-    <View style={{ height: 28, justifyContent: 'center' }}>
-      {/* Zones background */}
-      <View style={{ flexDirection: 'row', height: 10, borderRadius: 6, overflow: 'hidden' }}>
-        {/* Green zone: 0–10% → 50% of bar */}
-        <View style={{ flex: 50, backgroundColor: '#4ADE80' }} />
-        {/* Amber zone: 10–15% → 25% of bar */}
-        <View style={{ flex: 25, backgroundColor: '#FBBF24' }} />
-        {/* Red zone: 15–20% → 25% of bar */}
-        <View style={{ flex: 25, backgroundColor: colors.primary }} />
+    <View style={{ gap: 6 }}>
+      {/* Colored zone bar + thumb dot */}
+      <View style={{ height: 20, justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', height: 10, borderRadius: 6, overflow: 'hidden' }}>
+          {/* Green 0–10% → 50% width */}
+          <View style={{ flex: 50, backgroundColor: '#4ADE80' }} />
+          {/* Amber 10–15% → 25% width */}
+          <View style={{ flex: 25, backgroundColor: '#FBBF24' }} />
+          {/* Red 15–20% → 25% width */}
+          <View style={{ flex: 25, backgroundColor: colors.primary }} />
+        </View>
+        {/* Thumb dot */}
+        <View
+          style={{
+            position: 'absolute',
+            left: `${dotPositionPct}%` as any,
+            transform: [{ translateX: -9 }],
+            width: 18,
+            height: 18,
+            borderRadius: 9,
+            backgroundColor: colors.ink,
+            borderWidth: 3,
+            borderColor: colors.white,
+            top: 1,
+          }}
+        />
       </View>
-
-      {/* Dot */}
-      <View
-        style={{
-          position: 'absolute',
-          left: `${dotPositionPct}%` as any,
-          transform: [{ translateX: -8 }],
-          width: 18,
-          height: 18,
-          borderRadius: 9,
-          backgroundColor: colors.ink,
-          borderWidth: 3,
-          borderColor: colors.white,
-          // center vertically on the bar (bar is 10px, container 28px → offset 9px)
-          top: 5,
-        }}
-      />
-
-      {/* Labels */}
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 4,
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 18,
-        }}
-      >
+      {/* Axis labels */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text style={labelStyle}>0%</Text>
-        <Text style={[labelStyle, { position: 'absolute', left: '50%' as any }]}>10%</Text>
-        <Text style={[labelStyle, { position: 'absolute', left: '75%' as any }]}>15%</Text>
+        <Text style={labelStyle}>ปลอดภัย≤10%</Text>
+        <Text style={labelStyle}>เสี่ยง≥15%</Text>
         <Text style={labelStyle}>20%</Text>
       </View>
     </View>
@@ -357,19 +356,29 @@ function ZoneLegend({ color, label }: { color: string; label: string }) {
   );
 }
 
-function DataRow({ label, value }: { label: string; value: string }) {
+function DataRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: keyof typeof MaterialIcons.glyphMap;
+  label: string;
+  value: string;
+}) {
   return (
     <View
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         paddingHorizontal: 16,
         paddingVertical: 14,
+        gap: 12,
       }}
     >
+      <MaterialIcons name={icon} size={20} color={colors.textSecondary} />
       <Text
         style={{
+          flex: 1,
           fontFamily: fontFamily.anuphan.regular,
           fontSize: fontSize.bodyMd,
           color: colors.inkBody,

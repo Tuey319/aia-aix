@@ -51,7 +51,7 @@ export function PaySuccessScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      {/* Header — no back, only X */}
+      {/* Header — no back, only title */}
       <View
         style={{
           flexDirection: 'row',
@@ -59,7 +59,6 @@ export function PaySuccessScreen() {
           paddingHorizontal: screenPadding,
           paddingTop: 12,
           paddingBottom: 16,
-          gap: 8,
         }}
       >
         <Text
@@ -72,9 +71,6 @@ export function PaySuccessScreen() {
         >
           ชำระเงิน
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')} hitSlop={16}>
-          <MaterialIcons name="close" size={22} color={colors.ink} />
-        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -86,20 +82,6 @@ export function PaySuccessScreen() {
           alignItems: 'center',
         }}
       >
-        {/* Step counter */}
-        <Text
-          style={{
-            fontFamily: fontFamily.jakarta.semiBold,
-            fontSize: fontSize.caption,
-            color: colors.textSecondary,
-            letterSpacing: 0.3,
-            alignSelf: 'flex-start',
-            marginBottom: 4,
-          }}
-        >
-          7/7
-        </Text>
-
         {/* Green success circle */}
         <View
           style={{
@@ -109,10 +91,11 @@ export function PaySuccessScreen() {
             backgroundColor: colors.successTint,
             alignItems: 'center',
             justifyContent: 'center',
-            marginVertical: 8,
+            marginTop: 8,
+            marginBottom: 4,
           }}
         >
-          <MaterialIcons name="check-circle" size={48} color={colors.success} />
+          <MaterialIcons name="check" size={40} color={colors.success} />
         </View>
 
         {/* Title */}
@@ -138,7 +121,7 @@ export function PaySuccessScreen() {
             paddingHorizontal: 16,
           }}
         >
-          ลูกค้าจะได้รับใบเสร็จชั่วคราวผ่านทาง SMS และอีเมลที่ลงทะเบียนไว้
+          ลูกค้าจะได้รับใบเสร็จชั่วคราวผ่านทาง SMS{'\n'}และอีเมลที่ลงทะเบียนไว้
         </Text>
 
         {/* Info card */}

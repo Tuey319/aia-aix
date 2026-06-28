@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
+  TextInput,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -28,6 +29,8 @@ const STEP = 3;
 export function ClaimPaymentScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const [bank, setBank] = useState('ธนาคารกรุงเทพ');
+  const [accountNo, setAccountNo] = useState('888-0-12345-6');
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -47,22 +50,22 @@ export function ClaimPaymentScreen() {
             backgroundColor: colors.infoTint,
             borderRadius: radius.card,
             flexDirection: 'row',
-            alignItems: 'center',
-            padding: 14,
+            alignItems: 'flex-start',
+            padding: 12,
             gap: 10,
           }}
         >
-          <MaterialIcons name="info-outline" size={20} color={colors.info} />
+          <MaterialIcons name="info-outline" size={18} color={colors.info} style={{ marginTop: 1 }} />
           <Text
             style={{
               fontFamily: fontFamily.anuphan.regular,
-              fontSize: fontSize.body,
+              fontSize: fontSize.caption,
               color: colors.infoDeep,
               flex: 1,
-              lineHeight: 19,
+              lineHeight: 18,
             }}
           >
-            เงินค่าเคลมจะโอนเข้าบัญชีที่ระบุไว้ในกรมธรรม์
+            เงินจะโอนเข้าบัญชีธนาคารที่ระบุในกรมธรรม์ของคุณเท่านั้น
           </Text>
         </View>
 
@@ -76,113 +79,112 @@ export function ClaimPaymentScreen() {
             ...cardShadow,
           }}
         >
-          <View
+          <Text
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 14,
+              fontFamily: fontFamily.anuphan.semiBold,
+              fontSize: fontSize.bodyMd,
+              color: colors.inkBody2,
             }}
           >
-            {/* Bank logo placeholder */}
-            <View
+            ข้อมูลบัญชี (เจ้าของกรมธรรม์)
+          </Text>
+
+          {/* Bank dropdown */}
+          <View style={{ gap: 6 }}>
+            <Text
               style={{
-                width: 48,
-                height: 48,
-                borderRadius: 14,
-                backgroundColor: '#4E2D85',
-                alignItems: 'center',
-                justifyContent: 'center',
+                fontFamily: fontFamily.anuphan.regular,
+                fontSize: fontSize.caption,
+                color: colors.textSecondary,
               }}
             >
-              <MaterialIcons name="account-balance" size={26} color={colors.white} />
-            </View>
-
-            <View style={{ flex: 1, gap: 3 }}>
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.semiBold,
-                  fontSize: fontSize.bodyMd,
-                  color: colors.ink2,
-                }}
-              >
-                ธนาคารไทยพาณิชย์
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fontFamily.mono.regular,
-                  fontSize: fontSize.bodyMd,
-                  color: colors.inkBody2,
-                  letterSpacing: 1,
-                }}
-              >
-                xxx-x-xx123-x
-              </Text>
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.regular,
-                  fontSize: fontSize.caption,
-                  color: colors.textSecondary,
-                }}
-              >
-                Somchai Meethong
-              </Text>
-            </View>
-
-            {/* Selected indicator */}
-            <View
+              ธนาคาร
+            </Text>
+            <TouchableOpacity
+              activeOpacity={0.7}
               style={{
-                width: 26,
-                height: 26,
-                borderRadius: 13,
-                backgroundColor: colors.successTint,
+                flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
+                backgroundColor: colors.screenBg,
+                borderRadius: radius.input,
+                borderWidth: 1,
+                borderColor: colors.hairline2,
+                paddingHorizontal: 14,
+                paddingVertical: 12,
               }}
             >
-              <MaterialIcons name="check" size={16} color={colors.success} />
-            </View>
+              <Text
+                style={{
+                  flex: 1,
+                  fontFamily: fontFamily.anuphan.medium,
+                  fontSize: fontSize.bodyMd,
+                  color: colors.ink,
+                }}
+              >
+                {bank}
+              </Text>
+              <MaterialIcons name="expand-more" size={20} color={colors.textTertiary} />
+            </TouchableOpacity>
           </View>
 
-          {/* Confirmed label */}
-          <View
+          {/* Account number */}
+          <View style={{ gap: 6 }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.regular,
+                fontSize: fontSize.caption,
+                color: colors.textSecondary,
+              }}
+            >
+              เลขบัญชี
+            </Text>
+            <TextInput
+              value={accountNo}
+              onChangeText={setAccountNo}
+              keyboardType="numeric"
+              style={{
+                fontFamily: fontFamily.mono.regular,
+                fontSize: fontSize.bodyMd,
+                color: colors.ink,
+                backgroundColor: colors.screenBg,
+                borderRadius: radius.input,
+                borderWidth: 1,
+                borderColor: colors.hairline2,
+                paddingHorizontal: 14,
+                paddingVertical: 12,
+                letterSpacing: 1,
+              }}
+              placeholderTextColor={colors.textTertiary}
+            />
+          </View>
+        </View>
+
+        {/* My Info Card */}
+        <View
+          style={{
+            backgroundColor: colors.card,
+            borderRadius: radius.card,
+            paddingHorizontal: cardPadding,
+            ...cardShadow,
+          }}
+        >
+          <Text
             style={{
-              backgroundColor: colors.successTint,
-              borderRadius: 10,
-              paddingVertical: 8,
-              paddingHorizontal: 12,
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 6,
+              fontFamily: fontFamily.anuphan.semiBold,
+              fontSize: fontSize.bodyMd,
+              color: colors.inkBody2,
+              paddingVertical: 14,
             }}
           >
-            <MaterialIcons name="verified" size={16} color={colors.success} />
-            <Text
-              style={{
-                fontFamily: fontFamily.anuphan.medium,
-                fontSize: fontSize.caption,
-                color: colors.successDeep,
-              }}
-            >
-              ยืนยันบัญชีนี้
-            </Text>
-          </View>
+            ข้อมูลของฉัน
+          </Text>
+          <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
 
-          {/* Edit link */}
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}
-          >
-            <Text
-              style={{
-                fontFamily: fontFamily.anuphan.medium,
-                fontSize: fontSize.caption,
-                color: colors.primary,
-              }}
-            >
-              แก้ไขข้อมูลบัญชี
-            </Text>
-            <MaterialIcons name="arrow-forward" size={14} color={colors.primary} />
-          </TouchableOpacity>
+          <InfoRow label="เลขลูกค้า" value="910 1231 01123" />
+          <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
+          <InfoRow label="อีเมล" value="somchai@gmail.com" />
+          <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
+          <InfoRow label="แฮนด์โฟน" value="081 234 5678" />
         </View>
       </ScrollView>
 
@@ -221,5 +223,37 @@ export function ClaimPaymentScreen() {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 13,
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: fontFamily.anuphan.regular,
+          fontSize: fontSize.bodyMd,
+          color: colors.textSecondary,
+        }}
+      >
+        {label}
+      </Text>
+      <Text
+        style={{
+          fontFamily: fontFamily.anuphan.medium,
+          fontSize: fontSize.bodyMd,
+          color: colors.ink2,
+        }}
+      >
+        {value}
+      </Text>
+    </View>
   );
 }

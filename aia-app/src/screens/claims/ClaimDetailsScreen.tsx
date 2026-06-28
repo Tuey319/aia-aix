@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  TextInput,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -25,12 +24,11 @@ import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 type Nav = NativeStackNavigationProp<any>;
 
 const STEP = 1;
-const UPLOAD_SLOTS = 5;
 
 export function ClaimDetailsScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
-  const [agreed, setAgreed] = useState(false);
+  const [amount, setAmount] = useState('18,500');
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -44,44 +42,63 @@ export function ClaimDetailsScreen() {
           gap: cardGap,
         }}
       >
+        {/* Helper text */}
+        <Text
+          style={{
+            fontFamily: fontFamily.anuphan.regular,
+            fontSize: fontSize.caption,
+            color: colors.textSecondary,
+          }}
+        >
+          กรอกรายละเอียดการเคลม ง่าย เร็ว เต็มเม็ด
+        </Text>
+
         {/* Form Card */}
         <View
           style={{
             backgroundColor: colors.card,
             borderRadius: radius.card,
-            padding: cardPadding,
-            gap: 0,
+            paddingHorizontal: cardPadding,
             ...cardShadow,
           }}
         >
           {/* วันที่รับบริการ */}
-          <FormRow
+          <DropdownRow
             label="วันที่รับบริการ"
-            icon="calendar-today"
-            value="12 มิ.ย. 2569"
+            value="15 ส.ค. 2569"
+            rightIcon="calendar-today"
             onPress={() => {}}
           />
           <Divider />
 
-          {/* ผู้เอาประกัน */}
-          <FormRow
-            label="ผู้เอาประกัน"
-            icon="person"
-            value="สมชาย มีทอง"
+          {/* ผู้รับเคลม */}
+          <DropdownRow
+            label="ผู้รับเคลม"
+            value="สมชาย ใจดี"
+            rightIcon="expand-more"
             onPress={() => {}}
           />
           <Divider />
 
           {/* ประเภทการเคลม */}
-          <FormRow
+          <DropdownRow
             label="ประเภทการเคลม"
-            icon="local-hospital"
             value="ค่ารักษาผู้ป่วยนอก"
+            rightIcon="expand-more"
             onPress={() => {}}
           />
           <Divider />
 
-          {/* จำนวนเงินที่เคลม */}
+          {/* ประกันอะไร */}
+          <DropdownRow
+            label="ประกันอะไร"
+            value="ผู้ป่วยนอกเฉพาะทาง"
+            rightIcon="expand-more"
+            onPress={() => {}}
+          />
+          <Divider />
+
+          {/* จำนวนเงินที่เคลม — navigates to ClaimAmount */}
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => navigation.navigate('ClaimAmount')}
@@ -92,7 +109,6 @@ export function ClaimDetailsScreen() {
               gap: 10,
             }}
           >
-            <MaterialIcons name="payments" size={20} color={colors.primary} />
             <View style={{ flex: 1 }}>
               <Text
                 style={{
@@ -111,10 +127,10 @@ export function ClaimDetailsScreen() {
                   color: colors.ink,
                 }}
               >
-                ฿3,200.00
+                ฿{amount}
               </Text>
             </View>
-            <MaterialIcons name="edit" size={18} color={colors.primary} />
+            <MaterialIcons name="apps" size={22} color={colors.primary} />
           </TouchableOpacity>
         </View>
 
@@ -128,87 +144,85 @@ export function ClaimDetailsScreen() {
             ...cardShadow,
           }}
         >
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.semiBold,
-              fontSize: fontSize.bodyMd,
-              color: colors.ink2,
-            }}
-          >
-            แนบใบเสร็จ
-          </Text>
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.regular,
-              fontSize: fontSize.caption,
-              color: colors.textSecondary,
-              marginTop: -6,
-            }}
-          >
-            อัปโหลดได้สูงสุด {UPLOAD_SLOTS} ไฟล์
-          </Text>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-            {Array.from({ length: UPLOAD_SLOTS }).map((_, i) => (
-              <TouchableOpacity
-                key={i}
-                activeOpacity={0.7}
+          {/* Header row: label + count */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.semiBold,
+                fontSize: fontSize.bodyMd,
+                color: colors.ink2,
+              }}
+            >
+              แนบใบเสร็จ
+            </Text>
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.regular,
+                fontSize: fontSize.caption,
+                color: colors.textTertiary,
+              }}
+            >
+              สูงสุด 5 ใบ · แนบแล้ว
+            </Text>
+          </View>
+
+          {/* Upload slots row */}
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            {/* Already-uploaded slot (green check) */}
+            <View
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 12,
+                backgroundColor: colors.successTint,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <MaterialIcons name="check-circle" size={28} color={colors.success} />
+            </View>
+            {/* Already-uploaded slot 2 */}
+            <View
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 12,
+                backgroundColor: colors.successTint,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <MaterialIcons name="check-circle" size={28} color={colors.success} />
+            </View>
+            {/* Add new slot */}
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 12,
+                borderWidth: 1.5,
+                borderColor: colors.hairline2,
+                borderStyle: 'dashed',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: colors.screenBg,
+                gap: 4,
+              }}
+            >
+              <MaterialIcons name="camera-alt" size={20} color={colors.textTertiary} />
+              <Text
                 style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: 12,
-                  borderWidth: 1.5,
-                  borderColor: colors.hairline2,
-                  borderStyle: 'dashed',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: colors.screenBg,
+                  fontFamily: fontFamily.anuphan.regular,
+                  fontSize: 10,
+                  color: colors.textTertiary,
                 }}
               >
-                <MaterialIcons
-                  name={i === 0 ? 'camera-alt' : 'add'}
-                  size={24}
-                  color={colors.textTertiary}
-                />
-              </TouchableOpacity>
-            ))}
+                เพิ่ม
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
-
-        {/* T&C Checkbox */}
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => setAgreed(!agreed)}
-          style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}
-        >
-          <View
-            style={{
-              width: 22,
-              height: 22,
-              borderRadius: 6,
-              borderWidth: 1.5,
-              borderColor: agreed ? colors.primary : colors.hairline2,
-              backgroundColor: agreed ? colors.primaryTint : colors.white,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: 1,
-            }}
-          >
-            {agreed && (
-              <MaterialIcons name="check" size={14} color={colors.primary} />
-            )}
-          </View>
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.regular,
-              fontSize: fontSize.caption,
-              color: colors.inkBody2,
-              flex: 1,
-              lineHeight: 19,
-            }}
-          >
-            ข้าพเจ้ายืนยันว่าข้อมูลข้างต้นถูกต้องและยอมรับเงื่อนไขการเคลม
-          </Text>
-        </TouchableOpacity>
       </ScrollView>
 
       {/* Sticky Bottom Button */}
@@ -249,15 +263,15 @@ export function ClaimDetailsScreen() {
   );
 }
 
-function FormRow({
+function DropdownRow({
   label,
-  icon,
   value,
+  rightIcon,
   onPress,
 }: {
   label: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
   value: string;
+  rightIcon: keyof typeof MaterialIcons.glyphMap;
   onPress: () => void;
 }) {
   return (
@@ -271,7 +285,6 @@ function FormRow({
         gap: 10,
       }}
     >
-      <MaterialIcons name={icon} size={20} color={colors.primary} />
       <View style={{ flex: 1 }}>
         <Text
           style={{
@@ -293,7 +306,7 @@ function FormRow({
           {value}
         </Text>
       </View>
-      <MaterialIcons name="chevron-right" size={20} color={colors.textTertiary} />
+      <MaterialIcons name={rightIcon} size={22} color={colors.textTertiary} />
     </TouchableOpacity>
   );
 }
@@ -304,7 +317,6 @@ function Divider() {
       style={{
         height: 1,
         backgroundColor: colors.hairline2,
-        marginHorizontal: -2,
       }}
     />
   );

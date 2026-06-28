@@ -62,97 +62,21 @@ export function PayCardScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingHorizontal: screenPadding,
-          paddingBottom: insets.bottom + 120,
+          paddingBottom: insets.bottom + 140,
           gap: cardGap,
         }}
       >
-        {/* Step counter */}
-        <Text
-          style={{
-            fontFamily: fontFamily.jakarta.semiBold,
-            fontSize: fontSize.caption,
-            color: colors.textSecondary,
-            letterSpacing: 0.3,
-            marginBottom: 4,
-          }}
-        >
-          6a/7
-        </Text>
-
-        {/* Card brand icons */}
-        <View
-          style={{
-            backgroundColor: colors.card,
-            borderRadius: radius.card,
-            padding: 16,
-            gap: 12,
-            ...cardShadow,
-          }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-            {/* VISA */}
-            <View
-              style={{
-                backgroundColor: '#1A1F71',
-                borderRadius: 6,
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: fontFamily.jakarta.bold,
-                  fontSize: 14,
-                  color: colors.white,
-                  letterSpacing: 1,
-                }}
-              >
-                VISA
-              </Text>
-            </View>
-            {/* Mastercard */}
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 13,
-                  backgroundColor: '#EB001B',
-                  opacity: 0.9,
-                }}
-              />
-              <View
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 13,
-                  backgroundColor: '#F79E1B',
-                  marginLeft: -10,
-                  opacity: 0.9,
-                }}
-              />
-            </View>
-            {/* JCB */}
-            <View
-              style={{
-                backgroundColor: '#003087',
-                borderRadius: 6,
-                paddingHorizontal: 8,
-                paddingVertical: 4,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: fontFamily.jakarta.bold,
-                  fontSize: 14,
-                  color: colors.white,
-                  letterSpacing: 1,
-                }}
-              >
-                JCB
-              </Text>
-            </View>
-          </View>
+        {/* Section heading */}
+        <View style={{ gap: 4 }}>
+          <Text
+            style={{
+              fontFamily: fontFamily.anuphan.bold,
+              fontSize: fontSize.title,
+              color: colors.ink,
+            }}
+          >
+            กรอกข้อมูลการชำระเงินจำนวน
+          </Text>
           <Text
             style={{
               fontFamily: fontFamily.anuphan.regular,
@@ -162,6 +86,77 @@ export function PayCardScreen() {
           >
             รับบัตรของแบบ Visa, Mastercard และ JCB เท่านั้น
           </Text>
+        </View>
+
+        {/* Card brand logos row */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 12,
+          }}
+        >
+          {/* VISA */}
+          <View
+            style={{
+              backgroundColor: '#1A1F71',
+              borderRadius: 6,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: fontFamily.jakarta.bold,
+                fontSize: 14,
+                color: colors.white,
+                letterSpacing: 1,
+              }}
+            >
+              VISA
+            </Text>
+          </View>
+          {/* Mastercard */}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 14,
+                backgroundColor: '#EB001B',
+              }}
+            />
+            <View
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: 14,
+                backgroundColor: '#F79E1B',
+                marginLeft: -10,
+                opacity: 0.92,
+              }}
+            />
+          </View>
+          {/* JCB */}
+          <View
+            style={{
+              backgroundColor: '#003087',
+              borderRadius: 6,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: fontFamily.jakarta.bold,
+                fontSize: 14,
+                color: colors.white,
+                letterSpacing: 1,
+              }}
+            >
+              JCB
+            </Text>
+          </View>
         </View>
 
         {/* Card form */}
@@ -174,17 +169,19 @@ export function PayCardScreen() {
             ...cardShadow,
           }}
         >
+          <Text
+            style={{
+              fontFamily: fontFamily.anuphan.bold,
+              fontSize: fontSize.bodyMd,
+              color: colors.ink,
+              marginBottom: 2,
+            }}
+          >
+            ข้อมูลบัตรเครดิต
+          </Text>
+
           {/* Card number */}
           <View style={{ gap: 6 }}>
-            <Text
-              style={{
-                fontFamily: fontFamily.anuphan.medium,
-                fontSize: fontSize.body,
-                color: colors.inkBody,
-              }}
-            >
-              เลขบัตรเครดิต
-            </Text>
             <View
               style={{
                 flexDirection: 'row',
@@ -195,10 +192,11 @@ export function PayCardScreen() {
                 paddingHorizontal: 12,
                 height: 48,
                 gap: 8,
+                backgroundColor: colors.screenBg,
               }}
             >
               <TextInput
-                placeholder="0000 0000 0000 0000"
+                placeholder="เลขบัตรเครดิต"
                 placeholderTextColor={colors.textTertiary}
                 keyboardType="numeric"
                 maxLength={19}
@@ -215,100 +213,23 @@ export function PayCardScreen() {
 
           {/* Expiry + CVV row */}
           <View style={{ flexDirection: 'row', gap: 10 }}>
-            <View style={{ flex: 1, gap: 6 }}>
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.medium,
-                  fontSize: fontSize.body,
-                  color: colors.inkBody,
-                }}
-              >
-                วันที่หมดอายุ
-              </Text>
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: colors.hairline2,
-                  borderRadius: radius.input,
-                  paddingHorizontal: 12,
-                  height: 48,
-                  justifyContent: 'center',
-                }}
-              >
-                <TextInput
-                  placeholder="MM/YY"
-                  placeholderTextColor={colors.textTertiary}
-                  keyboardType="numeric"
-                  maxLength={5}
-                  style={{
-                    fontFamily: fontFamily.jakarta.regular,
-                    fontSize: fontSize.bodyMd,
-                    color: colors.ink,
-                  }}
-                />
-              </View>
-            </View>
-            <View style={{ flex: 1, gap: 6 }}>
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.medium,
-                  fontSize: fontSize.body,
-                  color: colors.inkBody,
-                }}
-              >
-                เลขหลังบัตร
-              </Text>
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: colors.hairline2,
-                  borderRadius: radius.input,
-                  paddingHorizontal: 12,
-                  height: 48,
-                  justifyContent: 'center',
-                }}
-              >
-                <TextInput
-                  placeholder="CVV"
-                  placeholderTextColor={colors.textTertiary}
-                  keyboardType="numeric"
-                  maxLength={4}
-                  secureTextEntry
-                  style={{
-                    fontFamily: fontFamily.jakarta.regular,
-                    fontSize: fontSize.bodyMd,
-                    color: colors.ink,
-                  }}
-                />
-              </View>
-            </View>
-          </View>
-
-          {/* Name on card */}
-          <View style={{ gap: 6 }}>
-            <Text
-              style={{
-                fontFamily: fontFamily.anuphan.medium,
-                fontSize: fontSize.body,
-                color: colors.inkBody,
-              }}
-            >
-              ชื่อ-นามสกุลตามที่ปรากฏบนบัตร (ภาษาอังกฤษ)
-            </Text>
             <View
               style={{
+                flex: 1,
                 borderWidth: 1,
                 borderColor: colors.hairline2,
                 borderRadius: radius.input,
                 paddingHorizontal: 12,
                 height: 48,
                 justifyContent: 'center',
+                backgroundColor: colors.screenBg,
               }}
             >
               <TextInput
-                placeholder="FIRSTNAME LASTNAME"
+                placeholder="วันที่หมดอายุ"
                 placeholderTextColor={colors.textTertiary}
-                autoCapitalize="characters"
+                keyboardType="numeric"
+                maxLength={5}
                 style={{
                   fontFamily: fontFamily.jakarta.regular,
                   fontSize: fontSize.bodyMd,
@@ -316,6 +237,55 @@ export function PayCardScreen() {
                 }}
               />
             </View>
+            <View
+              style={{
+                flex: 1,
+                borderWidth: 1,
+                borderColor: colors.hairline2,
+                borderRadius: radius.input,
+                paddingHorizontal: 12,
+                height: 48,
+                justifyContent: 'center',
+                backgroundColor: colors.screenBg,
+              }}
+            >
+              <TextInput
+                placeholder="เลขหลังบัตร"
+                placeholderTextColor={colors.textTertiary}
+                keyboardType="numeric"
+                maxLength={4}
+                secureTextEntry
+                style={{
+                  fontFamily: fontFamily.jakarta.regular,
+                  fontSize: fontSize.bodyMd,
+                  color: colors.ink,
+                }}
+              />
+            </View>
+          </View>
+
+          {/* Name on card */}
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: colors.hairline2,
+              borderRadius: radius.input,
+              paddingHorizontal: 12,
+              height: 48,
+              justifyContent: 'center',
+              backgroundColor: colors.screenBg,
+            }}
+          >
+            <TextInput
+              placeholder="ชื่อ-นามสกุลตามที่ปรากฏบนบัตร (ภาษาอังกฤษ)"
+              placeholderTextColor={colors.textTertiary}
+              autoCapitalize="characters"
+              style={{
+                fontFamily: fontFamily.jakarta.regular,
+                fontSize: fontSize.bodyMd,
+                color: colors.ink,
+              }}
+            />
           </View>
         </View>
 
@@ -437,8 +407,7 @@ export function PayCardScreen() {
               lineHeight: fontSize.caption * 1.6,
             }}
           >
-            *การสมัครบริการหักบัญชีอัตโนมัติจะมีผลในรอบบิลถัดไป บริษัทจะส่งแจ้งเตือนก่อนหักบัญชีล่วงหน้า 3 วันทำการ
-            ท่านสามารถยกเลิกบริการได้ตลอดเวลาผ่านแอปหรือติดต่อ AIA Contact Center
+            *การสมัครบริการหักบัญชี (CVV) หรือหัก 3 หลักที่อยู่ด้านหลังบัตรเพื่อยืนยันตัวตน ผลในรอบบิล
           </Text>
         </View>
       </ScrollView>
@@ -468,7 +437,7 @@ export function PayCardScreen() {
               color: colors.textSecondary,
             }}
           >
-            ยอดชำระ
+            จำนวนเงิน
           </Text>
           <Text
             style={{

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   View,
   Text,
@@ -22,9 +21,9 @@ import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 type Nav = NativeStackNavigationProp<any>;
 
 const riderRows = [
-  { name: 'สัญญาเพิ่มเติมอุบัติเหตุ (ADD/RDD)', amount: '200,000' },
-  { name: 'สัญญาเพิ่มเติมอุบัติเหตุ (AI/RCC)', amount: '200,000' },
-  { name: 'สัญญาเพิ่มเติมโรคร้ายแรง (แบบ AIA INFINITE CARE)', amount: '200,000' },
+  { name: 'สัญญาเพิ่มเติมอุบัติเหตุ (ADD/RDD)', amount: '200,000.00' },
+  { name: 'สัญญาเพิ่มเติมอุบัติเหตุ (AI/RCC)', amount: '200,000.00' },
+  { name: 'สัญญาเพิ่มเติมโรคร้ายแรง (แบบ AIA INFINITE CARE)', amount: '200,000.00' },
 ];
 
 export function PayCoverageScreen() {
@@ -199,6 +198,12 @@ export function PayCoverageScreen() {
 
           {/* Rider table */}
           <View style={{ gap: 0 }}>
+            {/* Column headers */}
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 6 }}>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: fontSize.caption, color: colors.textSecondary }}>สัญญาประกัน</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: fontSize.caption, color: colors.textSecondary }}>จำนวนทุนประกัน</Text>
+            </View>
+            <View style={{ height: 1, backgroundColor: colors.hairline }} />
             {riderRows.map((row, i) => (
               <View key={i}>
                 {i > 0 && (
