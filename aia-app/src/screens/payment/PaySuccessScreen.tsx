@@ -18,6 +18,7 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { IllustrationSuccess } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -82,21 +83,8 @@ export function PaySuccessScreen() {
           alignItems: 'center',
         }}
       >
-        {/* Green success circle */}
-        <View
-          style={{
-            width: 72,
-            height: 72,
-            borderRadius: 36,
-            backgroundColor: colors.successTint,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 8,
-            marginBottom: 4,
-          }}
-        >
-          <MaterialIcons name="check" size={40} color={colors.success} />
-        </View>
+        {/* Success illustration */}
+        <IllustrationSuccess width={200} height={160} color={colors.success} />
 
         {/* Title */}
         <Text
