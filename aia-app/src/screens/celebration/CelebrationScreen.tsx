@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { IllustrationSuccess } from '../../components/illustrations';
+import { IllustrationSuccess, AIRobotMascot } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -69,44 +69,7 @@ const CONFETTI = [
   { x: 355, delay: 320, color: colors.info,         size: 8  },
 ];
 
-// AI Robot mascot (simple SVG-like View composition)
-function AIRobot() {
-  const bounce = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(bounce, { toValue: -8, duration: 600, useNativeDriver: true }),
-        Animated.timing(bounce, { toValue: 0, duration: 600, useNativeDriver: true }),
-      ])
-    ).start();
-  }, []);
-
-  return (
-    <Animated.View style={{ transform: [{ translateY: bounce }], alignItems: 'center', marginBottom: 8 }}>
-      {/* Body */}
-      <View style={{ width: 64, height: 72, backgroundColor: colors.primary, borderRadius: 16, alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-        {/* Eyes */}
-        <View style={{ flexDirection: 'row', gap: 10, marginTop: 8 }}>
-          <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: '#fff' }}>
-            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: colors.ink, margin: 4 }} />
-          </View>
-          <View style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: '#fff' }}>
-            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: colors.ink, margin: 4 }} />
-          </View>
-        </View>
-        {/* Smile */}
-        <View style={{ width: 28, height: 12, borderBottomLeftRadius: 14, borderBottomRightRadius: 14, backgroundColor: '#fff', opacity: 0.9 }} />
-      </View>
-      {/* Head antenna */}
-      <View style={{ position: 'absolute', top: -10, width: 4, height: 14, backgroundColor: colors.primaryDeep, borderRadius: 2 }} />
-      <View style={{ position: 'absolute', top: -16, width: 8, height: 8, borderRadius: 4, backgroundColor: colors.primary }} />
-      {/* Arms */}
-      <View style={{ position: 'absolute', left: -14, top: 20, width: 14, height: 8, backgroundColor: colors.primaryDeep, borderRadius: 4 }} />
-      <View style={{ position: 'absolute', right: -14, top: 20, width: 14, height: 8, backgroundColor: colors.primaryDeep, borderRadius: 4 }} />
-    </Animated.View>
-  );
-}
+// Robot is now the proper SVG mascot from AIRobotMascot component
 
 export function CelebrationScreen() {
   const navigation = useNavigation<Nav>();
@@ -129,7 +92,7 @@ export function CelebrationScreen() {
       <Animated.View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenPadding, opacity: opacityAnim, transform: [{ scale: scaleAnim }] }}>
         {/* Main card */}
         <View style={{ backgroundColor: colors.card, borderRadius: 24, padding: 28, alignItems: 'center', width: '100%', gap: 16, ...cardShadow }}>
-          <AIRobot />
+          <AIRobotMascot size={100} animated />
 
           {/* Headline */}
           <View style={{ alignItems: 'center', gap: 6 }}>
