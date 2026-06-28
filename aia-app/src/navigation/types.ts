@@ -44,6 +44,12 @@ export type HomeStackParamList = {
   GenericError: undefined;
   Offline: undefined;
   SessionTimeout: undefined;
+  // AI Celebration (Delight Mak)
+  Celebration: undefined;
+  BadgeCollection: undefined;
+  ProtectionJourney: undefined;
+  GratitudeLetter: undefined;
+  SharePride: undefined;
 };
 
 export type PolicyStackParamList = {

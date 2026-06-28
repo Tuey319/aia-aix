@@ -99,6 +99,13 @@ export function HomeStack() {
       <Stack.Screen name="GenericError" component={GenericErrorScreen} />
       <Stack.Screen name="Offline" component={OfflineScreen} />
       <Stack.Screen name="SessionTimeout" component={SessionTimeoutScreen} />
+      {/* AI Celebration — Delight Mak */}
+      <Stack.Screen name="Celebration" component={require('../screens/celebration/CelebrationScreen').CelebrationScreen}
+        options={{ presentation: 'transparentModal', animation: 'fade' }} />
+      <Stack.Screen name="BadgeCollection" component={require('../screens/celebration/BadgeCollectionScreen').BadgeCollectionScreen} />
+      <Stack.Screen name="ProtectionJourney" component={require('../screens/celebration/ProtectionJourneyScreen').ProtectionJourneyScreen} />
+      <Stack.Screen name="GratitudeLetter" component={require('../screens/celebration/GratitudeLetterScreen').GratitudeLetterScreen} />
+      <Stack.Screen name="SharePride" component={require('../screens/celebration/SharePrideScreen').SharePrideScreen} />
     </Stack.Navigator>
   );
 }

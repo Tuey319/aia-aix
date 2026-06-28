@@ -28,17 +28,20 @@ export function PaySuccessScreen() {
   const [countdown, setCountdown] = useState(3);
 
   useEffect(() => {
+    // After 2s auto-launch AI Celebration popup
+    const timer = setTimeout(() => {
+      navigation.navigate('Celebration');
+    }, 2000);
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          navigation.navigate('Home');
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-    return () => clearInterval(interval);
+    return () => { clearTimeout(timer); clearInterval(interval); };
   }, [navigation]);
 
   const infoRows = [
