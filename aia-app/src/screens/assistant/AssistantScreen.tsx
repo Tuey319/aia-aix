@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Animated,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
@@ -17,9 +18,191 @@ import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 
 type Nav = NativeStackNavigationProp<any>;
 
+type ChatMessage = {
+  id: string;
+  role: 'user' | 'bot';
+  text: string;
+  ctaLabel?: string;
+  screen?: string;
+  showFallbackChips?: boolean;
+};
+
+// Mocked intent matching — no real LLM/backend. Each intent resolves a typed
+// message to exactly one destination, so the reply uses the action-card pattern.
+const INTENTS: { keywords: string[]; reply: string; ctaLabel: string; screen: string }[] = [
+  {
+    keywords: ['จ่าย', 'ชำระ', 'เบี้ย', 'pay', 'premium'],
+    reply: 'นี่คือหน้าชำระเบี้ยประกันของคุณค่ะ แตะปุ่มด้านล่างเพื่อดำเนินการต่อ',
+    ctaLabel: 'ไปที่หน้าชำระเงิน',
+    screen: 'PaySelect',
+  },
+  {
+    keywords: ['เคลม', 'claim', 'ยื่นเรื่อง'],
+    reply: 'เริ่มขั้นตอนยื่นเคลมได้ที่นี่ค่ะ',
+    ctaLabel: 'ไปที่หน้ายื่นเคลม',
+    screen: 'ClaimStart',
+  },
+  {
+    keywords: ['คุ้มครอง', 'coverage'],
+    reply: 'ดูรายละเอียดความคุ้มครองกรมธรรม์ของคุณได้ที่นี่ค่ะ',
+    ctaLabel: 'ดูความคุ้มครอง',
+    screen: 'CoverageDetail',
+  },
+  {
+    keywords: ['กรมธรรม์', 'policy', 'เอกสาร'],
+    reply: 'นี่คือหน้ากรมธรรม์ของคุณค่ะ',
+    ctaLabel: 'ไปที่หน้ากรมธรรม์',
+    screen: 'Policy',
+  },
+  {
+    keywords: ['vitality'],
+    reply: 'ตรวจสอบสถานะ AIA Vitality และส่วนลดของคุณได้ที่นี่ค่ะ',
+    ctaLabel: 'ไปที่ AIA Vitality',
+    screen: 'Vitality',
+  },
+  {
+    keywords: ['ติดต่อ', 'agent', 'เจ้าหน้าที่'],
+    reply: 'ติดต่อตัวแทนของคุณได้ที่นี่ค่ะ',
+    ctaLabel: 'ติดต่อเจ้าหน้าที่',
+    screen: 'ContactAgent',
+  },
+  {
+    keywords: ['คำถาม', 'faq', 'ถามตอบ'],
+    reply: 'ดูคำถามที่พบบ่อยได้ที่นี่ค่ะ',
+    ctaLabel: 'ดูคำถามที่พบบ่อย',
+    screen: 'FaqList',
+  },
+  {
+    keywords: ['ประวัติ', 'history'],
+    reply: 'ดูประวัติการชำระเบี้ยของคุณได้ที่นี่ค่ะ',
+    ctaLabel: 'ดูประวัติการชำระ',
+    screen: 'History',
+  },
+];
+
+function findIntent(text: string) {
+  const lower = text.toLowerCase();
+  return INTENTS.find((intent) => intent.keywords.some((kw) => lower.includes(kw.toLowerCase())));
+}
+
+function TypingDots() {
+  const dot1 = useRef(new Animated.Value(0.3)).current;
+  const dot2 = useRef(new Animated.Value(0.3)).current;
+  const dot3 = useRef(new Animated.Value(0.3)).current;
+
+  useEffect(() => {
+    const makePulse = (anim: Animated.Value, delay: number) =>
+      Animated.loop(
+        Animated.sequence([
+          Animated.delay(delay),
+          Animated.timing(anim, { toValue: 1, duration: 300, useNativeDriver: true }),
+          Animated.timing(anim, { toValue: 0.3, duration: 300, useNativeDriver: true }),
+          Animated.delay(600 - delay),
+        ])
+      );
+
+    const a1 = makePulse(dot1, 0);
+    const a2 = makePulse(dot2, 200);
+    const a3 = makePulse(dot3, 400);
+    a1.start();
+    a2.start();
+    a3.start();
+    return () => {
+      a1.stop();
+      a2.stop();
+      a3.stop();
+    };
+  }, [dot1, dot2, dot3]);
+
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 2 }}>
+      {[dot1, dot2, dot3].map((anim, i) => (
+        <Animated.View
+          key={i}
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: 4,
+            backgroundColor: colors.textTertiary,
+            opacity: anim,
+          }}
+        />
+      ))}
+    </View>
+  );
+}
+
+function ChipButton({ label, onPress }: { label: string; onPress: () => void }) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.8}
+      style={{
+        borderWidth: 1.5,
+        borderColor: colors.primary,
+        borderRadius: radius.pill,
+        paddingHorizontal: 14,
+        paddingVertical: 7,
+        backgroundColor: colors.white,
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: fontFamily.anuphan.medium,
+          fontSize: fontSize.body,
+          color: colors.primary,
+        }}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
 export function AssistantScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const scrollRef = useRef<ScrollView>(null);
+
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const QUICK_REPLIES: { label: string; screen: string }[] = [
+    { label: 'จ่ายเบี้ยฯ เลย', screen: 'PaySelect' },
+    { label: 'ดูความคุ้มครอง', screen: 'CoverageDetail' },
+    { label: 'ยื่นเคลม', screen: 'ClaimStart' },
+  ];
+
+  const sendMessage = (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    const userMsg: ChatMessage = { id: `${Date.now()}-u`, role: 'user', text: trimmed };
+    setMessages((prev) => [...prev, userMsg]);
+    setInput('');
+    setIsTyping(true);
+
+    setTimeout(() => {
+      const intent = findIntent(trimmed);
+      const botMsg: ChatMessage = intent
+        ? {
+            id: `${Date.now()}-b`,
+            role: 'bot',
+            text: intent.reply,
+            ctaLabel: intent.ctaLabel,
+            screen: intent.screen,
+          }
+        : {
+            id: `${Date.now()}-b`,
+            role: 'bot',
+            text: 'ขออภัยค่ะ ดิฉันไม่แน่ใจว่าคุณหมายถึงอะไร ลองเลือกจากตัวเลือกด้านล่างนะคะ',
+            showFallbackChips: true,
+          };
+      setIsTyping(false);
+      setMessages((prev) => [...prev, botMsg]);
+    }, 900);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -102,6 +285,7 @@ export function AssistantScreen() {
       >
         {/* Chat area */}
         <ScrollView
+          ref={scrollRef}
           style={{ flex: 1 }}
           contentContainerStyle={{
             paddingHorizontal: screenPadding,
@@ -111,6 +295,7 @@ export function AssistantScreen() {
           }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
         >
           {/* Bot greeting bubble */}
           <View style={{ alignItems: 'flex-start' }}>
@@ -136,64 +321,8 @@ export function AssistantScreen() {
                 สวัสดีค่ะ คุณสบาย 👋 มีอะไรให้ช่วยไหมคะ?
               </Text>
             </View>
-          </View>
 
-          {/* User bubble */}
-          <View style={{ alignItems: 'flex-end' }}>
-            <View
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: 16,
-                borderBottomRightRadius: 4,
-                paddingHorizontal: 14,
-                paddingVertical: 10,
-                maxWidth: '78%',
-                ...primaryButtonShadow,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.regular,
-                  fontSize: fontSize.bodyMd,
-                  color: colors.white,
-                  lineHeight: 22,
-                }}
-              >
-                เพื่อจจวดยี้นทำไหรไครับ
-              </Text>
-            </View>
-          </View>
-
-          {/* Bot reply bubble */}
-          <View style={{ alignItems: 'flex-start' }}>
-            <View
-              style={{
-                backgroundColor: colors.card,
-                borderRadius: 16,
-                borderBottomLeftRadius: 4,
-                paddingHorizontal: 14,
-                paddingVertical: 10,
-                maxWidth: '85%',
-                ...cardShadow,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.regular,
-                  fontSize: fontSize.bodyMd,
-                  color: colors.inkBody,
-                  lineHeight: 22,
-                }}
-              >
-                จากกรมธรรม์ เพย์ ไลฟ์ พลัส 20 ปี ต้องชำระ{' '}
-                <Text style={{ fontFamily: fontFamily.jakarta.bold, color: colors.ink }}>
-                  ฿14,380
-                </Text>{' '}
-                (หักส่วนลด Vitality แล้ว) ครบกำหนด 25 มิ.ย. นี้ ค่ะ:
-              </Text>
-            </View>
-
-            {/* Quick reply chips — below the bot bubble */}
+            {/* Quick reply chips — below the greeting bubble */}
             <View
               style={{
                 flexDirection: 'row',
@@ -202,7 +331,6 @@ export function AssistantScreen() {
                 marginTop: 10,
               }}
             >
-              {/* Chip label */}
               <Text
                 style={{
                   width: '100%',
@@ -214,77 +342,133 @@ export function AssistantScreen() {
               >
                 คำแนะนำ
               </Text>
-
-              <TouchableOpacity
-                onPress={() => navigation.navigate('PaySelect')}
-                activeOpacity={0.8}
-                style={{
-                  borderWidth: 1.5,
-                  borderColor: colors.primary,
-                  borderRadius: radius.pill,
-                  paddingHorizontal: 14,
-                  paddingVertical: 7,
-                  backgroundColor: colors.white,
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: fontFamily.anuphan.medium,
-                    fontSize: fontSize.body,
-                    color: colors.primary,
-                  }}
-                >
-                  จ่ายเบี้ยฯ เลย
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Home')}
-                activeOpacity={0.8}
-                style={{
-                  borderWidth: 1.5,
-                  borderColor: colors.primary,
-                  borderRadius: radius.pill,
-                  paddingHorizontal: 14,
-                  paddingVertical: 7,
-                  backgroundColor: colors.white,
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: fontFamily.anuphan.medium,
-                    fontSize: fontSize.body,
-                    color: colors.primary,
-                  }}
-                >
-                  ดูความคุ้มครอง
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => navigation.navigate('ClaimStart')}
-                activeOpacity={0.8}
-                style={{
-                  borderWidth: 1.5,
-                  borderColor: colors.primary,
-                  borderRadius: radius.pill,
-                  paddingHorizontal: 14,
-                  paddingVertical: 7,
-                  backgroundColor: colors.white,
-                }}
-              >
-                <Text
-                  style={{
-                    fontFamily: fontFamily.anuphan.medium,
-                    fontSize: fontSize.body,
-                    color: colors.primary,
-                  }}
-                >
-                  ยื่นเคลม
-                </Text>
-              </TouchableOpacity>
+              {QUICK_REPLIES.map((reply) => (
+                <ChipButton
+                  key={reply.screen}
+                  label={reply.label}
+                  onPress={() => navigation.navigate(reply.screen)}
+                />
+              ))}
             </View>
           </View>
+
+          {/* Dynamic conversation */}
+          {messages.map((msg) =>
+            msg.role === 'user' ? (
+              <View key={msg.id} style={{ alignItems: 'flex-end' }}>
+                <View
+                  style={{
+                    backgroundColor: colors.primary,
+                    borderRadius: 16,
+                    borderBottomRightRadius: 4,
+                    paddingHorizontal: 14,
+                    paddingVertical: 10,
+                    maxWidth: '78%',
+                    ...primaryButtonShadow,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: fontFamily.anuphan.regular,
+                      fontSize: fontSize.bodyMd,
+                      color: colors.white,
+                      lineHeight: 22,
+                    }}
+                  >
+                    {msg.text}
+                  </Text>
+                </View>
+              </View>
+            ) : (
+              <View key={msg.id} style={{ alignItems: 'flex-start', gap: 10 }}>
+                <View
+                  style={{
+                    backgroundColor: colors.card,
+                    borderRadius: 16,
+                    borderBottomLeftRadius: 4,
+                    paddingHorizontal: 14,
+                    paddingVertical: 10,
+                    maxWidth: '85%',
+                    ...cardShadow,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: fontFamily.anuphan.regular,
+                      fontSize: fontSize.bodyMd,
+                      color: colors.inkBody,
+                      lineHeight: 22,
+                    }}
+                  >
+                    {msg.text}
+                  </Text>
+                </View>
+
+                {/* Inline action card — the reply itself is the navigation trigger */}
+                {msg.ctaLabel && msg.screen && (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate(msg.screen!)}
+                    activeOpacity={0.82}
+                    style={{
+                      backgroundColor: colors.primary,
+                      borderRadius: radius.card,
+                      paddingHorizontal: 16,
+                      paddingVertical: 14,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 10,
+                      alignSelf: 'flex-start',
+                      minWidth: 220,
+                      ...primaryButtonShadow,
+                    }}
+                  >
+                    <MaterialIcons name="arrow-forward" size={20} color={colors.white} />
+                    <Text
+                      style={{
+                        fontFamily: fontFamily.anuphan.bold,
+                        fontSize: fontSize.bodyMd,
+                        color: colors.white,
+                        flex: 1,
+                      }}
+                    >
+                      {msg.ctaLabel}
+                    </Text>
+                    <MaterialIcons name="chevron-right" size={18} color="rgba(255,255,255,0.7)" />
+                  </TouchableOpacity>
+                )}
+
+                {msg.showFallbackChips && (
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                    {QUICK_REPLIES.map((reply) => (
+                      <ChipButton
+                        key={reply.screen}
+                        label={reply.label}
+                        onPress={() => navigation.navigate(reply.screen)}
+                      />
+                    ))}
+                  </View>
+                )}
+              </View>
+            )
+          )}
+
+          {/* Bot typing bubble */}
+          {isTyping && (
+            <View style={{ alignItems: 'flex-start' }}>
+              <View
+                style={{
+                  backgroundColor: colors.card,
+                  borderRadius: 16,
+                  borderBottomLeftRadius: 4,
+                  paddingHorizontal: 14,
+                  paddingVertical: 12,
+                  ...cardShadow,
+                }}
+              >
+                <TypingDots />
+              </View>
+            </View>
+          )}
         </ScrollView>
 
         {/* Bottom input bar */}
@@ -302,6 +486,10 @@ export function AssistantScreen() {
           }}
         >
           <TextInput
+            value={input}
+            onChangeText={setInput}
+            onSubmitEditing={() => sendMessage(input)}
+            returnKeyType="send"
             placeholder="พิมพ์ข้อความ..."
             placeholderTextColor={colors.textTertiary}
             style={{
@@ -318,6 +506,7 @@ export function AssistantScreen() {
             }}
           />
           <TouchableOpacity
+            onPress={() => sendMessage(input)}
             activeOpacity={0.82}
             style={{
               width: 46,
