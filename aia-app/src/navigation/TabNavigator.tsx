@@ -10,6 +10,7 @@ import { AccountStack } from './AccountStack';
 import { PlaceholderScreen } from '../screens/PlaceholderScreen';
 import { BenefitsScreen } from '../screens/benefits/BenefitsScreen';
 import { colors, fontFamily } from '../tokens';
+import { primaryButtonShadow } from '../tokens/shadows';
 import { useStrings } from '../i18n';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -24,7 +25,19 @@ function TabLabel({ label, focused }: { label: string; focused: boolean }) {
 
 function CenterTabIcon({ focused }: { focused: boolean }) {
   return (
-    <View style={{ width: 44, height: 44, borderRadius: 13, backgroundColor: focused ? colors.primary : colors.hairline2, alignItems: 'center', justifyContent: 'center', marginBottom: 2 }}>
+    <View
+      style={{
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: focused ? colors.primary : colors.hairline2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: -16,
+        marginBottom: 2,
+        ...(focused ? primaryButtonShadow : {}),
+      }}
+    >
       <MaterialIcons name="favorite" size={20} color={focused ? colors.white : colors.textSecondary} />
     </View>
   );

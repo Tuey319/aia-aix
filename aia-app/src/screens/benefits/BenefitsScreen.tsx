@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { shadows } from '../../tokens/shadows';
 
@@ -203,20 +204,29 @@ export function BenefitsScreen() {
       </View>
 
       {/* Category chips */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }}
-        contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 8, paddingBottom: 14 }}>
-        {CATEGORIES.map((cat) => {
-          const isActive = cat === activeCategory;
-          return (
-            <TouchableOpacity key={cat} onPress={() => setActiveCategory(cat)} activeOpacity={0.75}
-              style={{ height: 34, paddingHorizontal: 16, borderRadius: radius.pill, backgroundColor: isActive ? colors.primary : colors.card, borderWidth: 1, borderColor: isActive ? colors.primary : colors.hairline2, alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: fontSize.caption, color: isActive ? colors.white : colors.inkBody2 }}>
-                {cat}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+      <View style={{ position: 'relative' }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }}
+          contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 8, paddingBottom: 14 }}>
+          {CATEGORIES.map((cat) => {
+            const isActive = cat === activeCategory;
+            return (
+              <TouchableOpacity key={cat} onPress={() => setActiveCategory(cat)} activeOpacity={0.75}
+                style={{ height: 34, paddingHorizontal: 16, borderRadius: radius.pill, backgroundColor: isActive ? colors.primary : colors.card, borderWidth: 1, borderColor: isActive ? colors.primary : colors.hairline2, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: fontSize.caption, color: isActive ? colors.white : colors.inkBody2 }}>
+                  {cat}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+        {/* Fade hint that the chip row scrolls */}
+        <LinearGradient
+          pointerEvents="none"
+          colors={['transparent', colors.screenBg]}
+          start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+          style={{ position: 'absolute', right: 0, top: 0, bottom: 14, width: 28 }}
+        />
+      </View>
 
       {/* Benefits list */}
       <ScrollView showsVerticalScrollIndicator={false}
