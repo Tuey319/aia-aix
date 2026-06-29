@@ -22,6 +22,7 @@ export type HomeStackParamList = {
   Value: undefined;
   Illustration: undefined;
   CoverageOverview: undefined;
+  LifestyleCheck: { category?: CoverageCategoryId } | undefined;
   AdjustPlan: { category?: CoverageCategoryId } | undefined;
   Costs: undefined;
   Recommend: undefined;
