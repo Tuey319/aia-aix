@@ -233,7 +233,7 @@ export function AffordabilityScreen() {
               icon="tune"
               title="ปรับแผนความคุ้มครองให้พอดี"
               subtitle="ลดเบี้ยโดยยังคงความคุ้มครองที่จำเป็น"
-              onPress={() => navigation.navigate('AdjustPlan')}
+              onPress={() => navigation.navigate('CoverageOverview')}
             />
             <View style={{ height: 1, backgroundColor: colors.hairline, marginLeft: 50 }} />
             <ListRow
@@ -262,7 +262,7 @@ export function AffordabilityScreen() {
         }}
       >
         <TouchableOpacity
-          onPress={() => navigation.navigate('AdjustPlan')}
+          onPress={() => navigation.navigate('CoverageOverview')}
           activeOpacity={0.82}
           style={{
             backgroundColor: colors.primary,

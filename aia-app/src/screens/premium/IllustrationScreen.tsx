@@ -413,7 +413,7 @@ export function IllustrationScreen() {
         }}
       >
         <TouchableOpacity
-          onPress={() => navigation.navigate('AdjustPlan')}
+          onPress={() => navigation.navigate('CoverageOverview')}
           activeOpacity={0.82}
           style={{
             backgroundColor: colors.primary,

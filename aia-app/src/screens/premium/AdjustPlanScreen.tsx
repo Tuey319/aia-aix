@@ -3,21 +3,17 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '../../navigation/types';
 import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { useAppStore } from '../../store';
+import { getCoverageCategory } from './coverageCategories';
 
 type Nav = NativeStackNavigationProp<HomeStackParamList, 'AdjustPlan'>;
+type Route = RouteProp<HomeStackParamList, 'AdjustPlan'>;
 
-const COVERAGE_MIN = 10; // = ฿1.0M
-const COVERAGE_MAX = 30; // = ฿3.0M
-const COVERAGE_CURRENT = 20; // = ฿2.0M
-
-function coverageToBaht(v: number) { return v * 100000; }
-function coverageToMonthly(v: number) { return Math.round(coverageToBaht(v) * 0.002125); }
 function pctIncome(monthly: number, income: number) { return (monthly * 12) / (income * 12) * 100; }
 
 type Verdict = 'safe' | 'caution' | 'risk';
@@ -65,21 +61,28 @@ const LIGHTER_PLANS: LighterPlan[] = [
   },
 ];
 
+function formatCoverage(amount: number, unit: 'lump' | 'daily') {
+  if (unit === 'daily') return `฿${amount.toLocaleString('en-US')}/วัน`;
+  return amount >= 1000000 ? `฿${(amount / 1000000).toFixed(1)}M` : `฿${amount.toLocaleString('en-US')}`;
+}
+
 export function AdjustPlanScreen() {
   const navigation = useNavigation<Nav>();
+  const route = useRoute<Route>();
   const insets = useSafeAreaInsets();
   const income = useAppStore((s) => s.income);
-  const policy = useAppStore((s) => s.selectedPolicy);
 
-  const [coverageLevel, setCoverageLevel] = useState(COVERAGE_CURRENT);
+  const category = getCoverageCategory(route.params?.category);
+  const isLife = category.id === 'life';
+
+  const [coverageLevel, setCoverageLevel] = useState(category.amount);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
-  const newMonthly = coverageToMonthly(coverageLevel);
+  const newMonthly = Math.round(coverageLevel * category.bahtPerUnitMonthly);
+  const currentMonthly = Math.round(category.amount * category.bahtPerUnitMonthly);
   const pct = pctIncome(newMonthly, income);
   const verdict = getVerdict(pct);
-  const delta = newMonthly - policy.monthlyPremium;
-
-  const selectedLighterPlan = LIGHTER_PLANS.find((p) => p.id === selectedPlan);
+  const delta = newMonthly - currentMonthly;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -104,7 +107,7 @@ export function AdjustPlanScreen() {
             color: colors.ink,
           }}
         >
-          ปรับแผนให้พอดี
+          {isLife ? 'ปรับแผนให้พอดี' : `ปรับความคุ้มครอง · ${category.label}`}
         </Text>
       </View>
 
@@ -216,7 +219,7 @@ export function AdjustPlanScreen() {
                   color: colors.white,
                 }}
               >
-                ฿{(coverageToBaht(coverageLevel) / 1000000).toFixed(1)}M
+                {formatCoverage(coverageLevel, category.unit)}
               </Text>
             </View>
             <View
@@ -277,14 +280,14 @@ export function AdjustPlanScreen() {
                 color: colors.primary,
               }}
             >
-              ฿{(coverageToBaht(coverageLevel) / 1000000).toFixed(1)}M
+              {formatCoverage(coverageLevel, category.unit)}
             </Text>
           </View>
 
           <Slider
-            minimumValue={COVERAGE_MIN}
-            maximumValue={COVERAGE_MAX}
-            step={1}
+            minimumValue={category.sliderMin}
+            maximumValue={category.sliderMax}
+            step={category.sliderStep}
             value={coverageLevel}
             onValueChange={(v) => {
               setCoverageLevel(v);
@@ -298,13 +301,13 @@ export function AdjustPlanScreen() {
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ fontFamily: fontFamily.jakarta.medium, fontSize: 11, color: colors.textSecondary }}>
-              ฿1.0M
+              {formatCoverage(category.sliderMin, category.unit)}
             </Text>
             <Text style={{ fontFamily: fontFamily.jakarta.medium, fontSize: 11, color: colors.textTertiary }}>
-              ฿2.0M (ปัจจุบัน)
+              {formatCoverage(category.amount, category.unit)} (ปัจจุบัน)
             </Text>
             <Text style={{ fontFamily: fontFamily.jakarta.medium, fontSize: 11, color: colors.textSecondary }}>
-              ฿3.0M
+              {formatCoverage(category.sliderMax, category.unit)}
             </Text>
           </View>
 
@@ -341,7 +344,8 @@ export function AdjustPlanScreen() {
           </View>
         </View>
 
-        {/* Lighter Plans */}
+        {/* Lighter Plans (life coverage only) */}
+        {isLife && (
         <Text
           style={{
             fontFamily: fontFamily.anuphan.bold,
@@ -353,8 +357,9 @@ export function AdjustPlanScreen() {
         >
           หรือเปลี่ยนเป็นแผนที่เบากว่า — ไม่ด้อยกว่า
         </Text>
+        )}
 
-        {LIGHTER_PLANS.map((plan) => {
+        {isLife && LIGHTER_PLANS.map((plan) => {
           const isSelected = selectedPlan === plan.id;
           return (
             <TouchableOpacity

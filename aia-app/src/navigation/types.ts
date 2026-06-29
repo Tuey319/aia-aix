@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
+import { CoverageCategoryId } from '../screens/premium/coverageCategories';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -20,7 +21,8 @@ export type HomeStackParamList = {
   Affordability: undefined;
   Value: undefined;
   Illustration: undefined;
-  AdjustPlan: undefined;
+  CoverageOverview: undefined;
+  AdjustPlan: { category?: CoverageCategoryId } | undefined;
   Costs: undefined;
   Recommend: undefined;
   History: undefined;
