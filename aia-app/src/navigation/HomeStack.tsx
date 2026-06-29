@@ -6,6 +6,7 @@ import { PremiumMgmtScreen } from '../screens/premium/PremiumMgmtScreen';
 import { IllustrationScreen } from '../screens/premium/IllustrationScreen';
 import { CoverageOverviewScreen } from '../screens/premium/CoverageOverviewScreen';
 import { AdjustPlanScreen } from '../screens/premium/AdjustPlanScreen';
+import { LifestyleCheckScreen } from '../screens/premium/LifestyleCheckScreen';
 import { CostsScreen } from '../screens/premium/CostsScreen';
 import { PlaceholderScreen } from '../screens/PlaceholderScreen';
 
@@ -77,6 +78,7 @@ export function HomeStack() {
       <Stack.Screen name="Value" component={ValueScreen} />
       <Stack.Screen name="Illustration" component={IllustrationScreen} />
       <Stack.Screen name="CoverageOverview" component={CoverageOverviewScreen} />
+      <Stack.Screen name="LifestyleCheck" component={LifestyleCheckScreen} />
       <Stack.Screen name="AdjustPlan" component={AdjustPlanScreen} />
       <Stack.Screen name="Costs" component={CostsScreen} />
       <Stack.Screen name="Recommend" component={RecommendScreen} />

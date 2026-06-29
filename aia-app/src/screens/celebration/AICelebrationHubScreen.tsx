@@ -102,7 +102,7 @@ export function AICelebrationHubScreen() {
           </View>
           <View style={{ flexDirection: 'row', gap: 10, width: '100%' }}>
             <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 12, alignItems: 'center' }}>
-              <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 22, color: '#fff' }}>6</Text>
+              <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 22, color: '#fff' }}>12</Text>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>งวดตรงเวลา</Text>
             </View>
             <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 12, alignItems: 'center' }}>

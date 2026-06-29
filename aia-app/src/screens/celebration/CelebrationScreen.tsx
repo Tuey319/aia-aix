@@ -108,7 +108,7 @@ export function CelebrationScreen() {
           {/* Milestone badge */}
           <View style={{ backgroundColor: colors.primaryTint, borderRadius: radius.card, paddingHorizontal: 20, paddingVertical: 12, alignItems: 'center', width: '100%', gap: 4 }}>
             <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: colors.primary, letterSpacing: 1.5, textTransform: 'uppercase' }}>Milestone</Text>
-            <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 36, color: colors.primary, letterSpacing: -1 }}>6 งวด</Text>
+            <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 36, color: colors.primary, letterSpacing: -1 }}>12 งวด</Text>
             <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 13, color: colors.primaryDeep }}>ชำระตรงเวลาต่อเนื่อง 🔥</Text>
           </View>
 

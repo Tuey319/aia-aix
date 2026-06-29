@@ -68,7 +68,7 @@ export function CoverageOverviewScreen() {
           {COVERAGE_CATEGORIES.map((cat) => (
             <TouchableOpacity
               key={cat.id}
-              onPress={() => navigation.navigate('AdjustPlan', { category: cat.id })}
+              onPress={() => navigation.navigate('LifestyleCheck', { category: cat.id })}
               activeOpacity={0.85}
               style={{
                 width: '47%',

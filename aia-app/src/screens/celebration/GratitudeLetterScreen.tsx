@@ -15,7 +15,7 @@ type Nav = NativeStackNavigationProp<any>;
 
 const LETTER_TEXT = `สวัสดีคุณสมชาย 💌
 
-ขอบคุณที่ไว้วางใจ AIA ดูแลคุณและครอบครัวมาตลอด 6 เดือน ทุกครั้งที่คุณชำระเบี้ยตรงเวลา นั่นคือการรักษาคำสัญญาที่มีต่อคนที่คุณรัก
+ขอบคุณที่ไว้วางใจ AIA ดูแลคุณและครอบครัวมาตลอด 12 เดือน ทุกครั้งที่คุณชำระเบี้ยตรงเวลา นั่นคือการรักษาคำสัญญาที่มีต่อคนที่คุณรัก
 
 เราเห็นว่าคุณไม่เคยพลาดสักงวดเดียว นั่นไม่ใช่แค่การจ่ายเงิน — แต่คือความรับผิดชอบและความห่วงใยที่คุณมอบให้กับทุกคนในชีวิตของคุณ
 
@@ -69,7 +69,7 @@ export function GratitudeLetterScreen() {
             {/* Date + from */}
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={{ fontFamily: fontFamily.mono.regular, fontSize: 10, color: colors.textTertiary, letterSpacing: 0.8 }}>17 มิถุนายน 2569</Text>
-              <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: colors.primary, letterSpacing: 0.5 }}>AIA+ · MILESTONE 6</Text>
+              <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: colors.primary, letterSpacing: 0.5 }}>AIA+ · MILESTONE 12</Text>
             </View>
 
             <View style={{ height: 1, backgroundColor: '#FFE4CC' }} />
@@ -100,7 +100,7 @@ export function GratitudeLetterScreen() {
                 Always On Time Badge ปลดล็อคแล้ว! 🏅
               </Text>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.success }}>
-                ชำระตรงเวลา 6 งวดต่อเนื่อง
+                ชำระตรงเวลา 12 งวดต่อเนื่อง
               </Text>
             </View>
           </View>

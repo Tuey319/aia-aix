@@ -21,7 +21,8 @@ import { useAppStore } from '../store';
 import { useStrings } from '../i18n';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const BANNER_W = SCREEN_WIDTH - screenPadding * 2;
+const BANNER_PEEK = 24;
+const BANNER_W = SCREEN_WIDTH - screenPadding - 12 - BANNER_PEEK;
 const BANNER_H = 150;
 
 type Nav = NativeStackNavigationProp<HomeStackParamList, 'Home'>;
