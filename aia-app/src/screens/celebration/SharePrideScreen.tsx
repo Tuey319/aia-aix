@@ -24,7 +24,7 @@ const SHARE_CHANNELS = [
 async function handleShare() {
   try {
     await Share.share({
-      message: '🎉 ฉันชำระเบี้ยประกัน AIA ครบ 6 งวดตรงเวลา!\n\nHappy ที่ได้รับ "Always On Time" Badge 🏅\nทุกการชำระคือการปกป้องคนที่รัก ❤️\n\n#AIA #AIACelebration #EveryPaymentIsAPromise',
+      message: '🎉 ฉันชำระเบี้ยประกัน AIA ครบ 12 งวดตรงเวลา!\n\nHappy ที่ได้รับ "Always On Time" Badge 🏅\nทุกการชำระคือการปกป้องคนที่รัก ❤️\n\n#AIA #AIACelebration #EveryPaymentIsAPromise',
       title: 'แชร์ความภาคภูมิใจ',
     });
   } catch {}
@@ -56,7 +56,7 @@ export function SharePrideScreen() {
 
           <View style={{ alignItems: 'center', gap: 6 }}>
             <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: '#fff', textAlign: 'center' }}>
-              ชำระตรงเวลา 6 งวดแล้ว! 🎉
+              ชำระตรงเวลา 12 งวดแล้ว! 🎉
             </Text>
             <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: 'rgba(255,255,255,0.65)', textAlign: 'center' }}>
               ทุกการชำระคือการปกป้องคนที่รัก ❤️

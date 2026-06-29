@@ -68,7 +68,7 @@ const REWARDS: Reward[] = [
     iconBg: colors.goldTint,
     iconColor: colors.gold,
     title: 'Always On Time Badge',
-    subtitle: 'Badge สำหรับผู้ชำระตรงเวลา 6 งวด',
+    subtitle: 'Badge สำหรับผู้ชำระตรงเวลา 12 งวด',
     badge: '🏅 Earned',
     badgeBg: colors.goldTint,
     badgeText: colors.gold,
@@ -97,7 +97,7 @@ export function RewardPrivilegeScreen() {
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 100, gap: cardGap }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 150, gap: cardGap }}>
         {/* Hero congratulation card */}
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
           <LinearGradient
@@ -111,7 +111,7 @@ export function RewardPrivilegeScreen() {
                 คุณได้รับสิทธิพิเศษ! 🎁
               </Text>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: 'rgba(255,255,255,0.75)', textAlign: 'center' }}>
-                จาก Milestone การชำระตรงเวลา 6 งวด
+                จาก Milestone การชำระตรงเวลา 12 งวด
               </Text>
             </View>
             {/* 5% big highlight */}
@@ -157,7 +157,7 @@ export function RewardPrivilegeScreen() {
             </Text>
           </View>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: '#B0003A', lineHeight: 20 }}>
-            "ขอบคุณที่ไว้วางใจ AIA มาตลอด 6 เดือน ทุกครั้งที่คุณชำระเบี้ยตรงเวลา นั่นคือการรักษาคำสัญญา..."
+            "ขอบคุณที่ไว้วางใจ AIA มาตลอด 12 เดือน ทุกครั้งที่คุณชำระเบี้ยตรงเวลา นั่นคือการรักษาคำสัญญา..."
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 12, color: '#E91E8C' }}>อ่านจดหมายทั้งหมด</Text>

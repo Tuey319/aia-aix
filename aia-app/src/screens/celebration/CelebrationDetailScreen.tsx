@@ -33,7 +33,7 @@ interface ChatBubble {
 }
 
 const CHAT: ChatBubble[] = [
-  { from: 'ai', text: 'สวัสดีคุณสมชาย! 🎉 วันนี้คุณชำระเบี้ยครบ 6 งวดแล้ว', delay: 0 },
+  { from: 'ai', text: 'สวัสดีคุณสมชาย! 🎉 วันนี้คุณชำระเบี้ยครบ 12 งวดแล้ว', delay: 0 },
   { from: 'user', text: 'ใช่ค่ะ รู้สึกดีมากเลย!', delay: 400 },
   { from: 'ai', text: 'คุณคือ "Always On Time" ไม่เคยขาดสักงวด 🏆\nAIA ภูมิใจที่ได้ดูแลคุณมาตลอด ❤️', delay: 800 },
 ];
@@ -105,7 +105,7 @@ export function CelebrationDetailScreen() {
               🎉 Milestone Reached
             </Text>
           </View>
-          <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 40, color: '#fff', letterSpacing: -1 }}>6 งวด</Text>
+          <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 40, color: '#fff', letterSpacing: -1 }}>12 งวด</Text>
           <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 14, color: 'rgba(255,255,255,0.8)', textAlign: 'center' }}>
             ชำระตรงเวลาต่อเนื่อง · ไม่มีค่าปรับสักครั้ง
           </Text>
@@ -151,7 +151,7 @@ export function CelebrationDetailScreen() {
           </View>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.success, lineHeight: 20 }}>
             ทุกบาทที่คุณชำระ = ความคุ้มครอง ฿784 ต่อ ฿1 ที่จ่าย{'\n'}
-            คุณและครอบครัวปลอดภัยตลอด 6 เดือนที่ผ่านมา ❤️
+            คุณและครอบครัวปลอดภัยตลอด 12 เดือนที่ผ่านมา ❤️
           </Text>
         </View>
       </ScrollView>

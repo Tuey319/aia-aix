@@ -32,7 +32,7 @@ const BADGES: Badge[] = [
     id: 'always-on-time',
     name: 'Always On Time',
     nameTh: 'ชำระตรงเวลา',
-    desc: 'ชำระเบี้ยตรงเวลาต่อเนื่อง 6 งวด',
+    desc: 'ชำระเบี้ยตรงเวลาต่อเนื่อง 12 งวด',
     icon: 'schedule',
     color: colors.success,
     bg: colors.successTint,
