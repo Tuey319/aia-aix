@@ -63,10 +63,8 @@ const FREQ_OPTIONS: FreqOption[] = [
 export function CostsScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
-  const { billingFrequency, setBillingFrequency } = useAppStore((s) => ({
-    billingFrequency: s.billingFrequency,
-    setBillingFrequency: s.setBillingFrequency,
-  }));
+  const billingFrequency = useAppStore((s) => s.billingFrequency);
+  const setBillingFrequency = useAppStore((s) => s.setBillingFrequency);
 
   const [localFreq, setLocalFreq] = useState<BillingFreq>(billingFrequency);
 
