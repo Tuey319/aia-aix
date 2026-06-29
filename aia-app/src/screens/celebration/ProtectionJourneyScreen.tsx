@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { BarChart } from '../../components/BarChart';
+import { IllustrationHealthInsurance } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -51,6 +52,11 @@ export function ProtectionJourneyScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 32, gap: cardGap }}>
+        {/* Illustration */}
+        <View style={{ alignItems: 'center', marginBottom: -4 }}>
+          <IllustrationHealthInsurance width={240} height={200} />
+        </View>
+
         {/* Hero stats card */}
         <LinearGradient
           colors={[colors.primary, colors.primaryDeep]}
@@ -138,7 +144,7 @@ export function ProtectionJourneyScreen() {
         <TouchableOpacity onPress={() => navigation.navigate('SharePride')} activeOpacity={0.82}
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 52, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}>
           <MaterialIcons name="share" size={18} color={colors.white} />
-          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>แชร์ความภาคภูมิใจ 🎉</Text>
+          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>แชร์ความภาคภูมิใจ</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

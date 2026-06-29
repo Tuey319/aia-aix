@@ -4,7 +4,7 @@
  * Delight Mak doc: Screen 3 "ตัวอย่างหน้า AI Celebration"
  */
 import React, { useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
+import { View, Platform, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { AIRobotMascot } from '../../components/illustrations';
+
 import { BarChart } from '../../components/BarChart';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -45,8 +45,8 @@ function ChatMessage({ bubble, index }: { bubble: ChatBubble; index: number }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       Animated.parallel([
-        Animated.timing(opacity, { toValue: 1, duration: 350, useNativeDriver: true }),
-        Animated.timing(translateY, { toValue: 0, duration: 350, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 1, duration: 350, useNativeDriver: Platform.OS !== "web" }),
+        Animated.timing(translateY, { toValue: 0, duration: 350, useNativeDriver: Platform.OS !== "web" }),
       ]).start();
     }, bubble.delay + index * 100);
     return () => clearTimeout(timer);
@@ -93,7 +93,7 @@ export function CelebrationDetailScreen() {
           <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>รายละเอียดการฉลอง</Text>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.textSecondary }}>AI Celebration Detail</Text>
         </View>
-        <AIRobotMascot size={44} animated={false} />
+        
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 100, gap: cardGap }}>

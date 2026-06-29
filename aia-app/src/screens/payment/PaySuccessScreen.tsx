@@ -18,7 +18,7 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { IllustrationSuccess } from '../../components/illustrations';
+import { IllustrationGiftPremium } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -87,7 +87,7 @@ export function PaySuccessScreen() {
         }}
       >
         {/* Success illustration */}
-        <IllustrationSuccess width={200} height={160} color={colors.success} />
+        <IllustrationGiftPremium width={220} height={200} />
 
         {/* Title */}
         <Text

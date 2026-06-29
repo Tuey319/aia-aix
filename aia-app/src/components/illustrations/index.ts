@@ -1,5 +1,4 @@
-export { IllustrationEmpty } from './IllustrationEmpty';
-export { IllustrationSuccess } from './IllustrationSuccess';
-export { IllustrationError } from './IllustrationError';
-export { IllustrationHealth } from './IllustrationHealth';
-export { AIRobotMascot } from './AIRobotMascot';
+// Designer-provided SVG illustrations (placed in this folder)
+export { IllustrationFamilyInsurance } from './IllustrationFamilyInsurance';
+export { IllustrationHealthInsurance } from './IllustrationHealthInsurance';
+export { IllustrationGiftPremium } from './IllustrationGiftPremium';

@@ -4,7 +4,7 @@
  * Shows: 5% discount, AIA Thank You 💌, +100 Vitality points
  */
 import React, { useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
+import { View, Platform, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { AIRobotMascot } from '../../components/illustrations';
+import { IllustrationGiftPremium } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -81,7 +81,7 @@ export function RewardPrivilegeScreen() {
   const scaleAnim = useRef(new Animated.Value(0.85)).current;
 
   useEffect(() => {
-    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true, bounciness: 10 }).start();
+    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== "web", bounciness: 10 }).start();
   }, []);
 
   return (
@@ -105,7 +105,7 @@ export function RewardPrivilegeScreen() {
             start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
             style={{ borderRadius: 20, padding: 20, alignItems: 'center', gap: 12 }}
           >
-            <AIRobotMascot size={80} animated />
+            <IllustrationGiftPremium width={200} height={200} />
             <View style={{ alignItems: 'center', gap: 4 }}>
               <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: '#fff', textAlign: 'center' }}>
                 คุณได้รับสิทธิพิเศษ! 🎁
@@ -188,7 +188,7 @@ export function RewardPrivilegeScreen() {
         <TouchableOpacity onPress={() => navigation.navigate('SharePride')} activeOpacity={0.82}
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 52, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}>
           <MaterialIcons name="share" size={18} color={colors.white} />
-          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>แชร์ความภาคภูมิใจ 🎉</Text>
+          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>แชร์ความภาคภูมิใจ</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.7}
           style={{ height: 40, alignItems: 'center', justifyContent: 'center' }}>

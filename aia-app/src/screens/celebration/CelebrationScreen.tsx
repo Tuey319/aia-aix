@@ -3,6 +3,8 @@
  * "Every payment is a promise." — Delight Mak concept doc
  */
 import React, { useEffect, useRef } from 'react';
+import { Platform 
+} from 'react-native';
 import {
   View, Text, TouchableOpacity, Animated, Dimensions,
 } from 'react-native';
@@ -12,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { IllustrationSuccess, AIRobotMascot } from '../../components/illustrations';
+
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -27,10 +29,10 @@ function ConfettiDot({ x, delay, color: c, size }: { x: number; delay: number; c
     Animated.sequence([
       Animated.delay(delay),
       Animated.parallel([
-        Animated.timing(opacity, { toValue: 1, duration: 200, useNativeDriver: true }),
-        Animated.timing(y, { toValue: 300, duration: 2000, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 1, duration: 200, useNativeDriver: Platform.OS !== "web" }),
+        Animated.timing(y, { toValue: 300, duration: 2000, useNativeDriver: Platform.OS !== "web" }),
       ]),
-      Animated.timing(opacity, { toValue: 0, duration: 400, useNativeDriver: true }),
+      Animated.timing(opacity, { toValue: 0, duration: 400, useNativeDriver: Platform.OS !== "web" }),
     ]).start();
   }, []);
 
@@ -69,7 +71,6 @@ const CONFETTI = [
   { x: 355, delay: 320, color: colors.info,         size: 8  },
 ];
 
-// Robot is now the proper SVG mascot from AIRobotMascot component
 
 export function CelebrationScreen() {
   const navigation = useNavigation<Nav>();
@@ -78,8 +79,8 @@ export function CelebrationScreen() {
   const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true, bounciness: 12 }).start();
-    Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== "web", bounciness: 12 }).start();
+    Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: Platform.OS !== "web" }).start();
   }, []);
 
   return (
@@ -92,7 +93,7 @@ export function CelebrationScreen() {
       <Animated.View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenPadding, opacity: opacityAnim, transform: [{ scale: scaleAnim }] }}>
         {/* Main card */}
         <View style={{ backgroundColor: colors.card, borderRadius: 24, padding: 28, alignItems: 'center', width: '100%', gap: 16, ...cardShadow }}>
-          <AIRobotMascot size={100} animated />
+          
 
           {/* Headline */}
           <View style={{ alignItems: 'center', gap: 6 }}>

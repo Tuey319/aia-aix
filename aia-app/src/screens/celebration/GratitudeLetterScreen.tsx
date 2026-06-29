@@ -3,7 +3,7 @@
  * Delight Mak concept: "AI Thank you 💌" after milestone payment.
  */
 import React, { useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
+import { View, Platform, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -32,8 +32,8 @@ export function GratitudeLetterScreen() {
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
-      Animated.timing(slideAnim, { toValue: 0, duration: 600, useNativeDriver: true }),
+      Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: Platform.OS !== "web" }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 600, useNativeDriver: Platform.OS !== "web" }),
     ]).start();
   }, []);
 

@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { AIRobotMascot } from '../../components/illustrations';
+import { IllustrationFamilyInsurance } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -91,7 +91,7 @@ export function AICelebrationHubScreen() {
         {/* Hero */}
         <LinearGradient colors={[colors.primary, '#8B0030']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
           style={{ borderRadius: 22, padding: 24, alignItems: 'center', gap: 14 }}>
-          <AIRobotMascot size={90} animated />
+          <IllustrationFamilyInsurance width={200} height={200} />
           <View style={{ alignItems: 'center', gap: 6 }}>
             <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 24, color: '#fff', textAlign: 'center', letterSpacing: -0.5 }}>
               AI Celebration
