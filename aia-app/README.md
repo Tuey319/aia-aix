@@ -55,14 +55,15 @@ aia-app/
 │   │   ├── ListRow.tsx          # Icon + title + subtitle + chevron row
 │   │   ├── SectionGroup.tsx     # Labelled white card group with dividers
 │   │   ├── BarChart.tsx         # Simple vertical bar chart (View-based)
+│   │   ├── CoverageRing.tsx     # Per-category coverage progress ring
 │   │   ├── ScreenLayout.tsx     # Scrollable screen wrapper with safe-area padding
 │   │   └── Text.tsx             # Typography component with Thai/Latin font switching
 │   │
 │   ├── navigation/
 │   │   ├── types.ts             # All TypeScript param list types
 │   │   ├── RootNavigator.tsx    # Login ↔ Main switch
-│   │   ├── TabNavigator.tsx     # 5-tab bottom bar
-│   │   ├── HomeStack.tsx        # Home + Premium Management + Payment flow + System
+│   │   ├── TabNavigator.tsx     # 5-tab bottom bar (Home, Policy, Vitality, Benefits, Account)
+│   │   ├── HomeStack.tsx        # Home + Premium Management + Payment flow + Celebration + System
 │   │   ├── PolicyStack.tsx      # Policy + docs + coverage + Vitality
 │   │   ├── ClaimsStack.tsx      # 6-step e-claims flow
 │   │   └── AccountStack.tsx     # Account + Support + FAQ
@@ -75,6 +76,8 @@ aia-app/
 │       ├── payment/             # 7-step payment flow
 │       ├── policy/              # Policy, docs, coverage, Vitality
 │       ├── claims/              # 6-step e-claims flow
+│       ├── celebration/         # AI Celebration ecosystem (milestones, badges, gratitude, sharing)
+│       ├── benefits/            # Benefits tab
 │       ├── assistant/           # AI chat assistant
 │       ├── account/             # Account settings + profile
 │       ├── support/             # Support, FAQ, change freq, contact
@@ -83,16 +86,18 @@ aia-app/
 
 ---
 
-## Screens (54 implemented)
+## Screens (65 implemented)
 
 | Section | Screens |
 |---|---|
 | Auth | Login |
 | Home | Home |
-| Premium Management | PremiumMgmt · Affordability · Value · Illustration · AdjustPlan · Costs · Recommend · History · HistoryFiltered |
+| Premium Management | PremiumMgmt · Affordability · Value · Illustration · AdjustPlan · Costs · CoverageOverview · LifestyleCheck · Recommend · History · HistoryFiltered |
 | Payment (7-step) | PaySelect · PayCoverage · PayReview · PayMethod · PayCard · PayQr · PaySuccess · PayChecking · PayProcessing |
 | Policy | Policy · PolicyDocs · CoverageDetail · Vitality |
 | Claims (6-step) | ClaimStart · ClaimDetails · ClaimAmount · ClaimDocs · ClaimPayment · ClaimReview · ClaimSuccess · ClaimHistory · ClaimSubmitting · ClaimDeclined |
+| AI Celebration | Celebration · CelebrationDetail · AICelebrationHub · BadgeCollection · ProtectionJourney · GratitudeLetter · RewardPrivilege · SharePride |
+| Benefits | Benefits |
 | AI Assistant | Assistant · AssistantTyping · AssistantAction |
 | Account | Account · ProfileEdit |
 | Support | Support · FaqList · FaqSearch · FaqAnswer · ChangeFreq · FreqConfirm · ContactAgent |

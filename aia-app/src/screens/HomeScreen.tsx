@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  Image,
   Dimensions,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -28,155 +29,28 @@ const BANNER_H = 150;
 type Nav = NativeStackNavigationProp<HomeStackParamList, 'Home'>;
 
 const AD_BANNERS = [
-  {
-    id: '1',
-    color: '#C41038',
-    accent: '#9E0E34',
-    taglineTh: 'สุขภาพดีวันนี้\nเพื่อที่ดีกว่าในอนาคต',
-    taglineEn: 'Better health today\nfor a better tomorrow',
-    sub: 'AIA Vitality — สะสมแต้ม รับส่วนลดเบี้ยประกัน',
-    ctaTh: 'ดูเพิ่มเติม',
-    ctaEn: 'Learn more',
-  },
-  {
-    id: '2',
-    color: '#2A6FDB',
-    accent: '#1C4F9E',
-    taglineTh: 'เพิ่มทุนประกัน\nไม่ต้องตรวจสุขภาพ',
-    taglineEn: 'Add coverage\nNo health exam required',
-    sub: 'AIA Marketplace',
-    ctaTh: 'ดูเพิ่มเติม',
-    ctaEn: 'Learn more',
-  },
-  {
-    id: '3',
-    color: '#1B9E5A',
-    accent: '#0E5A35',
-    taglineTh: 'ครบกำหนดชำระ\nอย่าลืมชำระเบี้ย',
-    taglineEn: 'Payment due\nDon\'t miss your premium',
-    sub: 'ชำระผ่านแอปได้เลย',
-    ctaTh: 'ชำระเลย',
-    ctaEn: 'Pay now',
-  },
+  { id: '1', source: require('../../assets/ad-health.png') },
+  { id: '2', source: require('../../assets/ad-life.png') },
+  { id: '3', source: require('../../assets/ad-travel.png') },
 ];
 
-function AdBanner({
-  color,
-  accent,
-  tagline,
-  sub,
-  cta,
-}: {
-  color: string;
-  accent: string;
-  tagline: string;
-  sub: string;
-  cta: string;
-}) {
+function AdBanner({ source }: { source: number }) {
   return (
-    <View
+    <Image
+      source={source}
+      resizeMode="cover"
       style={{
         width: BANNER_W,
         height: BANNER_H,
         borderRadius: 22,
-        backgroundColor: color,
-        overflow: 'hidden',
       }}
-    >
-      {/* Decorative circles */}
-      <View
-        style={{
-          position: 'absolute',
-          right: -40,
-          top: -40,
-          width: 160,
-          height: 160,
-          borderRadius: 80,
-          backgroundColor: accent,
-          opacity: 0.45,
-        }}
-      />
-      <View
-        style={{
-          position: 'absolute',
-          right: 30,
-          bottom: -30,
-          width: 100,
-          height: 100,
-          borderRadius: 50,
-          backgroundColor: colors.white,
-          opacity: 0.07,
-        }}
-      />
-
-      {/* Content */}
-      <View style={{ flex: 1, padding: 18, justifyContent: 'space-between' }}>
-        {/* AIA logo top-left */}
-        <Text
-          style={{
-            fontFamily: fontFamily.jakarta.extraBold,
-            fontSize: 13,
-            color: colors.white,
-            letterSpacing: 2,
-          }}
-        >
-          AIA
-        </Text>
-
-        {/* Tagline + CTA */}
-        <View>
-          <Text
-            style={{
-              fontFamily: fontFamily.anuphan.bold,
-              fontSize: 18,
-              color: colors.white,
-              lineHeight: 26,
-              marginBottom: 6,
-            }}
-          >
-            {tagline}
-          </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text
-              style={{
-                fontFamily: fontFamily.anuphan.regular,
-                fontSize: 11,
-                color: 'rgba(255,255,255,0.80)',
-                flex: 1,
-                marginRight: 8,
-              }}
-            >
-              {sub}
-            </Text>
-            <View
-              style={{
-                backgroundColor: 'rgba(255,255,255,0.20)',
-                borderRadius: 20,
-                paddingHorizontal: 12,
-                paddingVertical: 5,
-              }}
-            >
-              <Text
-                style={{
-                  fontFamily: fontFamily.anuphan.semiBold,
-                  fontSize: 11,
-                  color: colors.white,
-                }}
-              >
-                {cta} {'>'}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </View>
+    />
   );
 }
 
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const policy = useAppStore((s) => s.selectedPolicy);
-  const language = useAppStore((s) => s.language);
   const s = useStrings();
   const [activeIndex, setActiveIndex] = useState(0);
   const flatRef = useRef<FlatList>(null);
@@ -288,15 +162,7 @@ export function HomeScreen() {
           decelerationRate="fast"
           contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 12 }}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <AdBanner
-              color={item.color}
-              accent={item.accent}
-              tagline={language === 'th' ? item.taglineTh : item.taglineEn}
-              sub={item.sub}
-              cta={language === 'th' ? item.ctaTh : item.ctaEn}
-            />
-          )}
+          renderItem={({ item }) => <AdBanner source={item.source} />}
           onScroll={onScroll}
           scrollEventThrottle={16}
         />
