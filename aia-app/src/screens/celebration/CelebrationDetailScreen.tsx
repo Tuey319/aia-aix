@@ -96,30 +96,41 @@ export function CelebrationDetailScreen() {
         
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 100, gap: cardGap }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 150, gap: cardGap }}>
         {/* Milestone hero */}
-        <LinearGradient colors={[colors.primary, '#8B0030']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-          style={{ borderRadius: radius.cardLg, padding: 20, alignItems: 'center', gap: 12 }}>
-          <View style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 99, paddingHorizontal: 14, paddingVertical: 5 }}>
-            <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: '#fff', letterSpacing: 1.5, textTransform: 'uppercase' }}>
-              🎉 Milestone Reached
+        <View style={{ borderRadius: radius.cardLg, overflow: 'hidden' }}>
+          <LinearGradient colors={[colors.primary, '#7A0029']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+            style={{ padding: 22, alignItems: 'center', gap: 14 }}>
+            {/* Decorative glow accents */}
+            <View style={{ position: 'absolute', top: -50, right: -40, width: 160, height: 160, borderRadius: 80, backgroundColor: 'rgba(255,255,255,0.07)' }} />
+            <View style={{ position: 'absolute', bottom: -60, left: -40, width: 130, height: 130, borderRadius: 65, backgroundColor: 'rgba(255,255,255,0.05)' }} />
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'rgba(255,205,90,0.18)', borderRadius: 99, paddingHorizontal: 14, paddingVertical: 6 }}>
+              <MaterialIcons name="military-tech" size={14} color={colors.gold} />
+              <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: colors.gold, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                Milestone Reached
+              </Text>
+            </View>
+            <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 42, color: '#fff', letterSpacing: -1 }}>12 งวด</Text>
+            <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 14, color: 'rgba(255,255,255,0.8)', textAlign: 'center' }}>
+              ชำระตรงเวลาต่อเนื่อง · ไม่มีค่าปรับสักครั้ง
             </Text>
-          </View>
-          <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 40, color: '#fff', letterSpacing: -1 }}>12 งวด</Text>
-          <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 14, color: 'rgba(255,255,255,0.8)', textAlign: 'center' }}>
-            ชำระตรงเวลาต่อเนื่อง · ไม่มีค่าปรับสักครั้ง
-          </Text>
-          <View style={{ flexDirection: 'row', gap: 10, marginTop: 4 }}>
-            <View style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 10, padding: 12, alignItems: 'center', flex: 1 }}>
-              <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿25,500</Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>ชำระแล้ว</Text>
+
+            <View style={{ flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.10)', borderRadius: 14, width: '100%' }}>
+              <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, gap: 4 }}>
+                <MaterialIcons name="account-balance-wallet" size={16} color="rgba(255,255,255,0.7)" />
+                <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿25,500</Text>
+                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>ชำระแล้ว</Text>
+              </View>
+              <View style={{ width: 1, backgroundColor: 'rgba(255,255,255,0.15)' }} />
+              <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, gap: 4 }}>
+                <MaterialIcons name="verified-user" size={16} color="rgba(255,255,255,0.7)" />
+                <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿2.0M</Text>
+                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>คุ้มครองอยู่</Text>
+              </View>
             </View>
-            <View style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 10, padding: 12, alignItems: 'center', flex: 1 }}>
-              <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿2.0M</Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>คุ้มครองอยู่</Text>
-            </View>
-          </View>
-        </LinearGradient>
+          </LinearGradient>
+        </View>
 
         {/* AI Chat */}
         <View style={{ backgroundColor: colors.screenBg }}>

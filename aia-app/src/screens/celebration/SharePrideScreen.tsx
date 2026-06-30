@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Share, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
@@ -15,10 +15,10 @@ import { IllustrationFamilyInsurance } from '../../components/illustrations';
 type Nav = NativeStackNavigationProp<any>;
 
 const SHARE_CHANNELS = [
-  { name: 'LINE', icon: 'chat' as const, color: '#06C755', bg: '#E8F8EE' },
-  { name: 'Facebook', icon: 'facebook' as const, color: '#1877F2', bg: '#EAF1FB' },
-  { name: 'Twitter/X', icon: 'alternate-email' as const, color: '#000', bg: '#F4F4F6' },
-  { name: 'คัดลอก', icon: 'content-copy' as const, color: colors.textSecondary, bg: colors.hairline2 },
+  { name: 'LINE', lib: 'fa6' as const, icon: 'line' as const, color: '#06C755', bg: '#E8F8EE' },
+  { name: 'Facebook', lib: 'fa6' as const, icon: 'facebook' as const, color: '#1877F2', bg: '#EAF1FB' },
+  { name: 'Twitter/X', lib: 'fa6' as const, icon: 'x-twitter' as const, color: '#000', bg: '#F4F4F6' },
+  { name: 'คัดลอก', lib: 'material' as const, icon: 'content-copy' as const, color: colors.textSecondary, bg: colors.hairline2 },
 ];
 
 async function handleShare() {
@@ -89,7 +89,9 @@ export function SharePrideScreen() {
           {SHARE_CHANNELS.map((ch) => (
             <TouchableOpacity key={ch.name} onPress={handleShare} activeOpacity={0.8}
               style={{ flex: 1, backgroundColor: ch.bg, borderRadius: 14, paddingVertical: 14, alignItems: 'center', gap: 6 }}>
-              <MaterialIcons name={ch.icon} size={22} color={ch.color} />
+              {ch.lib === 'fa6'
+                ? <FontAwesome6 name={ch.icon} size={20} color={ch.color} />
+                : <MaterialIcons name={ch.icon} size={22} color={ch.color} />}
               <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 10, color: ch.color }}>{ch.name}</Text>
             </TouchableOpacity>
           ))}

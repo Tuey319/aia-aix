@@ -6,6 +6,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Platform, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
@@ -58,37 +59,49 @@ export function GratitudeLetterScreen() {
         <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
           {/* Wax seal decoration */}
           <View style={{ alignItems: 'center', marginBottom: 8 }}>
-            <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', ...primaryButtonShadow }}>
-              <MaterialIcons name="favorite" size={26} color={colors.white} />
+            <View style={{ width: 76, height: 76, borderRadius: 38, backgroundColor: colors.primaryTint, alignItems: 'center', justifyContent: 'center' }}>
+              <View style={{ width: 54, height: 54, borderRadius: 27, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', ...primaryButtonShadow }}>
+                <MaterialIcons name="favorite" size={26} color={colors.white} />
+              </View>
             </View>
             <View style={{ width: 1, height: 20, backgroundColor: colors.hairline2, marginTop: 4 }} />
           </View>
 
           {/* Letter card */}
-          <View style={{ backgroundColor: colors.white, borderRadius: 20, padding: 24, gap: 16, ...cardShadow, borderWidth: 1, borderColor: '#FFE4CC' }}>
-            {/* Date + from */}
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={{ fontFamily: fontFamily.mono.regular, fontSize: 10, color: colors.textTertiary, letterSpacing: 0.8 }}>17 มิถุนายน 2569</Text>
-              <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: colors.primary, letterSpacing: 0.5 }}>AIA+ · MILESTONE 12</Text>
-            </View>
-
-            <View style={{ height: 1, backgroundColor: '#FFE4CC' }} />
-
-            {/* Letter body */}
-            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 15, color: colors.ink2, lineHeight: 26 }}>
-              {LETTER_TEXT}
-            </Text>
-
-            <View style={{ height: 1, backgroundColor: '#FFE4CC' }} />
-
-            {/* Signature */}
-            <View style={{ alignItems: 'center', gap: 8 }}>
-              <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 16, color: '#fff', letterSpacing: 0.5 }}>AIA</Text>
+          <View style={{ backgroundColor: colors.white, borderRadius: 20, overflow: 'hidden', ...cardShadow, borderWidth: 1, borderColor: '#FFE4CC' }}>
+            {/* Letterhead */}
+            <LinearGradient colors={[colors.primary, '#7A0029']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+              style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, paddingVertical: 12 }}>
+              <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 14, color: '#fff', letterSpacing: 1 }}>AIA Thailand</Text>
+              <View style={{ backgroundColor: 'rgba(255,255,255,0.18)', borderRadius: 99, paddingHorizontal: 10, paddingVertical: 4 }}>
+                <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 9, color: '#fff', letterSpacing: 0.8 }}>MILESTONE 12</Text>
               </View>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.textSecondary }}>
-                AIA Thailand · "Every payment is a promise"
-              </Text>
+            </LinearGradient>
+
+            <View style={{ padding: 24, gap: 16 }}>
+              <Text style={{ fontFamily: fontFamily.mono.regular, fontSize: 10, color: colors.textTertiary, letterSpacing: 0.8 }}>17 มิถุนายน 2569</Text>
+
+              <View style={{ height: 1, backgroundColor: '#FFE4CC' }} />
+
+              {/* Letter body */}
+              <View>
+                <MaterialIcons name="format-quote" size={64} color={colors.primaryTint} style={{ position: 'absolute', top: -20, left: -10 }} />
+                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 15, color: colors.ink2, lineHeight: 26 }}>
+                  {LETTER_TEXT}
+                </Text>
+              </View>
+
+              <View style={{ height: 1, backgroundColor: '#FFE4CC' }} />
+
+              {/* Signature */}
+              <View style={{ alignItems: 'center', gap: 8 }}>
+                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 16, color: '#fff', letterSpacing: 0.5 }}>AIA</Text>
+                </View>
+                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.textSecondary }}>
+                  AIA Thailand · "Every payment is a promise"
+                </Text>
+              </View>
             </View>
           </View>
 
