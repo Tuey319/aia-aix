@@ -18,6 +18,7 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { AiaLogo } from '../../components/AiaLogo';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -75,23 +76,13 @@ function FakeQrCode() {
           position: 'absolute',
           top: '50%',
           left: '50%',
-          transform: [{ translateX: -18 }, { translateY: -10 }],
-          backgroundColor: colors.primary,
-          borderRadius: 4,
-          paddingHorizontal: 6,
-          paddingVertical: 3,
+          transform: [{ translateX: -16 }, { translateY: -16 }],
+          backgroundColor: colors.white,
+          borderRadius: 6,
+          padding: 4,
         }}
       >
-        <Text
-          style={{
-            fontFamily: fontFamily.jakarta.bold,
-            fontSize: 11,
-            color: colors.white,
-            letterSpacing: 1,
-          }}
-        >
-          AIA
-        </Text>
+        <AiaLogo size={24} />
       </View>
     </View>
   );

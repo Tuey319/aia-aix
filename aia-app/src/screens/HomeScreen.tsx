@@ -18,6 +18,7 @@ import { HomeStackParamList } from '../navigation/types';
 import { colors, fontFamily, radius, screenPadding, cardGap } from '../tokens';
 import { cardShadow, primaryButtonShadow } from '../tokens/shadows';
 import { StatusPill } from '../components/StatusPill';
+import { AiaLogo } from '../components/AiaLogo';
 import { useAppStore } from '../store';
 import { useStrings } from '../i18n';
 
@@ -85,17 +86,7 @@ export function HomeScreen() {
           }}
         >
           <View>
-            <Text
-              style={{
-                fontFamily: fontFamily.jakarta.extraBold,
-                fontSize: 11,
-                color: colors.primary,
-                letterSpacing: 1.5,
-                textTransform: 'uppercase',
-              }}
-            >
-              AIA
-            </Text>
+            <AiaLogo size={22} />
             <Text
               style={{
                 fontFamily: fontFamily.anuphan.bold,

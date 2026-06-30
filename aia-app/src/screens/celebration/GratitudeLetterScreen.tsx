@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { AiaLogo } from '../../components/AiaLogo';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -95,8 +96,8 @@ export function GratitudeLetterScreen() {
 
               {/* Signature */}
               <View style={{ alignItems: 'center', gap: 8 }}>
-                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 16, color: '#fff', letterSpacing: 0.5 }}>AIA</Text>
+                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: colors.card, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.hairline, ...cardShadow }}>
+                  <AiaLogo size={32} />
                 </View>
                 <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.textSecondary }}>
                   AIA Thailand · "Every payment is a promise"
