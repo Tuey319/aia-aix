@@ -23,9 +23,8 @@ import { useAppStore } from '../store';
 import { useStrings } from '../i18n';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const BANNER_PEEK = 24;
-const BANNER_W = SCREEN_WIDTH - screenPadding - 12 - BANNER_PEEK;
-const BANNER_H = 150;
+const BANNER_W = SCREEN_WIDTH - screenPadding * 2;
+const BANNER_H = Math.round(BANNER_W * (956 / 1746));
 
 type Nav = NativeStackNavigationProp<HomeStackParamList, 'Home'>;
 
@@ -147,9 +146,9 @@ export function HomeScreen() {
           ref={flatRef}
           data={AD_BANNERS}
           horizontal
-          pagingEnabled
           showsHorizontalScrollIndicator={false}
           snapToInterval={BANNER_W + 12}
+          snapToAlignment="start"
           decelerationRate="fast"
           contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 12 }}
           keyExtractor={(item) => item.id}
@@ -409,8 +408,8 @@ export function HomeScreen() {
           style={{ marginHorizontal: screenPadding, marginBottom: 8 }}
         >
           <View style={{ backgroundColor: colors.ink, borderRadius: 18, padding: 16, flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-            <View style={{ width: 46, height: 46, borderRadius: 13, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' }}>
-              <MaterialIcons name="emoji-events" size={24} color={colors.white} />
+            <View style={{ width: 46, height: 46, borderRadius: 13, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' }}>
+              <AiaLogo size={32} />
             </View>
             <View style={{ flex: 1, gap: 2 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>

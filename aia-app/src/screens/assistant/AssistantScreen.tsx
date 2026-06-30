@@ -15,6 +15,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { AiaLogo } from '../../components/AiaLogo';
+import { IllustrationMedicalApp } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -218,18 +220,19 @@ export function AssistantScreen() {
           backgroundColor: colors.screenBg,
         }}
       >
-        {/* Robot icon — red rounded square */}
+        {/* AIA logo avatar */}
         <View
           style={{
             width: 40,
             height: 40,
             borderRadius: 12,
-            backgroundColor: colors.primary,
+            backgroundColor: colors.card,
             alignItems: 'center',
             justifyContent: 'center',
+            ...cardShadow,
           }}
         >
-          <MaterialIcons name="smart-toy" size={22} color={colors.white} />
+          <AiaLogo size={28} />
         </View>
 
         {/* Title + online pill stacked */}
@@ -297,6 +300,11 @@ export function AssistantScreen() {
           keyboardShouldPersistTaps="handled"
           onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
         >
+          {/* Welcome illustration */}
+          <View style={{ alignItems: 'center', paddingVertical: 4 }}>
+            <IllustrationMedicalApp width={160} height={130} />
+          </View>
+
           {/* Bot greeting bubble */}
           <View style={{ alignItems: 'flex-start' }}>
             <View

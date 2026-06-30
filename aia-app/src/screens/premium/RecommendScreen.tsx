@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
+import { IllustrationDataAnalysis } from '../../components/illustrations';
 
 interface RecommendCard {
   icon: keyof typeof MaterialIcons.glyphMap;
@@ -158,6 +159,11 @@ export function RecommendScreen() {
               </Text>
             </View>
           </View>
+        </View>
+
+        {/* Data-driven recommendation illustration */}
+        <View style={{ alignItems: 'center', paddingVertical: 4 }}>
+          <IllustrationDataAnalysis width={200} height={160} />
         </View>
 
         {/* Recommendation cards */}

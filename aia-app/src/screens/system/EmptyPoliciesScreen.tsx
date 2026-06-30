@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding } from '../../tokens';
 import { primaryButtonShadow } from '../../tokens/shadows';
-import { IllustrationFamilyInsurance } from '../../components/illustrations';
+import { IllustrationMedicalApp } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -26,7 +26,7 @@ export function EmptyPoliciesScreen() {
       </View>
 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenPadding, paddingBottom: 80, gap: 16 }}>
-        <IllustrationFamilyInsurance width={260} height={260} />
+        <IllustrationMedicalApp width={260} height={260} />
         <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: fontSize.titleLg, color: colors.ink2, textAlign: 'center' }}>
           ยังไม่มีกรมธรรม์ที่ใช้งาน
         </Text>

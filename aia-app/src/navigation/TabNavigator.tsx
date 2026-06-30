@@ -27,14 +27,14 @@ function CenterTabIcon({ focused }: { focused: boolean }) {
   return (
     <View
       style={{
-        width: 44,
-        height: 44,
-        borderRadius: 22,
+        width: 48,
+        height: 48,
+        borderRadius: 24,
         backgroundColor: focused ? colors.primary : colors.hairline2,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: -16,
-        marginBottom: 2,
+        marginTop: -18,
+        marginBottom: 0,
         ...(focused ? primaryButtonShadow : {}),
       }}
     >
@@ -54,9 +54,9 @@ export function TabNavigator() {
           backgroundColor: colors.card,
           borderTopColor: colors.hairline,
           borderTopWidth: 0.5,
-          height: Platform.OS === 'ios' ? 84 : 64,
+          height: Platform.OS === 'ios' ? 94 : 74,
           paddingBottom: Platform.OS === 'ios' ? 24 : 8,
-          paddingTop: 10,
+          paddingTop: 18,
           // Subtle shadow above tab bar
           shadowColor: '#14141E',
           shadowOffset: { width: 0, height: -4 },

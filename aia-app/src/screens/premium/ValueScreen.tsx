@@ -7,6 +7,7 @@ import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '..
 import { cardShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
 import { useAppStore } from '../../store';
+import { IllustrationCoinsDrop } from '../../components/illustrations';
 
 export function ValueScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -222,6 +223,11 @@ export function ValueScreen() {
             </Text>
             <StatusPill label={`${cashValuePct}% ของเบี้ยที่จ่ายสะสม`} variant="success" />
           </View>
+        </View>
+
+        {/* Value illustration */}
+        <View style={{ alignItems: 'center', paddingVertical: 4 }}>
+          <IllustrationCoinsDrop width={200} height={160} />
         </View>
 
         {/* Motivational footer note */}

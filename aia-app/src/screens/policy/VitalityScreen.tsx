@@ -19,6 +19,7 @@ import {
 } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
 import { SectionGroup } from '../../components/SectionGroup';
+import { IllustrationBeHealthy } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -282,6 +283,11 @@ export function VitalityScreen() {
               </Text>
             </View>
           </View>
+        </View>
+
+        {/* Wellness illustration */}
+        <View style={{ alignItems: 'center', paddingVertical: 4 }}>
+          <IllustrationBeHealthy width={200} height={160} />
         </View>
 
         {/* Earn more points section */}

@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { IllustrationHospital } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -36,6 +37,10 @@ export function CoverageDetailScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 100, gap: cardGap }}>
+
+        <View style={{ alignItems: 'center', paddingVertical: 4 }}>
+          <IllustrationHospital width={200} height={160} />
+        </View>
 
         {/* Hero card */}
         <View style={{ backgroundColor: colors.card, borderRadius: radius.card, padding: 20, gap: 8, ...cardShadow }}>

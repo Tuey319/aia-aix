@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding } from '../../tokens';
 import { primaryButtonShadow } from '../../tokens/shadows';
-import { IllustrationFamilyInsurance } from '../../components/illustrations';
+import { IllustrationCoinsDrop } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -26,7 +26,7 @@ export function EmptyHistoryScreen() {
       </View>
 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenPadding, paddingBottom: 80, gap: 16 }}>
-        <IllustrationFamilyInsurance width={240} height={240} />
+        <IllustrationCoinsDrop width={240} height={240} />
         <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: fontSize.titleLg, color: colors.ink2, textAlign: 'center' }}>
           ยังไม่มีประวัติการชำระ
         </Text>

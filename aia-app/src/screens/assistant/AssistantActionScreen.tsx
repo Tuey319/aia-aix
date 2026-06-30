@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { AiaLogo } from '../../components/AiaLogo';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -40,12 +41,13 @@ export function AssistantActionScreen() {
             width: 40,
             height: 40,
             borderRadius: 12,
-            backgroundColor: colors.primary,
+            backgroundColor: colors.card,
             alignItems: 'center',
             justifyContent: 'center',
+            ...cardShadow,
           }}
         >
-          <MaterialIcons name="smart-toy" size={22} color={colors.white} />
+          <AiaLogo size={28} />
         </View>
 
         <Text

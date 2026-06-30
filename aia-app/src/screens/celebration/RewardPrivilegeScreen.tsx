@@ -108,7 +108,7 @@ export function RewardPrivilegeScreen() {
             <IllustrationGiftPremium width={200} height={200} />
             <View style={{ alignItems: 'center', gap: 4 }}>
               <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: '#fff', textAlign: 'center' }}>
-                คุณได้รับสิทธิพิเศษ! 🎁
+                คุณได้รับสิทธิพิเศษ!
               </Text>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: 'rgba(255,255,255,0.75)', textAlign: 'center' }}>
                 จาก Milestone การชำระตรงเวลา 12 งวด

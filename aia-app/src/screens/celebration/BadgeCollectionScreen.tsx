@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
-import { IllustrationFamilyInsurance } from '../../components/illustrations';
+import { IllustrationBeHealthy } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -207,7 +207,7 @@ export function BadgeCollectionScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 32, gap: cardGap }}>
         {/* unDraw illustration */}
         <View style={{ alignItems: 'center', marginBottom: -8 }}>
-          <IllustrationFamilyInsurance width={260} height={200} />
+          <IllustrationBeHealthy width={260} height={200} />
         </View>
 
         {/* Progress banner */}

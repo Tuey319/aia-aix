@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Pressable } from 'react-native';
+import { Image } from 'expo-image';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { shadows } from '../../tokens/shadows';
+import { AiaLogo } from '../../components/AiaLogo';
 
 const CATEGORIES = ['ทั้งหมด', 'สุขภาพ', 'ไลฟ์สไตล์', 'อาหาร', 'ท่องเที่ยว', 'ช้อปปิ้ง'];
 
@@ -15,7 +17,8 @@ interface Benefit {
   title: string;
   discount: string;
   tag?: string;
-  iconName: keyof typeof MaterialIcons.glyphMap;
+  monogram: string;
+  logo?: number;
   iconBg: string;
   iconColor: string;
   expiry?: string;
@@ -29,7 +32,8 @@ const BENEFITS: Benefit[] = [
     title: 'ส่วนลดค่าตรวจสุขภาพประจำปี',
     discount: '15% OFF',
     tag: 'AIA Vitality',
-    iconName: 'local-hospital',
+    monogram: 'BH',
+    logo: require('../../../assets/partners/bumrungrad.webp'),
     iconBg: '#EAF7F0',
     iconColor: colors.success,
     expiry: '31 ธ.ค. 2569',
@@ -40,7 +44,8 @@ const BENEFITS: Benefit[] = [
     brand: 'Synphaet Hospital',
     title: 'ส่วนลดค่า Lab & X-Ray',
     discount: '20% OFF',
-    iconName: 'science',
+    monogram: 'SH',
+    logo: require('../../../assets/partners/synphaet.png'),
     iconBg: '#EAF7F0',
     iconColor: colors.success,
   },
@@ -51,7 +56,8 @@ const BENEFITS: Benefit[] = [
     title: 'ฟิตเนสไม่จำกัดครั้ง / เดือน',
     discount: '฿499/เดือน',
     tag: 'ยอดนิยม',
-    iconName: 'directions-run',
+    monogram: 'VA',
+    logo: require('../../../assets/partners/virgin-active.webp'),
     iconBg: '#EAF1FB',
     iconColor: colors.info,
   },
@@ -61,7 +67,8 @@ const BENEFITS: Benefit[] = [
     brand: 'Lemon Farm',
     title: 'ส่วนลดสินค้าออร์แกนิค',
     discount: '10% OFF',
-    iconName: 'spa',
+    monogram: 'LF',
+    logo: require('../../../assets/partners/lemon-farm.jpg'),
     iconBg: '#EAF7F0',
     iconColor: colors.success,
   },
@@ -71,7 +78,8 @@ const BENEFITS: Benefit[] = [
     brand: 'After You',
     title: 'เครื่องดื่มฟรี 1 แก้ว เมื่อสั่งครบ ฿200',
     discount: 'FREE Drink',
-    iconName: 'local-cafe',
+    monogram: 'AY',
+    logo: require('../../../assets/partners/after-you.jpeg'),
     iconBg: '#FBF4DA',
     iconColor: colors.gold,
     expiry: '30 มิ.ย. 2569',
@@ -82,7 +90,8 @@ const BENEFITS: Benefit[] = [
     brand: 'The Pizza Company',
     title: 'ส่วนลดพิซซ่า L ฟรีเครื่องดื่ม',
     discount: '฿99 ลด',
-    iconName: 'local-pizza',
+    monogram: 'PZ',
+    logo: require('../../../assets/partners/pizza-company.webp'),
     iconBg: '#FFF3E4',
     iconColor: colors.amber,
   },
@@ -93,7 +102,8 @@ const BENEFITS: Benefit[] = [
     title: 'ส่วนลดที่พักทั่วโลก',
     discount: '12% OFF',
     tag: 'ใหม่',
-    iconName: 'hotel',
+    monogram: 'AG',
+    logo: require('../../../assets/partners/agoda.webp'),
     iconBg: '#EAF1FB',
     iconColor: colors.info,
   },
@@ -103,7 +113,8 @@ const BENEFITS: Benefit[] = [
     brand: 'Thai Airways',
     title: 'ส่วนลดตั๋วเครื่องบินภายในประเทศ',
     discount: '8% OFF',
-    iconName: 'flight',
+    monogram: 'TG',
+    logo: require('../../../assets/partners/thai-airways.webp'),
     iconBg: '#EAF1FB',
     iconColor: colors.info,
   },
@@ -113,7 +124,8 @@ const BENEFITS: Benefit[] = [
     brand: 'Central Department Store',
     title: 'ส่วนลดสินค้าแฟชั่น & ไลฟ์สไตล์',
     discount: '5% + 5%',
-    iconName: 'shopping-cart',
+    monogram: 'CD',
+    logo: require('../../../assets/partners/central.webp'),
     iconBg: '#FCEDF1',
     iconColor: colors.primary,
   },
@@ -124,7 +136,8 @@ const BENEFITS: Benefit[] = [
     title: 'แต้มสะสมพิเศษจาก AIA Vitality',
     discount: '2X Points',
     tag: 'AIA Vitality',
-    iconName: 'local-pharmacy',
+    monogram: 'WT',
+    logo: require('../../../assets/partners/watson.webp'),
     iconBg: '#EAF7F0',
     iconColor: colors.success,
   },
@@ -143,10 +156,18 @@ function BenefitCard({ benefit }: { benefit: Benefit }) {
       })}
     >
       <View style={{ flexDirection: 'row', padding: 14, gap: 12, alignItems: 'center' }}>
-        {/* Brand icon */}
-        <View style={{ width: 48, height: 48, borderRadius: 14, backgroundColor: benefit.iconBg, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <MaterialIcons name={benefit.iconName} size={24} color={benefit.iconColor} />
-        </View>
+        {/* Brand logo (falls back to a monogram if none provided) */}
+        {benefit.logo ? (
+          <View style={{ width: 48, height: 48, borderRadius: 14, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.hairline2, alignItems: 'center', justifyContent: 'center', flexShrink: 0, padding: 7 }}>
+            <Image source={benefit.logo} style={{ width: '100%', height: '100%' }} contentFit="contain" />
+          </View>
+        ) : (
+          <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: benefit.iconBg, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 15, color: benefit.iconColor, letterSpacing: 0.2 }}>
+              {benefit.monogram}
+            </Text>
+          </View>
+        )}
 
         {/* Text */}
         <View style={{ flex: 1, gap: 3 }}>
@@ -234,8 +255,8 @@ export function BenefitsScreen() {
 
         {/* AIA Vitality promo banner */}
         <View style={{ backgroundColor: colors.primaryDeep, borderRadius: radius.card, padding: 16, flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-          <View style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' }}>
-            <MaterialIcons name="favorite" size={24} color={colors.white} />
+          <View style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' }}>
+            <AiaLogo size={32} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.white }}>AIA Vitality สะสมแต้ม</Text>
