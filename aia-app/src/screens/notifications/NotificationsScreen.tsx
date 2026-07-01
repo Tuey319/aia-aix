@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
-import { shadows } from '../../tokens/shadows';
+import { colors, fontFamily, screenPadding } from '../../tokens';
 import { useAppStore } from '../../store';
 import {
   Notification,
@@ -18,152 +18,153 @@ import {
 
 type Nav = NativeStackNavigationProp<any>;
 
-const CONFIDENCE_COLORS = {
-  high:   { bg: '#E8F5E9', text: '#2E7D32' },
-  medium: { bg: '#FFF8E1', text: '#F57C00' },
-  low:    { bg: '#FAFAFA', text: '#757575' },
-};
+// ─── Card ────────────────────────────────────────────────────────────────────
 
 function NotificationCard({
   notification,
   language,
   onPress,
-  onMarkRead,
 }: {
   notification: Notification;
   language: string;
   onPress: () => void;
-  onMarkRead: () => void;
 }) {
   const meta = INTENT_META[notification.intent];
-  const title = language === 'en' ? notification.titleEn : notification.titleTh;
-  const body  = language === 'en' ? notification.bodyEn  : notification.bodyTh;
+  const title       = language === 'en' ? notification.titleEn       : notification.titleTh;
+  const body        = language === 'en' ? notification.bodyEn        : notification.bodyTh;
   const actionLabel = language === 'en' ? notification.actionLabelEn : notification.actionLabelTh;
-  const confLevel = confidenceLabel(notification.confidence);
-  const confColor = CONFIDENCE_COLORS[confLevel];
-  const confLabelText = language === 'en'
-    ? confLevel === 'high' ? 'High' : confLevel === 'medium' ? 'Medium' : 'Low'
-    : confLevel === 'high' ? 'แน่ใจมาก' : confLevel === 'medium' ? 'ปานกลาง' : 'ต่ำ';
+  const isUnread    = !notification.isRead;
 
   return (
     <Pressable
       onPress={onPress}
-      android_ripple={{ color: 'rgba(0,0,0,0.05)' }}
+      android_ripple={{ color: 'rgba(0,0,0,0.04)' }}
       style={({ pressed }) => ({
-        backgroundColor: notification.isRead ? colors.card : colors.white,
-        borderRadius: radius.card,
-        overflow: 'hidden',
-        opacity: pressed ? 0.92 : 1,
-        borderLeftWidth: notification.isRead ? 0 : 3,
-        borderLeftColor: meta.colorIcon,
-        ...shadows.md,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 18,
+        padding: 16,
+        opacity: pressed ? 0.94 : 1,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+        elevation: 3,
       })}
     >
-      <View style={{ padding: 14, gap: 10 }}>
-        {/* Top row: icon + title + time */}
-        <View style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+      <View style={{ flexDirection: 'row', gap: 14, alignItems: 'flex-start' }}>
+
+        {/* Circle icon with unread red dot */}
+        <View style={{ position: 'relative', flexShrink: 0 }}>
           <View style={{
-            width: 40, height: 40, borderRadius: 12,
+            width: 50, height: 50, borderRadius: 25,
             backgroundColor: meta.colorBg,
-            alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            alignItems: 'center', justifyContent: 'center',
           }}>
-            <MaterialIcons name={meta.icon as any} size={20} color={meta.colorIcon} />
+            <MaterialIcons name={meta.icon as any} size={24} color={meta.colorIcon} />
           </View>
-
-          <View style={{ flex: 1, gap: 3 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Text style={{
-                fontFamily: notification.isRead ? fontFamily.anuphan.medium : fontFamily.anuphan.bold,
-                fontSize: 13, color: colors.ink2, flex: 1, marginRight: 8,
-              }} numberOfLines={1}>
-                {title}
-              </Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: colors.textTertiary }}>
-                {timeAgo(notification.createdAt, language)}
-              </Text>
-            </View>
-
-            {/* Intent chip + policy no */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <View style={{ backgroundColor: meta.colorBg, borderRadius: 99, paddingHorizontal: 7, paddingVertical: 2 }}>
-                <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 8, color: meta.colorIcon, letterSpacing: 0.3 }}>
-                  {language === 'en' ? meta.labelEn : meta.labelTh}
-                </Text>
-              </View>
-              <Text style={{ fontFamily: fontFamily.mono.regular, fontSize: 9, color: colors.textTertiary, letterSpacing: 0.5 }}>
-                {notification.policyNo}
-              </Text>
-            </View>
-          </View>
+          {isUnread && (
+            <View style={{
+              position: 'absolute', top: 1, right: 1,
+              width: 11, height: 11, borderRadius: 6,
+              backgroundColor: colors.primary,
+              borderWidth: 2, borderColor: '#FFFFFF',
+            }} />
+          )}
         </View>
 
-        {/* Body text */}
-        <Text style={{
-          fontFamily: fontFamily.anuphan.regular,
-          fontSize: 12, color: colors.inkBody, lineHeight: 18,
-          marginLeft: 52,
-        }}>
-          {body}
-        </Text>
-
-        {/* Bottom row: confidence + action CTA */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginLeft: 52 }}>
-          {/* Confidence pill — shows AI model confidence, hidden from non-technical users in prod */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: confColor.text }} />
-            <Text style={{ fontFamily: fontFamily.jakarta.regular, fontSize: 9, color: confColor.text }}>
-              {language === 'en' ? 'AI confidence:' : 'AI ความมั่นใจ:'} {confLabelText}
+        {/* Content */}
+        <View style={{ flex: 1, gap: 4 }}>
+          {/* Title row */}
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+            <Text
+              style={{
+                fontFamily: isUnread ? fontFamily.anuphan.bold : fontFamily.anuphan.medium,
+                fontSize: 14,
+                color: isUnread ? '#111827' : '#374151',
+                flex: 1,
+                lineHeight: 20,
+              }}
+              numberOfLines={2}
+            >
+              {title}
+            </Text>
+            <Text style={{ fontFamily: fontFamily.jakarta.regular, fontSize: 10, color: '#9CA3AF', marginTop: 2, flexShrink: 0 }}>
+              {timeAgo(notification.createdAt, language)}
             </Text>
           </View>
 
-          <TouchableOpacity
-            onPress={onPress}
-            style={{
-              backgroundColor: meta.colorIcon,
-              borderRadius: 99,
-              paddingHorizontal: 12,
-              paddingVertical: 5,
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 4,
-            }}
-          >
-            <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 11, color: colors.white }}>
-              {actionLabel}
+          {/* Intent label + policy */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Text style={{ fontFamily: fontFamily.jakarta.semiBold, fontSize: 10, color: meta.colorIcon }}>
+              {language === 'en' ? meta.labelEn : meta.labelTh}
             </Text>
-            <MaterialIcons name="arrow-forward" size={11} color={colors.white} />
-          </TouchableOpacity>
+            <View style={{ width: 3, height: 3, borderRadius: 2, backgroundColor: '#D1D5DB' }} />
+            <Text style={{ fontFamily: fontFamily.jakarta.regular, fontSize: 10, color: '#9CA3AF', letterSpacing: 0.4 }}>
+              {notification.policyNo}
+            </Text>
+          </View>
+
+          {/* Body */}
+          <Text style={{
+            fontFamily: fontFamily.anuphan.regular,
+            fontSize: 12, color: '#6B7280', lineHeight: 18, marginTop: 2,
+          }}>
+            {body}
+          </Text>
+
+          {/* CTA */}
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 6 }}>
+            <TouchableOpacity
+              onPress={onPress}
+              activeOpacity={0.82}
+              style={{
+                backgroundColor: meta.colorIcon,
+                borderRadius: 99,
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 5,
+              }}
+            >
+              <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 12, color: '#FFFFFF' }}>
+                {actionLabel}
+              </Text>
+              <MaterialIcons name="arrow-forward" size={12} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Pressable>
   );
 }
 
+// ─── Filter chips ─────────────────────────────────────────────────────────────
+
 const FILTER_CHIPS: { intent: NotificationIntent | 'all'; labelTh: string; labelEn: string }[] = [
-  { intent: 'all',              labelTh: 'ทั้งหมด',      labelEn: 'All' },
-  { intent: 'due_date_amount',  labelTh: 'ครบกำหนด',     labelEn: 'Due' },
-  { intent: 'payment_status',   labelTh: 'การชำระ',       labelEn: 'Payment' },
-  { intent: 'autopay',          labelTh: 'อัตโนมัติ',     labelEn: 'Auto-Pay' },
-  { intent: 'loan_repayment',   labelTh: 'เงินกู้',       labelEn: 'Loan' },
-  { intent: 'tax_consent',      labelTh: 'ภาษี',          labelEn: 'Tax' },
+  { intent: 'all',             labelTh: 'ทั้งหมด',   labelEn: 'All'      },
+  { intent: 'due_date_amount', labelTh: 'ครบกำหนด',  labelEn: 'Due'      },
+  { intent: 'payment_status',  labelTh: 'การชำระ',    labelEn: 'Payment'  },
+  { intent: 'autopay',         labelTh: 'อัตโนมัติ',  labelEn: 'Auto-Pay' },
+  { intent: 'loan_repayment',  labelTh: 'เงินกู้',    labelEn: 'Loan'     },
+  { intent: 'tax_consent',     labelTh: 'ภาษี',       labelEn: 'Tax'      },
 ];
 
+// ─── Screen ──────────────────────────────────────────────────────────────────
+
 export function NotificationsScreen() {
-  const navigation = useNavigation<Nav>();
-  const insets = useSafeAreaInsets();
-  const language = useAppStore((s) => s.language);
+  const navigation  = useNavigation<Nav>();
+  const insets      = useSafeAreaInsets();
+  const language    = useAppStore((s) => s.language);
 
-  // TODO: replace STUB_NOTIFICATIONS with real prediction API call
+  // TODO: replace with prediction API call — see AIA-CallIntent-Prediction/src/build_features.py
   const [notifications, setNotifications] = useState<Notification[]>(STUB_NOTIFICATIONS);
-  const [activeFilter, setActiveFilter] = useState<NotificationIntent | 'all'>('all');
+  const [activeFilter, setActiveFilter]   = useState<NotificationIntent | 'all'>('all');
 
-  const filtered = activeFilter === 'all'
-    ? notifications
-    : notifications.filter((n) => n.intent === activeFilter);
-
-  const unread = filtered.filter((n) => !n.isRead);
-  const read   = filtered.filter((n) => n.isRead);
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const filtered     = activeFilter === 'all' ? notifications : notifications.filter((n) => n.intent === activeFilter);
+  const unread       = filtered.filter((n) => !n.isRead);
+  const read         = filtered.filter((n) => n.isRead);
+  const unreadCount  = notifications.filter((n) => !n.isRead).length;
 
   function markRead(id: string) {
     setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, isRead: true } : n));
@@ -179,57 +180,95 @@ export function NotificationsScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      {/* Header */}
-      <View style={{ paddingHorizontal: screenPadding, paddingTop: 12, paddingBottom: 4, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={16}>
-          <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
-        </TouchableOpacity>
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 20, color: colors.ink }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F5F7' }} edges={['top']}>
+
+      {/* ── Header gradient strip ───────────────────────────────────────────── */}
+      <LinearGradient
+        colors={['#FFFFFF', '#F5F5F7']}
+        style={{ paddingHorizontal: screenPadding, paddingTop: 14, paddingBottom: 6 }}
+      >
+        {/* Row 1: back + title + mark all */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={16}
+            style={{ width: 36, height: 36, borderRadius: 10, backgroundColor: '#F0F0F3', alignItems: 'center', justifyContent: 'center' }}>
+            <MaterialIcons name="arrow-back-ios" size={18} color="#111827" style={{ marginLeft: 4 }} />
+          </TouchableOpacity>
+
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: '#111827' }}>
               {language === 'en' ? 'Notifications' : 'การแจ้งเตือน'}
             </Text>
             {unreadCount > 0 && (
-              <View style={{ backgroundColor: colors.primary, borderRadius: 99, paddingHorizontal: 8, paddingVertical: 2 }}>
-                <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 10, color: colors.white }}>
+              <View style={{
+                backgroundColor: colors.primary, borderRadius: 99,
+                minWidth: 22, height: 22, paddingHorizontal: 6,
+                alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 11, color: '#FFFFFF' }}>
                   {unreadCount}
                 </Text>
               </View>
             )}
           </View>
-          <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.textSecondary, marginTop: 1 }}>
-            {language === 'en'
-              ? 'Personalised alerts from AIA AI'
-              : 'การแจ้งเตือนส่วนตัวจาก AIA AI'}
-          </Text>
-        </View>
-        {unreadCount > 0 && (
-          <TouchableOpacity onPress={markAllRead} hitSlop={8}>
-            <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 12, color: colors.primary }}>
-              {language === 'en' ? 'Mark all read' : 'อ่านทั้งหมด'}
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
 
-      {/* Filter chips */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }}
-        contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 8, paddingVertical: 10 }}>
+          {unreadCount > 0 && (
+            <TouchableOpacity onPress={markAllRead} hitSlop={10}>
+              <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 13, color: colors.primary }}>
+                {language === 'en' ? 'Mark all read' : 'อ่านทั้งหมด'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Row 2: subtitle */}
+        <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: '#6B7280', marginTop: 3, marginLeft: 46 }}>
+          {language === 'en' ? 'Personalised alerts from AIA AI' : 'การแจ้งเตือนส่วนตัวจาก AIA AI'}
+        </Text>
+      </LinearGradient>
+
+      {/* ── Filter chips ────────────────────────────────────────────────────── */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ flexGrow: 0, backgroundColor: '#F5F5F7' }}
+        contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 8, paddingVertical: 10 }}
+      >
         {FILTER_CHIPS.map((chip) => {
           const isActive = chip.intent === activeFilter;
-          const meta = chip.intent !== 'all' ? INTENT_META[chip.intent] : null;
+          const meta     = chip.intent !== 'all' ? INTENT_META[chip.intent] : null;
+          const activeBg = meta?.colorIcon ?? colors.primary;
           return (
-            <TouchableOpacity key={chip.intent} onPress={() => setActiveFilter(chip.intent)} activeOpacity={0.75}
+            <TouchableOpacity
+              key={chip.intent}
+              onPress={() => setActiveFilter(chip.intent)}
+              activeOpacity={0.75}
               style={{
-                height: 30, paddingHorizontal: 12, borderRadius: radius.pill,
-                backgroundColor: isActive ? (meta?.colorIcon ?? colors.primary) : colors.card,
-                borderWidth: 1,
-                borderColor: isActive ? (meta?.colorIcon ?? colors.primary) : colors.hairline2,
-                alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 5,
+                height: 34, paddingHorizontal: 14,
+                borderRadius: 99,
+                backgroundColor: isActive ? activeBg : '#FFFFFF',
+                borderWidth: 1.5,
+                borderColor: isActive ? activeBg : '#E5E7EB',
+                alignItems: 'center', justifyContent: 'center',
+                flexDirection: 'row', gap: 5,
+                shadowColor: isActive ? activeBg : 'transparent',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: isActive ? 0.3 : 0,
+                shadowRadius: 6,
+                elevation: isActive ? 3 : 0,
+              }}
+            >
+              {meta && (
+                <MaterialIcons
+                  name={meta.icon as any}
+                  size={13}
+                  color={isActive ? '#FFFFFF' : meta.colorIcon}
+                />
+              )}
+              <Text style={{
+                fontFamily: fontFamily.anuphan.semiBold,
+                fontSize: 13,
+                color: isActive ? '#FFFFFF' : '#374151',
               }}>
-              {meta && <MaterialIcons name={meta.icon as any} size={12} color={isActive ? colors.white : meta.colorIcon} />}
-              <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: fontSize.caption, color: isActive ? colors.white : colors.inkBody2 }}>
                 {language === 'en' ? chip.labelEn : chip.labelTh}
               </Text>
             </TouchableOpacity>
@@ -237,65 +276,71 @@ export function NotificationsScreen() {
         })}
       </ScrollView>
 
-      <ScrollView showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 32, gap: 8 }}>
+      {/* ── List ────────────────────────────────────────────────────────────── */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 40, gap: 10 }}
+      >
 
         {/* Empty state */}
         {filtered.length === 0 && (
-          <View style={{ alignItems: 'center', paddingTop: 60, gap: 12 }}>
-            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: colors.hairline2, alignItems: 'center', justifyContent: 'center' }}>
-              <MaterialIcons name="notifications-none" size={32} color={colors.textTertiary} />
+          <View style={{ alignItems: 'center', paddingTop: 72, gap: 14 }}>
+            <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 }}>
+              <MaterialIcons name="notifications-none" size={34} color="#D1D5DB" />
             </View>
-            <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 15, color: colors.ink2 }}>
-              {language === 'en' ? 'No notifications' : 'ไม่มีการแจ้งเตือน'}
+            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 16, color: '#374151' }}>
+              {language === 'en' ? 'All caught up!' : 'ไม่มีการแจ้งเตือน'}
             </Text>
-            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.textSecondary, textAlign: 'center', maxWidth: 240 }}>
+            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: '#9CA3AF', textAlign: 'center', maxWidth: 220, lineHeight: 20 }}>
               {language === 'en'
-                ? 'AIA AI will notify you here when action is needed on your policies.'
-                : 'AIA AI จะแจ้งเตือนคุณที่นี่เมื่อมีเรื่องที่ต้องดำเนินการ'}
+                ? 'AIA AI will alert you here when your policies need attention.'
+                : 'AIA AI จะแจ้งเตือนคุณเมื่อมีเรื่องที่ต้องดำเนินการ'}
             </Text>
           </View>
         )}
 
-        {/* Unread section */}
+        {/* NEW section */}
         {unread.length > 0 && (
           <>
-            <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 11, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.8, marginTop: 4 }}>
-              {language === 'en' ? `New · ${unread.length}` : `ใหม่ · ${unread.length}`}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4 }}>
+              <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: colors.primary }} />
+              <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 11, color: '#9CA3AF', letterSpacing: 1, textTransform: 'uppercase' }}>
+                {language === 'en' ? `New  ·  ${unread.length}` : `ใหม่  ·  ${unread.length}`}
+              </Text>
+            </View>
             {unread.map((n) => (
-              <NotificationCard key={n.id} notification={n} language={language}
-                onPress={() => handlePress(n)}
-                onMarkRead={() => markRead(n.id)}
-              />
+              <NotificationCard key={n.id} notification={n} language={language} onPress={() => handlePress(n)} />
             ))}
           </>
         )}
 
-        {/* Read section */}
+        {/* EARLIER section */}
         {read.length > 0 && (
           <>
-            <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 11, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.8, marginTop: unread.length > 0 ? 8 : 4 }}>
-              {language === 'en' ? 'Earlier' : 'ก่อนหน้านี้'}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: unread.length > 0 ? 10 : 4 }}>
+              <View style={{ flex: 1, height: 1, backgroundColor: '#E5E7EB' }} />
+              <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 11, color: '#9CA3AF', letterSpacing: 1, textTransform: 'uppercase' }}>
+                {language === 'en' ? 'Earlier' : 'ก่อนหน้านี้'}
+              </Text>
+              <View style={{ flex: 1, height: 1, backgroundColor: '#E5E7EB' }} />
+            </View>
             {read.map((n) => (
-              <NotificationCard key={n.id} notification={n} language={language}
-                onPress={() => handlePress(n)}
-                onMarkRead={() => markRead(n.id)}
-              />
+              <NotificationCard key={n.id} notification={n} language={language} onPress={() => handlePress(n)} />
             ))}
           </>
         )}
 
-        {/* AI disclaimer */}
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8, paddingTop: 8, opacity: 0.6 }}>
-          <MaterialIcons name="info-outline" size={14} color={colors.textTertiary} style={{ marginTop: 1 }} />
-          <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: colors.textTertiary, flex: 1, lineHeight: 15 }}>
-            {language === 'en'
-              ? 'Notifications are generated by AIA\'s AI prediction model and are personalised based on your policy and behaviour patterns.'
-              : 'การแจ้งเตือนสร้างโดย AI ของ AIA โดยอิงจากพฤติกรรมและข้อมูลกรมธรรม์ของคุณ'}
-          </Text>
-        </View>
+        {/* AI footer */}
+        {filtered.length > 0 && (
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 7, marginTop: 8, paddingHorizontal: 4, opacity: 0.55 }}>
+            <MaterialIcons name="auto-awesome" size={12} color="#9CA3AF" style={{ marginTop: 1 }} />
+            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: '#9CA3AF', flex: 1, lineHeight: 15 }}>
+              {language === 'en'
+                ? 'Powered by AIA AI · Alerts personalised from your policy & behaviour patterns'
+                : 'ขับเคลื่อนโดย AIA AI · แจ้งเตือนจากพฤติกรรมและข้อมูลกรมธรรม์ของคุณ'}
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
