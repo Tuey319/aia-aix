@@ -30,8 +30,7 @@
       "assets/illustrations/*.svg"
     ],
     "plugins": [
-      "expo-font",
-      "expo-image"
+      "expo-font"
     ],
     "extra": {
       "eas": {

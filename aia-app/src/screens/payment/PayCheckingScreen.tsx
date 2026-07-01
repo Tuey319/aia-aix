@@ -36,14 +36,19 @@ export function PayCheckingScreen() {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          navigation.navigate('Home');
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [navigation]);
+  }, []);
+
+  useEffect(() => {
+    if (countdown === 0) {
+      navigation.navigate('Home');
+    }
+  }, [countdown, navigation]);
 
   const infoRows = [
     { label: language === 'en' ? 'Amount' : 'จำนวนเงิน', value: language === 'en' ? '฿17,380.00' : '17,380.00 บาท' },
