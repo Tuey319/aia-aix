@@ -57,10 +57,10 @@ function NotificationCard({
         <View style={{ position: 'relative', flexShrink: 0 }}>
           <View style={{
             width: 50, height: 50, borderRadius: 25,
-            backgroundColor: meta.colorBg,
+            backgroundColor: '#FFF0F3',
             alignItems: 'center', justifyContent: 'center',
           }}>
-            <MaterialIcons name={meta.icon as any} size={24} color={meta.colorIcon} />
+            <MaterialIcons name={meta.icon as any} size={24} color={colors.primary} />
           </View>
           {isUnread && (
             <View style={{
@@ -256,13 +256,6 @@ export function NotificationsScreen() {
                 elevation: isActive ? 3 : 0,
               }}
             >
-              {meta && (
-                <MaterialIcons
-                  name={meta.icon as any}
-                  size={13}
-                  color={isActive ? '#FFFFFF' : '#6B7280'}
-                />
-              )}
               <Text style={{
                 fontFamily: fontFamily.anuphan.semiBold,
                 fontSize: 13,
