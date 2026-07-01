@@ -5,7 +5,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Share, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
@@ -95,9 +95,7 @@ export function SharePrideScreen() {
           {SHARE_CHANNELS.map((ch) => (
             <TouchableOpacity key={ch.name} onPress={handleShare} activeOpacity={0.8}
               style={{ flex: 1, backgroundColor: ch.bg, borderRadius: 14, paddingVertical: 14, alignItems: 'center', gap: 6 }}>
-              {ch.lib === 'fa6'
-                ? <FontAwesome6 name={ch.icon} size={20} color={ch.color} />
-                : <MaterialIcons name={ch.icon} size={22} color={ch.color} />}
+              <MaterialIcons name={ch.icon} size={22} color={ch.color} />
               <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 10, color: ch.color }}>{ch.name}</Text>
             </TouchableOpacity>
           ))}

@@ -51,6 +51,7 @@ function AdBanner({ source }: { source: number }) {
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const policy = useAppStore((s) => s.selectedPolicy);
+  const language = useAppStore((s) => s.language);
   const s = useStrings();
   const [activeIndex, setActiveIndex] = useState(0);
   const flatRef = useRef<FlatList>(null);
