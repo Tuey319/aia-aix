@@ -47,6 +47,8 @@ export type HomeStackParamList = {
   GenericError: undefined;
   Offline: undefined;
   SessionTimeout: undefined;
+  // Notifications (Call-Intent Prediction stubs)
+  Notifications: undefined;
   // AI Celebration (Delight Mak)
   Celebration: undefined;
   CelebrationDetail: undefined;

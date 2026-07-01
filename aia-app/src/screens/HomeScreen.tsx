@@ -101,6 +101,7 @@ export function HomeScreen() {
 
           {/* Bell with red notification badge */}
           <TouchableOpacity
+            onPress={() => navigation.navigate('Notifications' as any)}
             style={{
               width: 40,
               height: 40,

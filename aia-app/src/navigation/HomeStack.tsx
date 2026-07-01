@@ -103,6 +103,8 @@ export function HomeStack() {
       <Stack.Screen name="GenericError" component={GenericErrorScreen} />
       <Stack.Screen name="Offline" component={OfflineScreen} />
       <Stack.Screen name="SessionTimeout" component={SessionTimeoutScreen} />
+      {/* Notifications — Call-Intent Prediction stubs */}
+      <Stack.Screen name="Notifications" component={require('../screens/notifications/NotificationsScreen').NotificationsScreen} />
       {/* AI Celebration — Delight Mak (full ecosystem) */}
       <Stack.Screen name="Celebration" component={require('../screens/celebration/CelebrationScreen').CelebrationScreen}
         options={{ presentation: 'transparentModal', animation: 'fade' }} />
