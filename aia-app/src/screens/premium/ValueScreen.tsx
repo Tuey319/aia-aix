@@ -7,11 +7,14 @@ import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '..
 import { cardShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
 import { useAppStore } from '../../store';
+import { useStrings } from '../../i18n';
 
 export function ValueScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const insets = useSafeAreaInsets();
-  const policy = useAppStore((s) => s.selectedPolicy);
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+  const policy = useAppStore((st) => st.selectedPolicy);
 
   const paidToDate = 148000;
   const multiplier = Math.round(policy.sumAssured / paidToDate);
@@ -42,7 +45,7 @@ export function ValueScreen() {
             flex: 1,
           }}
         >
-          คุณค่าที่ได้รับ
+          {s.value.title}
         </Text>
       </View>
 
@@ -72,7 +75,7 @@ export function ValueScreen() {
               color: 'rgba(255,255,255,0.75)',
             }}
           >
-            คุณจ่ายเบี้ยสะสมแล้ว ฿{paidToDate.toLocaleString('en-US')}
+            {s.value.paidSoFar} ฿{paidToDate.toLocaleString('en-US')}
           </Text>
           <Text
             style={{
@@ -82,7 +85,7 @@ export function ValueScreen() {
               marginTop: -10,
             }}
           >
-            และได้รับความคุ้มครอง
+            {s.value.coverageReceived}
           </Text>
 
           {/* Big sum assured */}
@@ -119,9 +122,9 @@ export function ValueScreen() {
                 flex: 1,
               }}
             >
-              ทุก ฿1 ที่จ่าย = ฿{multiplier} ความคุ้มครอง
+              {s.value.valueRatio(String(multiplier))}
             </Text>
-            <StatusPill label="คุ้มครองอยู่" variant="success" />
+            <StatusPill label={s.value.activeStatus} variant="success" />
           </View>
         </View>
 
@@ -144,7 +147,7 @@ export function ValueScreen() {
                 letterSpacing: 0.6,
               }}
             >
-              ความคุ้มครองที่คุณได้รับอยู่
+              {s.value.coverageSection}
             </Text>
           </View>
 
@@ -153,24 +156,24 @@ export function ValueScreen() {
           <CoverageRow
             icon="shield"
             iconColor={colors.primary}
-            title="คุ้มครองชีวิต"
-            subtitle="จ่ายเมื่อเสียชีวิตหรือทุพพลภาพมากไป"
+            title={s.value.lifeInsurance}
+            subtitle={s.value.lifeInsuranceSub}
             value="฿2,000,000"
           />
           <View style={{ height: 1, backgroundColor: colors.hairline, marginLeft: 50 }} />
           <CoverageRow
             icon="local-hospital"
             iconColor={colors.primary}
-            title="ค่ารักษาพยาบาล"
-            subtitle="ผู้ป่วยใน ผู้ป่วยนอก"
+            title={s.value.hospital}
+            subtitle={s.value.hospitalSub}
             value="฿1,000,000"
           />
           <View style={{ height: 1, backgroundColor: colors.hairline, marginLeft: 50 }} />
           <CoverageRow
             icon="favorite"
             iconColor={colors.primary}
-            title="โรคร้ายแรง"
-            subtitle="เช็คมาตรฐานครบวงจร"
+            title={s.value.criticalIllness}
+            subtitle={s.value.criticalIllnessSub}
             value="฿500,000"
           />
           <View style={{ height: 8 }} />
@@ -211,7 +214,7 @@ export function ValueScreen() {
             >
               ฿{claimReceived.toLocaleString('en-US')}
             </Text>
-            <StatusPill label={`${claimPct}% ของเบี้ยปีนี้`} variant="success" />
+            <StatusPill label={`${claimPct}% ${language === 'en' ? 'of this year\'s premium' : 'ของเบี้ยปีนี้'}`} variant="success" />
           </View>
         </View>
 
@@ -236,8 +239,9 @@ export function ValueScreen() {
               lineHeight: 22,
             }}
           >
-            เบี้ยที่จ่ายไม่ได้หายไปไหน — มันคือความเตรียมพร้อม
-            ปกป้องคุณและครอบครัวในวันที่ไม่มีใครคาดคิด
+            {language === 'en'
+              ? 'Every premium you pay is preparation — protecting you and your family when the unexpected happens.'
+              : 'เบี้ยที่จ่ายไม่ได้หายไปไหน — มันคือความเตรียมพร้อม ปกป้องคุณและครอบครัวในวันที่ไม่มีใครคาดคิด'}
           </Text>
         </View>
       </ScrollView>

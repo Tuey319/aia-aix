@@ -13,6 +13,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { IllustrationSuccess, AIRobotMascot } from '../../components/illustrations';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -74,6 +75,7 @@ const CONFETTI = [
 export function CelebrationScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const language = useAppStore((state) => state.language);
   const scaleAnim = useRef(new Animated.Value(0.7)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
 
@@ -97,10 +99,10 @@ export function CelebrationScreen() {
           {/* Headline */}
           <View style={{ alignItems: 'center', gap: 6 }}>
             <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 26, color: colors.ink, textAlign: 'center' }}>
-              ดีมากเลย! 🎉
+              {language === 'en' ? 'Well done! 🎉' : 'ดีมากเลย! 🎉'}
             </Text>
             <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 14, color: colors.textSecondary, textAlign: 'center', lineHeight: 20 }}>
-              คุณชำระเบี้ยประกันครบแล้ว
+              {language === 'en' ? 'Your insurance premium is fully paid.' : 'คุณชำระเบี้ยประกันครบแล้ว'}
             </Text>
           </View>
 
@@ -108,14 +110,14 @@ export function CelebrationScreen() {
           <View style={{ backgroundColor: colors.primaryTint, borderRadius: radius.card, paddingHorizontal: 20, paddingVertical: 12, alignItems: 'center', width: '100%', gap: 4 }}>
             <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: colors.primary, letterSpacing: 1.5, textTransform: 'uppercase' }}>Milestone</Text>
             <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 36, color: colors.primary, letterSpacing: -1 }}>6 งวด</Text>
-            <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 13, color: colors.primaryDeep }}>ชำระตรงเวลาต่อเนื่อง 🔥</Text>
+            <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 13, color: colors.primaryDeep }}>{language === 'en' ? 'On-time streak 🔥' : 'ชำระตรงเวลาต่อเนื่อง 🔥'}</Text>
           </View>
 
           {/* Payment amount */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <MaterialIcons name="check-circle" size={20} color={colors.success} />
             <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 14, color: colors.inkBody }}>
-              ชำระเสร็จสิ้น ·{' '}
+              {language === 'en' ? 'Payment complete ·' : 'ชำระเสร็จสิ้น ·'}{' '}
               <Text style={{ fontFamily: fontFamily.jakarta.bold, color: colors.ink }}>฿4,250.00</Text>
             </Text>
           </View>
@@ -128,7 +130,7 @@ export function CelebrationScreen() {
               style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 50, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}
             >
               <MaterialIcons name="celebration" size={18} color={colors.white} />
-              <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>ดูรายละเอียดการฉลอง</Text>
+              <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>{language === 'en' ? 'View Celebration Details' : 'ดูรายละเอียดการฉลอง'}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => navigation.navigate('RewardPrivilege')}
@@ -136,10 +138,10 @@ export function CelebrationScreen() {
               style={{ borderWidth: 1.5, borderColor: colors.primary, borderRadius: radius.button, height: 46, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }}
             >
               <MaterialIcons name="card-giftcard" size={18} color={colors.primary} />
-              <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold, fontSize: 14 }}>ดูสิทธิพิเศษของคุณ 🎁</Text>
+              <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold, fontSize: 14 }}>{language === 'en' ? 'View Your Privileges 🎁' : 'ดูสิทธิพิเศษของคุณ 🎁'}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.7} style={{ paddingVertical: 8, alignItems: 'center' }}>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.textSecondary }}>กลับหน้าหลัก</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.textSecondary }}>{language === 'en' ? 'Back to Home' : 'กลับหน้าหลัก'}</Text>
             </TouchableOpacity>
           </View>
         </View>

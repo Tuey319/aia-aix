@@ -6,11 +6,15 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding } from '../../tokens';
 import { primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
 export function PayFailedScreen() {
   const navigation = useNavigation<Nav>();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top', 'bottom']}>
@@ -46,7 +50,7 @@ export function PayFailedScreen() {
             textAlign: 'center',
           }}
         >
-          การชำระเงินไม่สำเร็จ
+          {s.payment.failedTitle}
         </Text>
 
         <Text
@@ -59,7 +63,7 @@ export function PayFailedScreen() {
             marginBottom: 14,
           }}
         >
-          ธนาคารปฏิเสธรายการนี้{'\n'}ยังไม่มีการตัดเงินจากบัญชีของคุณ
+          {s.payment.failedSub}
         </Text>
 
         {/* Reference code */}
@@ -71,7 +75,7 @@ export function PayFailedScreen() {
             marginBottom: 36,
           }}
         >
-          รหัสอ้างอิง · TXN-0095521
+          {language === 'en' ? 'Reference · TXN-0095521' : 'รหัสอ้างอิง · TXN-0095521'}
         </Text>
 
         {/* Retry button */}
@@ -96,7 +100,7 @@ export function PayFailedScreen() {
               fontSize: fontSize.title,
             }}
           >
-            ลองอีกครั้ง
+            {s.common.retry}
           </Text>
         </TouchableOpacity>
 
@@ -121,7 +125,7 @@ export function PayFailedScreen() {
               fontSize: fontSize.title,
             }}
           >
-            กลับหน้าหลัก
+            {s.common.backHome}
           </Text>
         </TouchableOpacity>
       </View>

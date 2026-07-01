@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
+import { useAppStore } from '../../store';
 
 function SkeletonRow({ pct }: { pct: number }) {
   return (
@@ -17,6 +18,7 @@ function SkeletonRow({ pct }: { pct: number }) {
 }
 
 export function SearchLoadingScreen() {
+  const language = useAppStore((state) => state.language);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top', 'bottom']}>
       <View
@@ -38,7 +40,7 @@ export function SearchLoadingScreen() {
               color: colors.textSecondary,
             }}
           >
-            กำลังค้นหา...
+            {language === 'en' ? 'Loading...' : 'กำลังค้นหา...'}
           </Text>
         </View>
 

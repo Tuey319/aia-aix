@@ -22,6 +22,7 @@ import { StatusPill } from '../../components/StatusPill';
 import { SectionGroup } from '../../components/SectionGroup';
 import { ListRow } from '../../components/ListRow';
 import { useAppStore } from '../../store';
+import { useStrings } from '../../i18n';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -29,6 +30,8 @@ export function PolicyScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const policy = useAppStore((s) => s.selectedPolicy);
+  const language = useAppStore((s) => s.language);
+  const s = useStrings();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -88,7 +91,7 @@ export function PolicyScreen() {
             >
               {policy.policyNo}
             </Text>
-            <StatusPill label="คุ้มครองอยู่" variant="success" />
+            <StatusPill label={s.policy.activeStatus} variant="success" />
           </View>
 
           {/* Plan name */}
@@ -99,7 +102,7 @@ export function PolicyScreen() {
               color: colors.textSecondary,
             }}
           >
-            กรมประกัน
+            {language === 'en' ? 'Insurance Policy' : 'กรมประกัน'}
           </Text>
 
           {/* Sum assured – big */}
@@ -134,7 +137,7 @@ export function PolicyScreen() {
               color: 'rgba(255,255,255,0.75)',
             }}
           >
-            มูลค่าความคุ้มครองต่อคุณในปีนี้
+            {s.policy.valueRatio}
           </Text>
 
           {/* ฿1:฿49 ratio */}
@@ -156,7 +159,7 @@ export function PolicyScreen() {
                 color: 'rgba(255,255,255,0.55)',
               }}
             >
-              จาก ความคุ้มครอง
+              {language === 'en' ? 'from coverage' : 'จาก ความคุ้มครอง'}
             </Text>
           </View>
 
@@ -179,7 +182,7 @@ export function PolicyScreen() {
                   color: 'rgba(255,255,255,0.55)',
                 }}
               >
-                เคลมในปีนี้
+                {s.policy.claimsThisYear}
               </Text>
               <Text
                 style={{
@@ -211,7 +214,7 @@ export function PolicyScreen() {
                   color: 'rgba(255,255,255,0.55)',
                 }}
               >
-                สิทธิ Vitality
+                {s.policy.vitalityBenefit}
               </Text>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                 <Text
@@ -249,20 +252,20 @@ export function PolicyScreen() {
                 flex: 1,
               }}
             >
-              คุณได้รับมากกว่าที่จ่ายในปีนี้
+              {language === 'en' ? 'You received more than you paid this year' : 'คุณได้รับมากกว่าที่จ่ายในปีนี้'}
             </Text>
           </View>
         </View>
 
         {/* Coverage section */}
-        <SectionGroup label="ความคุ้มครอง">
+        <SectionGroup label={s.policy.coverageSection}>
           <ListRow
             icon="local-hospital"
             iconColor={colors.primary}
-            title="ค่ารักษาผู้ป่วยใน"
+            title={s.policy.inpatient}
             right={
               <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: fontSize.bodyMd, color: colors.ink2 }}>
-                เต็มจำนวน
+                {language === 'en' ? 'Full' : 'เต็มจำนวน'}
               </Text>
             }
             onPress={() => navigation.navigate('CoverageDetail')}
@@ -270,7 +273,7 @@ export function PolicyScreen() {
           <ListRow
             icon="favorite"
             iconColor={colors.primary}
-            title="โรคร้ายแรง"
+            title={s.policy.criticalIllness}
             right={
               <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: fontSize.bodyMd, color: colors.ink2 }}>
                 ฿1,000,000
@@ -281,7 +284,7 @@ export function PolicyScreen() {
           <ListRow
             icon="verified-user"
             iconColor={colors.primary}
-            title="คุ้มครองชีวิต"
+            title={s.policy.lifeInsurance}
             right={
               <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: fontSize.bodyMd, color: colors.ink2 }}>
                 ฿1,500,000
@@ -302,7 +305,7 @@ export function PolicyScreen() {
         >
           <ListRow
             icon="description"
-            title="เอกสารกรมธรรม์"
+            title={s.policy.documents}
             onPress={() => navigation.navigate('PolicyDocs')}
           />
         </View>

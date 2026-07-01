@@ -558,11 +558,11 @@ export function HomeScreen() {
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                 <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.white }}>AI Celebration ✨</Text>
                 <View style={{ backgroundColor: colors.primary, borderRadius: 99, paddingHorizontal: 7, paddingVertical: 2 }}>
-                  <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 8, color: colors.white, letterSpacing: 0.3 }}>ใหม่</Text>
+                  <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 8, color: colors.white, letterSpacing: 0.3 }}>{language === 'en' ? 'New' : 'ใหม่'}</Text>
                 </View>
               </View>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>
-                เหรียญรางวัล · การเดินทาง · จดหมายขอบคุณ
+                {language === 'en' ? 'Badges · Journey · Gratitude Letter' : 'เหรียญรางวัล · การเดินทาง · จดหมายขอบคุณ'}
               </Text>
             </View>
             <MaterialIcons name="chevron-right" size={20} color="rgba(255,255,255,0.4)" />

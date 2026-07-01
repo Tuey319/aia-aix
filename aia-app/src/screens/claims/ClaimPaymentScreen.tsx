@@ -21,6 +21,8 @@ import {
 } from '../../tokens';
 import { ClaimStepHeader } from '../../components/ClaimStepHeader';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -31,10 +33,12 @@ export function ClaimPaymentScreen() {
   const insets = useSafeAreaInsets();
   const [bank, setBank] = useState('ธนาคารกรุงเทพ');
   const [accountNo, setAccountNo] = useState('888-0-12345-6');
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      <ClaimStepHeader step={STEP} title="ข้อมูลการรับเงิน" />
+      <ClaimStepHeader step={STEP} title={s.claims.paymentTitle} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -65,7 +69,7 @@ export function ClaimPaymentScreen() {
               lineHeight: 18,
             }}
           >
-            เงินจะโอนเข้าบัญชีธนาคารที่ระบุในกรมธรรม์ของคุณเท่านั้น
+            {s.claims.paymentNote}
           </Text>
         </View>
 
@@ -86,7 +90,7 @@ export function ClaimPaymentScreen() {
               color: colors.inkBody2,
             }}
           >
-            ข้อมูลบัญชี (เจ้าของกรมธรรม์)
+            {language === 'en' ? 'Account Details (Policy Holder)' : 'ข้อมูลบัญชี (เจ้าของกรมธรรม์)'}
           </Text>
 
           {/* Bank dropdown */}
@@ -98,7 +102,7 @@ export function ClaimPaymentScreen() {
                 color: colors.textSecondary,
               }}
             >
-              ธนาคาร
+              {language === 'en' ? 'Bank' : 'ธนาคาร'}
             </Text>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -136,7 +140,7 @@ export function ClaimPaymentScreen() {
                 color: colors.textSecondary,
               }}
             >
-              เลขบัญชี
+              {language === 'en' ? 'Account Number' : 'เลขบัญชี'}
             </Text>
             <TextInput
               value={accountNo}
@@ -176,15 +180,15 @@ export function ClaimPaymentScreen() {
               paddingVertical: 14,
             }}
           >
-            ข้อมูลของฉัน
+            {language === 'en' ? 'My Information' : 'ข้อมูลของฉัน'}
           </Text>
           <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
 
-          <InfoRow label="เลขลูกค้า" value="910 1231 01123" />
+          <InfoRow label={language === 'en' ? 'Customer ID' : 'เลขลูกค้า'} value="910 1231 01123" />
           <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
-          <InfoRow label="อีเมล" value="somchai@gmail.com" />
+          <InfoRow label={language === 'en' ? 'Email' : 'อีเมล'} value="somchai@gmail.com" />
           <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
-          <InfoRow label="แฮนด์โฟน" value="081 234 5678" />
+          <InfoRow label={language === 'en' ? 'Mobile' : 'แฮนด์โฟน'} value="081 234 5678" />
         </View>
       </ScrollView>
 
@@ -218,7 +222,7 @@ export function ClaimPaymentScreen() {
               fontSize: 16,
             }}
           >
-            ถัดไป
+            {s.common.next}
           </Text>
         </TouchableOpacity>
       </View>

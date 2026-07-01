@@ -15,6 +15,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -68,6 +70,8 @@ function TypingDots() {
 export function AssistantTypingScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -104,7 +108,7 @@ export function AssistantTypingScreen() {
             flex: 1,
           }}
         >
-          ผู้ช่วย AIA
+          {s.assistant.title}
         </Text>
 
         <View
@@ -133,7 +137,7 @@ export function AssistantTypingScreen() {
               color: colors.success,
             }}
           >
-            ออนไลน์
+            {s.assistant.online}
           </Text>
         </View>
       </View>
@@ -175,7 +179,7 @@ export function AssistantTypingScreen() {
                   lineHeight: 22,
                 }}
               >
-                เช็คว่าฉันต้องจ่ายเท่าไหร่
+                {language === 'en' ? 'How much do I need to pay?' : 'เช็คว่าฉันต้องจ่ายเท่าไหร่'}
               </Text>
             </View>
           </View>
@@ -203,7 +207,7 @@ export function AssistantTypingScreen() {
                 marginLeft: 4,
               }}
             >
-              กำลังพิมพ์...
+              {s.assistant.typing}
             </Text>
           </View>
         </ScrollView>
@@ -223,7 +227,7 @@ export function AssistantTypingScreen() {
           }}
         >
           <TextInput
-            placeholder="พิมพ์ข้อความ..."
+            placeholder={s.assistant.placeholder}
             placeholderTextColor={colors.textTertiary}
             style={{
               flex: 1,

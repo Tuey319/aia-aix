@@ -17,18 +17,22 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
-
-const riderRows = [
-  { name: 'สัญญาเพิ่มเติมอุบัติเหตุ (ADD/RDD)', amount: '200,000.00' },
-  { name: 'สัญญาเพิ่มเติมอุบัติเหตุ (AI/RCC)', amount: '200,000.00' },
-  { name: 'สัญญาเพิ่มเติมโรคร้ายแรง (แบบ AIA INFINITE CARE)', amount: '200,000.00' },
-];
 
 export function PayCoverageScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const riderRows = [
+    { name: language === 'en' ? 'Accident Rider (ADD/RDD)' : 'สัญญาเพิ่มเติมอุบัติเหตุ (ADD/RDD)', amount: '200,000.00' },
+    { name: language === 'en' ? 'Accident Rider (AI/RCC)' : 'สัญญาเพิ่มเติมอุบัติเหตุ (AI/RCC)', amount: '200,000.00' },
+    { name: language === 'en' ? 'Critical Illness Rider (AIA INFINITE CARE)' : 'สัญญาเพิ่มเติมโรคร้ายแรง (แบบ AIA INFINITE CARE)', amount: '200,000.00' },
+  ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -54,7 +58,7 @@ export function PayCoverageScreen() {
             flex: 1,
           }}
         >
-          ความคุ้มครองเพิ่มเติม
+          {s.payment.coverageTitle}
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} hitSlop={16}>
           <MaterialIcons name="close" size={22} color={colors.ink} />
@@ -79,7 +83,7 @@ export function PayCoverageScreen() {
             marginBottom: 4,
           }}
         >
-          2/7
+          {s.payment.step('2', '7')}
         </Text>
 
         {/* Dark hero card */}
@@ -114,7 +118,7 @@ export function PayCoverageScreen() {
                 color: colors.white,
               }}
             >
-              เพิ่มทุนประกัน +฿1,000,000
+              {s.payment.addCoverageHero}
             </Text>
             <Text
               style={{
@@ -124,7 +128,7 @@ export function PayCoverageScreen() {
                 lineHeight: fontSize.caption * 1.5,
               }}
             >
-              +฿420/เดือน · เพิ่มได้ด้วยอายุถึง 60 ปี ไม่มีถามคำถามสุขภาพ
+              {s.payment.addCoverageSub}
             </Text>
           </View>
           <MaterialIcons name="chevron-right" size={20} color="rgba(255,255,255,0.5)" />
@@ -147,7 +151,7 @@ export function PayCoverageScreen() {
               color: colors.textSecondary,
             }}
           >
-            หรือเลือกแพ็กสัญญาเพิ่มเติม ในราคาเพียง
+            {language === 'en' ? 'Or choose a rider bundle for only' : 'หรือเลือกแพ็กสัญญาเพิ่มเติม ในราคาเพียง'}
           </Text>
           <View style={{ flex: 1, height: 1, backgroundColor: colors.hairline2 }} />
         </View>
@@ -181,7 +185,7 @@ export function PayCoverageScreen() {
                   letterSpacing: 0,
                 }}
               >
-                บาทต่อปี
+                {language === 'en' ? 'THB/year' : 'บาทต่อปี'}
               </Text>
             </Text>
             <Text
@@ -192,7 +196,7 @@ export function PayCoverageScreen() {
                 textAlign: 'center',
               }}
             >
-              สมัครได้ง่าย ไม่ต้องตรวจหรือตอบคำถามสุขภาพ
+              {language === 'en' ? 'Easy to apply, no medical exam or health questions' : 'สมัครได้ง่าย ไม่ต้องตรวจหรือตอบคำถามสุขภาพ'}
             </Text>
           </View>
 
@@ -200,8 +204,8 @@ export function PayCoverageScreen() {
           <View style={{ gap: 0 }}>
             {/* Column headers */}
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 6 }}>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: fontSize.caption, color: colors.textSecondary }}>สัญญาประกัน</Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: fontSize.caption, color: colors.textSecondary }}>จำนวนทุนประกัน</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: fontSize.caption, color: colors.textSecondary }}>{language === 'en' ? 'Coverage' : 'สัญญาประกัน'}</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: fontSize.caption, color: colors.textSecondary }}>{language === 'en' ? 'Sum Assured' : 'จำนวนทุนประกัน'}</Text>
             </View>
             <View style={{ height: 1, backgroundColor: colors.hairline }} />
             {riderRows.map((row, i) => (
@@ -263,7 +267,7 @@ export function PayCoverageScreen() {
                   color: colors.primary,
                 }}
               >
-                ติดต่อตัวแทน
+                {language === 'en' ? 'Contact Agent' : 'ติดต่อตัวแทน'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -285,7 +289,7 @@ export function PayCoverageScreen() {
                   color: colors.primary,
                 }}
               >
-                ดูเพิ่มเติม
+                {language === 'en' ? 'Learn More' : 'ดูเพิ่มเติม'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -312,7 +316,7 @@ export function PayCoverageScreen() {
               flex: 1,
             }}
           >
-            ดูแผนเพิ่มเติมทั้งหมดใน AIA Marketplace
+            {language === 'en' ? 'Browse all plans on AIA Marketplace' : 'ดูแผนเพิ่มเติมทั้งหมดใน AIA Marketplace'}
           </Text>
           <MaterialIcons name="open-in-new" size={18} color={colors.info} />
         </TouchableOpacity>
@@ -353,7 +357,7 @@ export function PayCoverageScreen() {
               fontSize: fontSize.title,
             }}
           >
-            เพิ่มความคุ้มครอง
+            {s.payment.addCoverageBtn}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -372,7 +376,7 @@ export function PayCoverageScreen() {
               fontSize: fontSize.title,
             }}
           >
-            ข้าม
+            {s.payment.skipBtn}
           </Text>
         </TouchableOpacity>
       </View>

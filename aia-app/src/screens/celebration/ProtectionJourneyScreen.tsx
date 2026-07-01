@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { BarChart } from '../../components/BarChart';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -36,6 +37,7 @@ const PROTECTION_EVENTS = [
 export function ProtectionJourneyScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -45,8 +47,8 @@ export function ProtectionJourneyScreen() {
           <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>การเดินทางของคุณ</Text>
-          <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.textSecondary }}>Protection Journey · ปี 2569</Text>
+          <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>{language === 'en' ? 'Your Journey' : 'การเดินทางของคุณ'}</Text>
+          <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.textSecondary }}>Protection Journey · {language === 'en' ? 'Year 2026' : 'ปี 2569'}</Text>
         </View>
       </View>
 
@@ -66,20 +68,20 @@ export function ProtectionJourneyScreen() {
 
           <View style={{ flexDirection: 'row', gap: 12 }}>
             <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 14, gap: 4 }}>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>ชำระแล้วปีนี้</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Paid this year' : 'ชำระแล้วปีนี้'}</Text>
               <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 22, color: '#fff', letterSpacing: -0.5 }}>฿25,500</Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.5)' }}>6 งวด ตรงเวลาทั้งหมด</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.5)' }}>{language === 'en' ? '6 instalments, all on time' : '6 งวด ตรงเวลาทั้งหมด'}</Text>
             </View>
             <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 14, gap: 4 }}>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>ความคุ้มครอง</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Coverage' : 'ความคุ้มครอง'}</Text>
               <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 22, color: '#fff', letterSpacing: -0.5 }}>฿2.0M</Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.5)' }}>ปกป้องคุณตลอดปี</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.5)' }}>{language === 'en' ? 'Protecting you all year' : 'ปกป้องคุณตลอดปี'}</Text>
             </View>
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <MaterialIcons name="emoji-events" size={16} color={colors.gold} />
-            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 13, color: colors.gold }}>3 Badges ได้รับปีนี้</Text>
+            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 13, color: colors.gold }}>{language === 'en' ? '3 Badges earned this year' : '3 Badges ได้รับปีนี้'}</Text>
             <View style={{ flex: 1, height: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
           </View>
         </LinearGradient>
@@ -87,7 +89,7 @@ export function ProtectionJourneyScreen() {
         {/* Payment bar chart */}
         <View style={{ backgroundColor: colors.card, borderRadius: radius.card, padding: 18, gap: 14, ...cardShadow }}>
           <View style={{ flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.ink2 }}>ประวัติการชำระรายเดือน</Text>
+            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.ink2 }}>{language === 'en' ? 'Monthly Payment History' : 'ประวัติการชำระรายเดือน'}</Text>
             <Text style={{ fontFamily: fontFamily.mono.regular, fontSize: 9, color: colors.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase' }}>2569</Text>
           </View>
           <BarChart
@@ -99,7 +101,7 @@ export function ProtectionJourneyScreen() {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.success }} />
             <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.success }}>
-              ตรงเวลาทุกงวด · ไม่มีค่าปรับ
+              {language === 'en' ? 'On time every instalment · No late fees' : 'ตรงเวลาทุกงวด · ไม่มีค่าปรับ'}
             </Text>
           </View>
         </View>
@@ -107,7 +109,7 @@ export function ProtectionJourneyScreen() {
         {/* Protection timeline */}
         <View style={{ backgroundColor: colors.card, borderRadius: radius.card, padding: 18, gap: 0, ...cardShadow }}>
           <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.ink2, marginBottom: 16 }}>
-            Timeline การคุ้มครอง
+            {language === 'en' ? 'Protection Timeline' : 'Timeline การคุ้มครอง'}
           </Text>
 
           {PROTECTION_EVENTS.map((evt, i) => (
@@ -138,7 +140,7 @@ export function ProtectionJourneyScreen() {
         <TouchableOpacity onPress={() => navigation.navigate('SharePride')} activeOpacity={0.82}
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 52, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}>
           <MaterialIcons name="share" size={18} color={colors.white} />
-          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>แชร์ความภาคภูมิใจ 🎉</Text>
+          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>{language === 'en' ? 'Share Your Pride 🎉' : 'แชร์ความภาคภูมิใจ 🎉'}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

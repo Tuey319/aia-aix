@@ -16,6 +16,8 @@ import {
   screenPadding,
 } from '../../tokens';
 import { primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -30,6 +32,8 @@ export function ClaimAmountScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const [amount, setAmount] = useState('18,500');
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   function handleKey(key: string) {
     if (key === 'backspace') {
@@ -73,7 +77,7 @@ export function ClaimAmountScreen() {
             flex: 1,
           }}
         >
-          จำนวนเงินที่เคลม
+          {s.claims.claimAmount}
         </Text>
       </View>
 
@@ -94,7 +98,7 @@ export function ClaimAmountScreen() {
             color: colors.textSecondary,
           }}
         >
-          ระบุจำนวนเงินที่ต้องการเคลม
+          {language === 'en' ? 'Enter the claim amount' : 'ระบุจำนวนเงินที่ต้องการเคลม'}
         </Text>
         <Text
           style={{
@@ -113,7 +117,7 @@ export function ClaimAmountScreen() {
             color: colors.textTertiary,
           }}
         >
-          ยอดสูงสุดที่เคลมได้ ฿50,000
+          {language === 'en' ? 'Maximum claimable: ฿50,000' : 'ยอดสูงสุดที่เคลมได้ ฿50,000'}
         </Text>
       </View>
 
@@ -200,7 +204,7 @@ export function ClaimAmountScreen() {
               fontSize: 16,
             }}
           >
-            ถกลง
+            {language === 'en' ? 'Confirm' : 'ถกลง'}
           </Text>
         </TouchableOpacity>
       </View>

@@ -18,6 +18,8 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -27,6 +29,8 @@ export function PayMethodScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const [selected, setSelected] = useState<Method | null>(null);
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   function handleNext() {
     if (selected === 'card') navigation.navigate('PayCard');
@@ -57,7 +61,7 @@ export function PayMethodScreen() {
             flex: 1,
           }}
         >
-          ชำระเงิน
+          {language === 'en' ? 'Payment' : 'ชำระเงิน'}
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} hitSlop={16}>
           <MaterialIcons name="close" size={22} color={colors.ink} />
@@ -90,7 +94,7 @@ export function PayMethodScreen() {
                 color: colors.textSecondary,
               }}
             >
-              เลขกรมธรรม์
+              {language === 'en' ? 'Policy Number' : 'เลขกรมธรรม์'}
             </Text>
             <Text
               style={{
@@ -113,7 +117,7 @@ export function PayMethodScreen() {
                 color: colors.textSecondary,
               }}
             >
-              จำนวนเงินที่ต้องชำระ
+              {language === 'en' ? 'Amount to pay' : 'จำนวนเงินที่ต้องชำระ'}
             </Text>
             <Text
               style={{
@@ -123,7 +127,7 @@ export function PayMethodScreen() {
                 letterSpacing: -0.5,
               }}
             >
-              17,380.00 บาท
+              {language === 'en' ? '฿17,380.00' : '17,380.00 บาท'}
             </Text>
           </View>
 
@@ -145,7 +149,7 @@ export function PayMethodScreen() {
                 lineHeight: fontSize.caption * 1.5,
               }}
             >
-              ระบบจะดึงเงินออกจากบัญชีฯ เมื่อได้รับการยืนยันในวันที่ทำการถัดไป
+              {language === 'en' ? 'Funds will be debited upon confirmation on the next business day.' : 'ระบบจะดึงเงินออกจากบัญชีฯ เมื่อได้รับการยืนยันในวันที่ทำการถัดไป'}
             </Text>
           </View>
         </View>
@@ -158,7 +162,7 @@ export function PayMethodScreen() {
             color: colors.ink,
           }}
         >
-          เลือกวิธีชำระเงิน
+          {s.payment.methodTitle}
         </Text>
 
         {/* Payment method cards — side by side */}
@@ -201,7 +205,7 @@ export function PayMethodScreen() {
                 textAlign: 'center',
               }}
             >
-              บัตรเครดิต
+              {s.payment.creditCard}
             </Text>
           </TouchableOpacity>
 
@@ -231,7 +235,7 @@ export function PayMethodScreen() {
                 textAlign: 'center',
               }}
             >
-              QR code
+              {s.payment.qrCode}
             </Text>
           </TouchableOpacity>
         </View>
@@ -273,7 +277,7 @@ export function PayMethodScreen() {
               fontSize: fontSize.title,
             }}
           >
-            ถัดไป
+            {s.common.next}
           </Text>
         </TouchableOpacity>
       </View>

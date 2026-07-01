@@ -13,23 +13,35 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
 type ThumbState = 'up' | 'down' | null;
 
-const ARTICLE_TITLE = 'จะเปลี่ยนงวดชำระเบี้ยฯ ได้อย่างไร?';
-
-const ARTICLE_BODY = [
-  'คุณสามารถเปลี่ยนงวดการชำระเบี้ยประกันได้ด้วยตนเองผ่านแอป AIA+ ได้ง่ายๆ โดยไม่ต้องติดต่อเจ้าหน้าที่',
-  'วิธีการเปลี่ยน:\n1. เปิดแอป AIA+\n2. ไปที่หน้า "การจัดการเบี้ย"\n3. เลือก "ค่าใช้จ่าย & การผ่อน"\n4. เลือกงวดที่ต้องการ (รายเดือน / ราย 3 เดือน / รายปี)\n5. กด "บันทึกงวดการชำระ"',
-  'การเปลี่ยนแปลงจะมีผลในรอบบิลถัดไป ไม่ใช่รอบบิลปัจจุบัน หากมีคำถามเพิ่มเติมสามารถติดต่อเจ้าหน้าที่ได้ที่ 1581 ตลอด 24 ชั่วโมง',
-];
-
 export function FaqAnswerScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const [thumb, setThumb] = useState<ThumbState>(null);
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const ARTICLE_TITLE = language === 'en'
+    ? 'How do I change my billing frequency?'
+    : 'จะเปลี่ยนงวดชำระเบี้ยฯ ได้อย่างไร?';
+
+  const ARTICLE_BODY = language === 'en'
+    ? [
+        'You can change your premium billing frequency yourself through the AIA+ app — no need to contact an agent.',
+        'Steps to change:\n1. Open the AIA+ app\n2. Go to "Premium Management"\n3. Select "Expenses & Installments"\n4. Choose your preferred frequency (Monthly / Quarterly / Annual)\n5. Tap "Save Billing Frequency"',
+        'The change takes effect from the next billing cycle, not the current one. For further questions, contact us at 1581 — available 24 hours.',
+      ]
+    : [
+        'คุณสามารถเปลี่ยนงวดการชำระเบี้ยประกันได้ด้วยตนเองผ่านแอป AIA+ ได้ง่ายๆ โดยไม่ต้องติดต่อเจ้าหน้าที่',
+        'วิธีการเปลี่ยน:\n1. เปิดแอป AIA+\n2. ไปที่หน้า "การจัดการเบี้ย"\n3. เลือก "ค่าใช้จ่าย & การผ่อน"\n4. เลือกงวดที่ต้องการ (รายเดือน / ราย 3 เดือน / รายปี)\n5. กด "บันทึกงวดการชำระ"',
+        'การเปลี่ยนแปลงจะมีผลในรอบบิลถัดไป ไม่ใช่รอบบิลปัจจุบัน หากมีคำถามเพิ่มเติมสามารถติดต่อเจ้าหน้าที่ได้ที่ 1581 ตลอด 24 ชั่วโมง',
+      ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -55,7 +67,7 @@ export function FaqAnswerScreen() {
             flex: 1,
           }}
         >
-          คำถามที่พบบ่อย
+          {s.support.faqTitle}
         </Text>
       </View>
 
@@ -122,7 +134,7 @@ export function FaqAnswerScreen() {
                 color: colors.textSecondary,
               }}
             >
-              บทความนี้มีประโยชน์ไหม?
+              {language === 'en' ? 'Was this article helpful?' : 'บทความนี้มีประโยชน์ไหม?'}
             </Text>
             <View style={{ flexDirection: 'row', gap: 16 }}>
               <TouchableOpacity
@@ -161,7 +173,7 @@ export function FaqAnswerScreen() {
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 52, alignItems: 'center', justifyContent: 'center', ...primaryButtonShadow }}
         >
           <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>
-            ไปที่เปลี่ยนงวดการชำระ
+            {language === 'en' ? 'Change Billing Frequency' : 'ไปที่เปลี่ยนงวดการชำระ'}
           </Text>
         </TouchableOpacity>
       </View>

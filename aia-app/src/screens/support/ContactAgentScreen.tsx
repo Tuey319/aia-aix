@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -15,15 +17,17 @@ interface ChannelRow {
   sub: string;
 }
 
-const CHANNELS: ChannelRow[] = [
-  { icon: 'access-time', title: 'นัดให้โทรกลับ', sub: 'เลือกเวลาที่สะดวก' },
-  { icon: 'chat-bubble-outline', title: 'แชทกับผู้ช่วย', sub: 'ตอบทันที 24 ชม.' },
-  { icon: 'location-on', title: 'ค้นหาสาขาใกล้คุณ', sub: 'อา.–ศ. 08:30–17:00 น.' },
-];
-
 export function ContactAgentScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const CHANNELS: ChannelRow[] = [
+    { icon: 'access-time', title: s.support.callbackTitle, sub: s.support.callbackSub },
+    { icon: 'chat-bubble-outline', title: s.support.chatBtn, sub: language === 'en' ? 'Instant reply, 24 hrs.' : 'ตอบทันที 24 ชม.' },
+    { icon: 'location-on', title: s.support.nearbyBranch, sub: s.support.officeHours },
+  ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -32,7 +36,7 @@ export function ContactAgentScreen() {
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={16}>
           <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
         </TouchableOpacity>
-        <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>ติดต่อเจ้าหน้าที่</Text>
+        <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>{s.support.contactTitle}</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 32, gap: cardGap }}>
@@ -42,7 +46,7 @@ export function ContactAgentScreen() {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.successDot }} />
             <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 12, color: 'rgba(255,255,255,0.65)' }}>
-              แจ้งให้บริการตลอด 24 ชม.
+              {s.support.hotlineSub}
             </Text>
           </View>
 
@@ -51,7 +55,7 @@ export function ContactAgentScreen() {
               AIA Call Center
             </Text>
             <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 44, color: colors.white, letterSpacing: -1 }}>
-              1581
+              {s.support.hotline}
             </Text>
           </View>
 
@@ -60,13 +64,13 @@ export function ContactAgentScreen() {
             activeOpacity={0.82}
             style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 50, alignItems: 'center', justifyContent: 'center', ...primaryButtonShadow }}
           >
-            <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>โทรเลย</Text>
+            <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>{s.support.callNow}</Text>
           </TouchableOpacity>
         </View>
 
-        {/* ช่องทางอื่น */}
+        {/* Other channels */}
         <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 12, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.6, marginTop: 4, marginLeft: 2 }}>
-          ช่องทางอื่น
+          {language === 'en' ? 'Other Channels' : 'ช่องทางอื่น'}
         </Text>
 
         <View style={{ backgroundColor: colors.card, borderRadius: radius.card, overflow: 'hidden', ...cardShadow }}>

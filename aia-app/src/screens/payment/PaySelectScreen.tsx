@@ -19,6 +19,8 @@ import {
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -26,6 +28,8 @@ export function PaySelectScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const [selected, setSelected] = useState<0 | 1>(1);
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -51,7 +55,7 @@ export function PaySelectScreen() {
             flex: 1,
           }}
         >
-          จ่ายเบี้ยฯ
+          {s.payment.headerTitle}
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} hitSlop={16}>
           <MaterialIcons name="close" size={22} color={colors.ink} />
@@ -76,7 +80,7 @@ export function PaySelectScreen() {
               letterSpacing: 0.3,
             }}
           >
-            1/7
+            {s.payment.step('1', '7')}
           </Text>
           <Text
             style={{
@@ -85,7 +89,7 @@ export function PaySelectScreen() {
               color: colors.ink,
             }}
           >
-            เลือกกรมธรรม์ที่ต้องการชำระเบี้ย
+            {s.payment.selectTitle}
           </Text>
         </View>
 
@@ -135,7 +139,7 @@ export function PaySelectScreen() {
                   color: selected === 0 ? colors.ink : colors.inkBody2,
                 }}
               >
-                AIA สมาร์ท เวลท์ (ยูนิต ลิงค์)
+                {language === 'en' ? 'AIA Smart Wealth (Unit Link)' : 'AIA สมาร์ท เวลท์ (ยูนิต ลิงค์)'}
               </Text>
               <Text
                 style={{
@@ -160,7 +164,7 @@ export function PaySelectScreen() {
           </View>
 
           <View style={{ paddingLeft: 30 }}>
-            <StatusPill label="ครบกำหนดใน 16 วัน" variant="amber" />
+            <StatusPill label={language === 'en' ? 'Due in 16 days' : 'ครบกำหนดใน 16 วัน'} variant="amber" />
           </View>
         </TouchableOpacity>
 
@@ -210,7 +214,7 @@ export function PaySelectScreen() {
                 flex: 1,
               }}
             >
-              AIA เพย์ ไลฟ์ พลัส 20 ปี
+              {language === 'en' ? 'AIA Pay Life Plus 20 Yr' : 'AIA เพย์ ไลฟ์ พลัส 20 ปี'}
             </Text>
           </View>
 
@@ -236,7 +240,7 @@ export function PaySelectScreen() {
                   color: colors.inkBody2,
                 }}
               >
-                เบี้ยก่อนหักส่วนลด
+                {s.payment.grossPremium}
               </Text>
               <Text
                 style={{
@@ -256,7 +260,7 @@ export function PaySelectScreen() {
                   color: colors.primary,
                 }}
               >
-                ส่วนลด Vitality
+                {s.payment.vitalityDiscount}
               </Text>
               <Text
                 style={{
@@ -285,7 +289,7 @@ export function PaySelectScreen() {
                   color: colors.ink,
                 }}
               >
-                ยอดชำระ
+                {s.payment.netDue}
               </Text>
               <Text
                 style={{
@@ -336,7 +340,7 @@ export function PaySelectScreen() {
               fontSize: fontSize.title,
             }}
           >
-            ถัดไป
+            {s.common.next}
           </Text>
         </TouchableOpacity>
       </View>

@@ -9,6 +9,7 @@ import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { BarChart } from '../../components/BarChart';
 import { useAppStore } from '../../store';
+import { useStrings } from '../../i18n';
 
 type Nav = NativeStackNavigationProp<HomeStackParamList, 'Costs'>;
 
@@ -63,9 +64,11 @@ const FREQ_OPTIONS: FreqOption[] = [
 export function CostsScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
-  const { billingFrequency, setBillingFrequency } = useAppStore((s) => ({
-    billingFrequency: s.billingFrequency,
-    setBillingFrequency: s.setBillingFrequency,
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+  const { billingFrequency, setBillingFrequency } = useAppStore((st) => ({
+    billingFrequency: st.billingFrequency,
+    setBillingFrequency: st.setBillingFrequency,
   }));
 
   const [localFreq, setLocalFreq] = useState<BillingFreq>(billingFrequency);
@@ -98,7 +101,7 @@ export function CostsScreen() {
             color: colors.ink,
           }}
         >
-          ค่าใช้จ่าย & การผ่อน
+          {s.costs.title}
         </Text>
       </View>
 
@@ -128,7 +131,7 @@ export function CostsScreen() {
                 color: colors.ink2,
               }}
             >
-              แนวโน้มเบี้ย 5 ปี
+              {s.costs.forecastTitle}
             </Text>
             <Text
               style={{
@@ -139,7 +142,7 @@ export function CostsScreen() {
                 textTransform: 'uppercase',
               }}
             >
-              บาท
+              {language === 'en' ? 'THB' : 'บาท'}
             </Text>
           </View>
 
@@ -170,8 +173,7 @@ export function CostsScreen() {
                 lineHeight: 18,
               }}
             >
-              เบี้ยประกันมีแนวโน้มเพิ่มขึ้นตามอายุและต้นทุนทางการแพทย์ —
-              วางแผนงบล่วงหน้าช่วยให้จัดการได้ง่ายขึ้น
+              {s.costs.forecastNote}
             </Text>
           </View>
         </View>
@@ -195,7 +197,7 @@ export function CostsScreen() {
                 letterSpacing: 0.8,
               }}
             >
-              เลือกงวดการชำระ
+              {s.costs.freqSection}
             </Text>
           </View>
 
@@ -251,7 +253,7 @@ export function CostsScreen() {
                           color: isSelected ? colors.primaryDeep : colors.ink2,
                         }}
                       >
-                        {opt.labelTh}
+                        {opt.id === 'monthly' ? s.costs.monthly : opt.id === 'quarterly' ? s.costs.quarterly : s.costs.annual}
                       </Text>
                       {opt.badge && (
                         <View
@@ -269,7 +271,7 @@ export function CostsScreen() {
                               color: colors.white,
                             }}
                           >
-                            {opt.badge}
+                            {opt.id === 'annual' ? s.costs.bestValue : language === 'en' ? 'Cheapest' : 'ถูกสุด'}
                           </Text>
                         </View>
                       )}
@@ -282,7 +284,11 @@ export function CostsScreen() {
                           color: opt.saving ? colors.success : colors.textSecondary,
                         }}
                       >
-                        {opt.note}
+                        {opt.id === 'monthly'
+                          ? s.costs.periodsPerYear('12')
+                          : opt.id === 'quarterly'
+                          ? s.costs.saveNote('1', '510')
+                          : s.costs.saveNote('3', '1,530')}
                       </Text>
                     )}
                   </View>
@@ -316,7 +322,7 @@ export function CostsScreen() {
                 lineHeight: 16,
               }}
             >
-              * การเปลี่ยนงวดชำระจะมีผลในรอบบิลถัดไป
+              {s.costs.cycleNote}
             </Text>
           </View>
         </View>
@@ -356,7 +362,7 @@ export function CostsScreen() {
               fontSize: 16,
             }}
           >
-            บันทึกงวดการชำระ
+            {s.costs.saveBtn}
           </Text>
         </TouchableOpacity>
       </View>

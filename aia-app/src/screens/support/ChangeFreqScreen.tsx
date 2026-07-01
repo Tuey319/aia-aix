@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { useAppStore } from '../../store';
+import { useStrings } from '../../i18n';
 
 type Nav = NativeStackNavigationProp<any>;
 type BillingFreq = 'monthly' | 'quarterly' | 'annual';
@@ -20,18 +21,20 @@ interface FreqOption {
   isCurrent?: boolean;
 }
 
-// Screenshot order: annual (top) → quarterly → monthly (selected/current, bottom)
-const OPTIONS: FreqOption[] = [
-  { id: 'annual',    label: 'รายปี',        amount: 49800, note: 'ประหยัดสูงสุด · ส่วนลด 2%' },
-  { id: 'quarterly', label: 'ราย 3 เดือน', amount: 12700, note: '4 งวด/ปี' },
-  { id: 'monthly',   label: 'รายเดือน',    amount: 4250,  note: '12 งวด/ปี', badge: 'ปัจจุบัน' },
-];
-
 export function ChangeFreqScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const { billingFrequency, setBillingFrequency } = useAppStore();
   const [selected, setSelected] = useState<BillingFreq>(billingFrequency);
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  // Screenshot order: annual (top) → quarterly → monthly (selected/current, bottom)
+  const OPTIONS: FreqOption[] = [
+    { id: 'annual',    label: language === 'en' ? 'Annual' : 'รายปี',        amount: 49800, note: language === 'en' ? 'Best savings · 2% discount' : 'ประหยัดสูงสุด · ส่วนลด 2%' },
+    { id: 'quarterly', label: language === 'en' ? 'Quarterly' : 'ราย 3 เดือน', amount: 12700, note: language === 'en' ? '4 installments/year' : '4 งวด/ปี' },
+    { id: 'monthly',   label: language === 'en' ? 'Monthly' : 'รายเดือน',    amount: 4250,  note: language === 'en' ? '12 installments/year' : '12 งวด/ปี', badge: language === 'en' ? 'Current' : 'ปัจจุบัน' },
+  ];
 
   function handleSave() {
     setBillingFrequency(selected);
@@ -44,14 +47,14 @@ export function ChangeFreqScreen() {
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={16}>
           <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
         </TouchableOpacity>
-        <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>เปลี่ยนงวดการชำระเบี้ยฯ</Text>
+        <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>{s.support.changeFreqTitle}</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 100, gap: cardGap }}>
 
         <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 14, color: colors.textSecondary }}>
-          เลือกความถี่ในการชำระเบี้ยประกันที่เหมาะกับคุณ
+          {language === 'en' ? 'Choose a premium payment frequency that suits you.' : 'เลือกความถี่ในการชำระเบี้ยประกันที่เหมาะกับคุณ'}
         </Text>
 
         {OPTIONS.map((opt) => {
@@ -95,7 +98,7 @@ export function ChangeFreqScreen() {
       <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: colors.screenBg, paddingHorizontal: screenPadding, paddingTop: 12, paddingBottom: insets.bottom + 16, borderTopWidth: 1, borderTopColor: colors.hairline }}>
         <TouchableOpacity onPress={handleSave} activeOpacity={0.82}
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 52, alignItems: 'center', justifyContent: 'center', ...primaryButtonShadow }}>
-          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>บันทึก</Text>
+          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>{s.common.save}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

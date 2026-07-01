@@ -20,6 +20,8 @@ import {
 } from '../../tokens';
 import { ClaimStepHeader } from '../../components/ClaimStepHeader';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -28,18 +30,22 @@ const STEP = 2;
 interface DocRow {
   id: string;
   label: string;
+  labelEn: string;
   uploaded: boolean;
 }
-
-const INITIAL_DOCS: DocRow[] = [
-  { id: 'receipt', label: 'ใบเสร็จรับเงินตัวจริง', uploaded: true },
-  { id: 'expense', label: 'ใบแสดงรายการค่าใช้จ่าย', uploaded: true },
-  { id: 'cert', label: 'ใบรับรองแพทย์', uploaded: false },
-];
 
 export function ClaimDocsScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const INITIAL_DOCS: DocRow[] = [
+    { id: 'receipt', label: 'ใบเสร็จรับเงินตัวจริง', labelEn: 'Original Receipt', uploaded: true },
+    { id: 'expense', label: 'ใบแสดงรายการค่าใช้จ่าย', labelEn: 'Itemised Expense Statement', uploaded: true },
+    { id: 'cert', label: 'ใบรับรองแพทย์', labelEn: 'Medical Certificate', uploaded: false },
+  ];
+
   const [docs, setDocs] = useState<DocRow[]>(INITIAL_DOCS);
   const [idUploaded, setIdUploaded] = useState(false);
 
@@ -51,7 +57,7 @@ export function ClaimDocsScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      <ClaimStepHeader step={STEP} title="อัปโหลดเอกสาร" />
+      <ClaimStepHeader step={STEP} title={s.claims.docsTitle} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -78,7 +84,7 @@ export function ClaimDocsScreen() {
               paddingVertical: 14,
             }}
           >
-            เอกสารที่จำเป็นสำหรับการเคลมค่ารักษา
+            {language === 'en' ? 'Required Documents for Medical Claim' : 'เอกสารที่จำเป็นสำหรับการเคลมค่ารักษา'}
           </Text>
           <View style={{ height: 1, backgroundColor: colors.hairline2 }} />
 
@@ -118,7 +124,7 @@ export function ClaimDocsScreen() {
                     color: colors.ink2,
                   }}
                 >
-                  {doc.label}
+                  {language === 'en' ? doc.labelEn : doc.label}
                 </Text>
 
                 <Text
@@ -128,7 +134,9 @@ export function ClaimDocsScreen() {
                     color: doc.uploaded ? colors.success : colors.primary,
                   }}
                 >
-                  {doc.uploaded ? 'แนบแล้ว' : 'แนบใหม่'}
+                  {doc.uploaded
+                    ? (language === 'en' ? 'Attached' : 'แนบแล้ว')
+                    : (language === 'en' ? 'Attach' : 'แนบใหม่')}
                 </Text>
               </TouchableOpacity>
               {index < docs.length - 1 && (
@@ -155,14 +163,14 @@ export function ClaimDocsScreen() {
               color: colors.inkBody2,
             }}
           >
-            บัตรประชาชน / พาสปอร์ต{' '}
+            {s.claims.idCard}{' '}
             <Text
               style={{
                 fontFamily: fontFamily.anuphan.regular,
                 color: colors.textSecondary,
               }}
             >
-              (เพื่อยืนยันตัวตน)
+              {language === 'en' ? '(for identity verification)' : '(เพื่อยืนยันตัวตน)'}
             </Text>
           </Text>
 
@@ -194,7 +202,9 @@ export function ClaimDocsScreen() {
                 color: idUploaded ? colors.success : colors.ink2,
               }}
             >
-              {idUploaded ? 'อัปโหลดแล้ว' : 'ถ่าย / อัปโหลดบัตรประชาชน'}
+              {idUploaded
+                ? (language === 'en' ? 'Uploaded' : 'อัปโหลดแล้ว')
+                : (language === 'en' ? 'Capture / Upload ID Card' : 'ถ่าย / อัปโหลดบัตรประชาชน')}
             </Text>
             {!idUploaded && (
               <Text
@@ -204,7 +214,7 @@ export function ClaimDocsScreen() {
                   color: colors.textTertiary,
                 }}
               >
-                รองรับ JPG, PNG, PDF
+                {language === 'en' ? 'Supports JPG, PNG, PDF' : 'รองรับ JPG, PNG, PDF'}
               </Text>
             )}
           </TouchableOpacity>
@@ -241,7 +251,7 @@ export function ClaimDocsScreen() {
               fontSize: 16,
             }}
           >
-            ถัดไป
+            {s.common.next}
           </Text>
         </TouchableOpacity>
       </View>

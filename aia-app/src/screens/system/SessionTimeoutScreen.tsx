@@ -5,10 +5,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { colors, fontFamily, fontSize, radius, screenPadding } from '../../tokens';
 import { primaryButtonShadow } from '../../tokens/shadows';
 import { useAppStore } from '../../store';
+import { useStrings } from '../../i18n';
 
 export function SessionTimeoutScreen() {
   const insets = useSafeAreaInsets();
   const setLoggedIn = useAppStore((s) => s.setLoggedIn);
+  const s = useStrings();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top', 'bottom']}>
@@ -45,7 +47,7 @@ export function SessionTimeoutScreen() {
             textAlign: 'center',
           }}
         >
-          เซสชันหมดอายุ
+          {s.system.sessionTitle}
         </Text>
 
         <Text
@@ -57,7 +59,7 @@ export function SessionTimeoutScreen() {
             lineHeight: 22,
           }}
         >
-          เพื่อความปลอดภัย ระบบได้ออกจากระบบโดยอัตโนมัติ{'\n'}กรุณาเข้าสู่ระบบอีกครั้ง
+          {s.system.sessionSub}
         </Text>
       </View>
 
@@ -88,7 +90,7 @@ export function SessionTimeoutScreen() {
               fontSize: fontSize.title,
             }}
           >
-            เข้าสู่ระบบอีกครั้ง
+            {s.system.sessionBtn}
           </Text>
         </TouchableOpacity>
       </View>

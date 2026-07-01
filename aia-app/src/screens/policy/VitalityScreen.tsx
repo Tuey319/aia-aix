@@ -19,40 +19,14 @@ import {
 } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
 import { SectionGroup } from '../../components/SectionGroup';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
 const CURRENT_POINTS = 12_400;
 const NEXT_TIER = 15_000;
 const progressPct = CURRENT_POINTS / NEXT_TIER;
-
-interface EarnItem {
-  icon: keyof typeof MaterialIcons.glyphMap;
-  title: string;
-  subtitle: string;
-  points: string;
-}
-
-const EARN_ITEMS: EarnItem[] = [
-  {
-    icon: 'fitness-center',
-    title: 'ออกกำลังกาย',
-    subtitle: 'เชื่อมต่อแอปออกกำลังกาย สูงสุด 300/สัปดาห์',
-    points: '+50',
-  },
-  {
-    icon: 'health-and-safety',
-    title: 'ตรวจสุขภาพประจำปี',
-    subtitle: 'รับผลออนไลน์ผ่านแอป',
-    points: '+1,000',
-  },
-  {
-    icon: 'restaurant',
-    title: 'เลือกรับประทานอาหารสุขภาพ',
-    subtitle: 'สแกนที่ร้านที่ร่วมรายการ',
-    points: '+100',
-  },
-];
 
 function PointsPill({ label }: { label: string }) {
   return (
@@ -80,6 +54,14 @@ function PointsPill({ label }: { label: string }) {
 export function VitalityScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const EARN_ITEMS = [
+    { icon: 'fitness-center' as const, title: s.vitality.exercise, subtitle: s.vitality.exerciseSub, points: '+50' },
+    { icon: 'health-and-safety' as const, title: s.vitality.checkup, subtitle: s.vitality.checkupSub, points: '+1,000' },
+    { icon: 'restaurant' as const, title: s.vitality.food, subtitle: s.vitality.foodSub, points: '+100' },
+  ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -136,7 +118,7 @@ export function VitalityScreen() {
                 color: 'rgba(255,255,255,0.75)',
               }}
             >
-              สถานะ Gold
+              {language === 'en' ? 'Gold Status' : 'สถานะ Gold'}
             </Text>
             <View
               style={{
@@ -178,7 +160,7 @@ export function VitalityScreen() {
                 letterSpacing: 0,
               }}
             >
-              คะแนน
+              {s.vitality.points}
             </Text>
           </Text>
 
@@ -192,7 +174,7 @@ export function VitalityScreen() {
                   color: 'rgba(255,255,255,0.7)',
                 }}
               >
-                ระดับถัดไป
+                {language === 'en' ? 'Next tier' : 'ระดับถัดไป'}
               </Text>
               <Text
                 style={{
@@ -201,7 +183,7 @@ export function VitalityScreen() {
                   color: colors.white,
                 }}
               >
-                เหลืออีก {(NEXT_TIER - CURRENT_POINTS).toLocaleString('en-US')}
+                {s.vitality.remainingTo('Platinum', (NEXT_TIER - CURRENT_POINTS).toLocaleString('en-US'))}
               </Text>
             </View>
             <View
@@ -241,7 +223,7 @@ export function VitalityScreen() {
                   color: 'rgba(255,255,255,0.65)',
                 }}
               >
-                ส่วนลดปีนี้
+                {s.vitality.discountThisYear}
               </Text>
               <Text
                 style={{
@@ -269,7 +251,7 @@ export function VitalityScreen() {
                   color: 'rgba(255,255,255,0.65)',
                 }}
               >
-                ส่วนลดสูงสุด
+                {s.vitality.maxDiscount}
               </Text>
               <Text
                 style={{
@@ -285,7 +267,7 @@ export function VitalityScreen() {
         </View>
 
         {/* Earn more points section */}
-        <SectionGroup label="สะสมคะแนนเพิ่ม">
+        <SectionGroup label={s.vitality.earnMore}>
           {EARN_ITEMS.map((item, index) => (
             <TouchableOpacity
               key={item.title}

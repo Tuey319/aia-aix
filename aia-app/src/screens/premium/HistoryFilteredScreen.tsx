@@ -7,6 +7,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type FilterType = 'all' | 'bill' | 'policy';
 
@@ -59,17 +61,20 @@ const PAYMENTS: PaymentRecord[] = [
   },
 ];
 
-const FILTER_LABELS: { key: FilterType; label: string }[] = [
-  { key: 'all', label: 'ทั้งหมด' },
-  { key: 'bill', label: 'บิล' },
-  { key: 'policy', label: 'ใบกรมธรรม์' },
-];
 
 export function HistoryFilteredScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
   // Start with "policy" filter active
   const [activeFilter, setActiveFilter] = useState<FilterType>('policy');
+
+  const FILTER_LABELS: { key: FilterType; label: string }[] = [
+    { key: 'all', label: s.history.filterAll },
+    { key: 'bill', label: s.history.filterBill },
+    { key: 'policy', label: s.history.filterPolicy },
+  ];
 
   const filtered = activeFilter === 'all'
     ? PAYMENTS
@@ -115,7 +120,7 @@ export function HistoryFilteredScreen() {
             flex: 1,
           }}
         >
-          ประวัติการชำระ
+          {s.history.title}
         </Text>
         <TouchableOpacity hitSlop={12}>
           <MaterialIcons name="filter-list" size={22} color={colors.primary} />
@@ -150,7 +155,7 @@ export function HistoryFilteredScreen() {
                 color: colors.textSecondary,
               }}
             >
-              ชำระแล้วปี 2569
+              {s.history.paidThisYear('2569', '')}
             </Text>
             <Text
               style={{
@@ -163,7 +168,7 @@ export function HistoryFilteredScreen() {
               ฿{totalPaid.toLocaleString('en-US')}
             </Text>
           </View>
-          <StatusPill label={`ตรงเวลา ${onTimeCount} งวด`} variant="success" />
+          <StatusPill label={s.history.onTimeStreak(String(onTimeCount))} variant="success" />
         </View>
 
         {/* Filter chips row */}
@@ -213,7 +218,7 @@ export function HistoryFilteredScreen() {
               marginLeft: 4,
             }}
           >
-            {filtered.length} ผลลัพธ์
+            {filtered.length} {language === 'en' ? 'results' : 'ผลลัพธ์'}
           </Text>
         )}
 
@@ -268,7 +273,7 @@ export function HistoryFilteredScreen() {
                 color: colors.textSecondary,
               }}
             >
-              ไม่พบรายการ
+              {language === 'en' ? 'No results' : 'ไม่พบรายการ'}
             </Text>
           </View>
         )}

@@ -6,12 +6,16 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
 export function ClaimDeclinedScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -19,7 +23,9 @@ export function ClaimDeclinedScreen() {
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={16}>
           <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
         </TouchableOpacity>
-        <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>สถานะการเคลม</Text>
+        <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>
+          {language === 'en' ? 'Claim Status' : 'สถานะการเคลม'}
+        </Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}
@@ -31,7 +37,7 @@ export function ClaimDeclinedScreen() {
         </View>
 
         <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: colors.ink, textAlign: 'center', marginTop: 4 }}>
-          เคลมไม่ได้รับการอนุมัติ
+          {s.claims.declinedTitle}
         </Text>
 
         {/* eClaim ref */}
@@ -41,10 +47,12 @@ export function ClaimDeclinedScreen() {
 
         {/* Reason card */}
         <View style={{ backgroundColor: colors.card, borderRadius: radius.card, padding: 16, width: '100%', gap: 10, ...cardShadow }}>
-          <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 11, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.8 }}>เหตุผล</Text>
+          <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 11, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+            {language === 'en' ? 'REASON' : 'เหตุผล'}
+          </Text>
           <View style={{ height: 1, backgroundColor: colors.hairline }} />
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 14, color: colors.inkBody, lineHeight: 22 }}>
-            เอกสารประกอบไม่ครบถ้วน — ไม่พบใบรับรองแพทย์ฉบับจริง กรุณาแนบเอกสารเพิ่มเติมและส่งเคลมอีกครั้ง
+            {s.claims.declinedReason}
           </Text>
         </View>
       </ScrollView>
@@ -52,11 +60,11 @@ export function ClaimDeclinedScreen() {
       <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: colors.screenBg, paddingHorizontal: screenPadding, paddingTop: 12, paddingBottom: insets.bottom + 16, borderTopWidth: 1, borderTopColor: colors.hairline, gap: 10 }}>
         <TouchableOpacity onPress={() => navigation.navigate('ClaimDocs')} activeOpacity={0.82}
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 52, alignItems: 'center', justifyContent: 'center', ...primaryButtonShadow }}>
-          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>แก้ไขและส่งใหม่</Text>
+          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>{s.claims.fixAndResubmit}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('ContactAgent')} activeOpacity={0.7}
           style={{ height: 48, alignItems: 'center', justifyContent: 'center', borderRadius: radius.button, borderWidth: 1.5, borderColor: colors.primary }}>
-          <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold, fontSize: 15 }}>ติดต่อเจ้าหน้าที่</Text>
+          <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold, fontSize: 15 }}>{s.claims.contactAgent}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

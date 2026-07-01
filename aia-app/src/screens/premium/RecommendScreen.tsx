@@ -7,6 +7,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 interface RecommendCard {
   icon: keyof typeof MaterialIcons.glyphMap;
@@ -22,6 +24,8 @@ interface RecommendCard {
 export function RecommendScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   const cards: RecommendCard[] = [
     {
@@ -90,7 +94,7 @@ export function RecommendScreen() {
             flex: 1,
           }}
         >
-          คำแนะนำเฉพาะคุณ
+          {s.recommend.title}
         </Text>
       </View>
 
@@ -143,7 +147,7 @@ export function RecommendScreen() {
                     letterSpacing: 0.5,
                   }}
                 >
-                  AI · เฉพาะคุณ
+                  {language === 'en' ? 'AI · For You' : 'AI · เฉพาะคุณ'}
                 </Text>
               </View>
               <Text
@@ -154,7 +158,7 @@ export function RecommendScreen() {
                   lineHeight: 22,
                 }}
               >
-                สร้างความมั่งคั่งจากรายได้ส่วนเกินและแนวโน้มเบี้ยของคุณ — เพิ่มผลตอบแทนสูงสุด
+                {s.recommend.heroBanner}
               </Text>
             </View>
           </View>
@@ -234,7 +238,7 @@ export function RecommendScreen() {
             paddingHorizontal: 8,
           }}
         >
-          คำแนะนำนี้สร้างจากข้อมูลและแนวโน้ม ไม่ใช่คำแนะนำทางการเงิน
+          {s.recommend.disclaimer}
         </Text>
       </ScrollView>
     </SafeAreaView>

@@ -15,12 +15,14 @@ import {
 import { cardShadow } from '../../tokens/shadows';
 import { SectionGroup } from '../../components/SectionGroup';
 import { ListRow } from '../../components/ListRow';
+import { useStrings } from '../../i18n';
 
 type Nav = NativeStackNavigationProp<any>;
 
 export function SupportScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -46,7 +48,7 @@ export function SupportScreen() {
             flex: 1,
           }}
         >
-          ศูนย์ช่วยเหลือ
+          {s.support.title}
         </Text>
       </View>
 
@@ -82,26 +84,26 @@ export function SupportScreen() {
               flex: 1,
             }}
           >
-            ค้นหาคำถามที่พบบ่อย...
+            {s.support.searchPlaceholder}
           </Text>
         </TouchableOpacity>
 
         {/* Frequent services section */}
-        <SectionGroup label="บริการที่ใช้บ่อย">
+        <SectionGroup label={s.support.commonSection}>
           <ListRow
             icon="event-repeat"
-            title="เปลี่ยนงวดการชำระเบี้ยฯ"
+            title={s.support.changeFreq}
             subtitle="รายเดือน · ราย 3 เดือน / รายปี"
             onPress={() => navigation.navigate('ChangeFreq')}
           />
           <ListRow
             icon="edit"
-            title="เปลี่ยนข้อมูลส่วนตัว"
+            title={s.support.changeInfo}
             onPress={() => navigation.navigate('ProfileEdit')}
           />
           <ListRow
             icon="description"
-            title="ขอเอกสารกรมธรรม์"
+            title={s.support.requestDocs}
             onPress={() => navigation.navigate('PolicyDocs')}
           />
         </SectionGroup>
@@ -131,7 +133,7 @@ export function SupportScreen() {
                 color: colors.white,
               }}
             >
-              แชทกับผู้ช่วย
+              {s.support.chatBtn}
             </Text>
           </TouchableOpacity>
 
@@ -161,7 +163,7 @@ export function SupportScreen() {
                 color: colors.primary,
               }}
             >
-              โทร 1581
+              {s.support.callBtn}
             </Text>
           </TouchableOpacity>
         </View>

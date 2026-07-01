@@ -20,6 +20,8 @@ import {
 } from '../../tokens';
 import { ClaimStepHeader } from '../../components/ClaimStepHeader';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -30,21 +32,23 @@ interface SummaryRow {
   value: string;
 }
 
-const SUMMARY_ROWS: SummaryRow[] = [
-  { label: 'ประเภทการเคลม', value: 'ผู้ป่วยนอกเฉพาะทาง' },
-  { label: 'วันที่รักษา', value: '15 ส.ค. 2569' },
-  { label: 'ผู้เคลม', value: 'สมชาย ใจดี' },
-  { label: 'ใบเสร็จ', value: '2 ใบ' },
-  { label: 'บัญชีรับเงิน', value: 'ธ.กรุงเทพ ••••45–6' },
-];
-
 export function ClaimReviewScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const SUMMARY_ROWS: SummaryRow[] = [
+    { label: language === 'en' ? 'Claim Type' : 'ประเภทการเคลม', value: language === 'en' ? 'Specialist Out-patient' : 'ผู้ป่วยนอกเฉพาะทาง' },
+    { label: language === 'en' ? 'Treatment Date' : 'วันที่รักษา', value: '15 ส.ค. 2569' },
+    { label: language === 'en' ? 'Claimant' : 'ผู้เคลม', value: language === 'en' ? 'Somchai Jaidee' : 'สมชาย ใจดี' },
+    { label: language === 'en' ? 'Receipts' : 'ใบเสร็จ', value: language === 'en' ? '2 receipts' : '2 ใบ' },
+    { label: language === 'en' ? 'Payout Account' : 'บัญชีรับเงิน', value: 'ธ.กรุงเทพ ••••45–6' },
+  ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      <ClaimStepHeader step={STEP} title="ตรวจสอบและส่งเคลม" />
+      <ClaimStepHeader step={STEP} title={s.claims.reviewTitle} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -117,7 +121,7 @@ export function ClaimReviewScreen() {
                 color: colors.ink2,
               }}
             >
-              ยอดที่ยื่นเคลม
+              {language === 'en' ? 'Amount Claimed' : 'ยอดที่ยื่นเคลม'}
             </Text>
             <Text
               style={{
@@ -153,7 +157,7 @@ export function ClaimReviewScreen() {
               lineHeight: 19,
             }}
           >
-            ตรวจสอบข้อมูลถูกต้องแล้ว พร้อมส่งเคลม
+            {language === 'en' ? 'Information verified. Ready to submit.' : 'ตรวจสอบข้อมูลถูกต้องแล้ว พร้อมส่งเคลม'}
           </Text>
         </View>
       </ScrollView>
@@ -191,7 +195,7 @@ export function ClaimReviewScreen() {
               fontSize: 16,
             }}
           >
-            ส่งเคลม
+            {s.claims.submitBtn}
           </Text>
         </TouchableOpacity>
       </View>
