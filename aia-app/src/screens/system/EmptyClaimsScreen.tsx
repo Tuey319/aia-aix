@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding } from '../../tokens';
 import { primaryButtonShadow } from '../../tokens/shadows';
-import { IllustrationEmpty } from '../../components/illustrations';
+import { IllustrationHealthInsurance } from '../../components/illustrations';
 import { useStrings } from '../../i18n';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -28,7 +28,7 @@ export function EmptyClaimsScreen() {
       </View>
 
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenPadding, paddingBottom: 80, gap: 16 }}>
-        <IllustrationEmpty width={220} height={180} color={colors.primary} />
+        <IllustrationHealthInsurance width={240} height={240} />
         <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: fontSize.titleLg, color: colors.ink2, textAlign: 'center' }}>
           {s.system.emptyClaimsTitle}
         </Text>

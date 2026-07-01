@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { AIRobotMascot } from '../../components/illustrations';
+import { IllustrationDataAnalysis } from '../../components/illustrations';
 import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -98,7 +98,7 @@ export function AICelebrationHubScreen() {
         {/* Hero */}
         <LinearGradient colors={[colors.primary, '#8B0030']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
           style={{ borderRadius: 22, padding: 24, alignItems: 'center', gap: 14 }}>
-          <AIRobotMascot size={90} animated />
+          <IllustrationDataAnalysis width={200} height={200} />
           <View style={{ alignItems: 'center', gap: 6 }}>
             <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 24, color: '#fff', textAlign: 'center', letterSpacing: -0.5 }}>
               AI Celebration
@@ -109,7 +109,7 @@ export function AICelebrationHubScreen() {
           </View>
           <View style={{ flexDirection: 'row', gap: 10, width: '100%' }}>
             <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 12, alignItems: 'center' }}>
-              <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 22, color: '#fff' }}>6</Text>
+              <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 22, color: '#fff' }}>12</Text>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'On-time payments' : 'งวดตรงเวลา'}</Text>
             </View>
             <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 12, alignItems: 'center' }}>

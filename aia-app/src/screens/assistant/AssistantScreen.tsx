@@ -17,6 +17,8 @@ import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '..
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { useStrings } from '../../i18n';
 import { useAppStore } from '../../store';
+import { AiaLogo } from '../../components/AiaLogo';
+import { IllustrationMedicalApp } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -27,111 +29,57 @@ type ChatMessage = {
   ctaLabel?: string;
   screen?: string;
   showFallbackChips?: boolean;
-  source?: string;
 };
-
-type LocalizedText = { th: string; en: string };
 
 // Mocked intent matching — no real LLM/backend. Each intent resolves a typed
 // message to exactly one destination, so the reply uses the action-card pattern.
-// Reply/ctaLabel are localized per-message (see detectMessageLanguage), independent
-// of the app-wide language toggle, so the bot mirrors whichever language the user typed in.
-// `source` is a fake document citation shown under replies that plausibly come from
-// looking something up (policy wording, member handbooks, FAQ base) rather than
-// pure navigation actions — it's cosmetic, there's no real retrieval behind it.
-const INTENTS: {
-  keywords: string[];
-  reply: LocalizedText;
-  ctaLabel: LocalizedText;
-  screen: string;
-  source?: LocalizedText;
-}[] = [
+const INTENTS: { keywords: string[]; reply: string; ctaLabel: string; screen: string }[] = [
   {
     keywords: ['จ่าย', 'ชำระ', 'เบี้ย', 'pay', 'premium'],
-    reply: {
-      th: 'นี่คือหน้าชำระเบี้ยประกันของคุณค่ะ แตะปุ่มด้านล่างเพื่อดำเนินการต่อ',
-      en: "Here's your premium payment page. Tap the button below to continue.",
-    },
-    ctaLabel: { th: 'ไปที่หน้าชำระเงิน', en: 'Go to Payment Page' },
+    reply: 'นี่คือหน้าชำระเบี้ยประกันของคุณค่ะ แตะปุ่มด้านล่างเพื่อดำเนินการต่อ',
+    ctaLabel: 'ไปที่หน้าชำระเงิน',
     screen: 'PaySelect',
   },
   {
     keywords: ['เคลม', 'claim', 'ยื่นเรื่อง'],
-    reply: {
-      th: 'เริ่มขั้นตอนยื่นเคลมได้ที่นี่ค่ะ',
-      en: 'You can start your claim process here.',
-    },
-    ctaLabel: { th: 'ไปที่หน้ายื่นเคลม', en: 'Go to Claim' },
+    reply: 'เริ่มขั้นตอนยื่นเคลมได้ที่นี่ค่ะ',
+    ctaLabel: 'ไปที่หน้ายื่นเคลม',
     screen: 'ClaimStart',
   },
   {
     keywords: ['คุ้มครอง', 'coverage'],
-    reply: {
-      th: 'ดูรายละเอียดความคุ้มครองกรมธรรม์ของคุณได้ที่นี่ค่ะ',
-      en: 'You can view your policy coverage details here.',
-    },
-    ctaLabel: { th: 'ดูความคุ้มครอง', en: 'View Coverage' },
+    reply: 'ดูรายละเอียดความคุ้มครองกรมธรรม์ของคุณได้ที่นี่ค่ะ',
+    ctaLabel: 'ดูความคุ้มครอง',
     screen: 'CoverageDetail',
-    source: {
-      th: 'แหล่งข้อมูล: กรมธรรม์ฉบับเต็ม หมวด 3 — ความคุ้มครอง',
-      en: 'Source: Full Policy Document, Section 3 — Coverage',
-    },
   },
   {
     keywords: ['กรมธรรม์', 'policy', 'เอกสาร'],
-    reply: {
-      th: 'นี่คือหน้ากรมธรรม์ของคุณค่ะ',
-      en: 'Here is your policy page.',
-    },
-    ctaLabel: { th: 'ไปที่หน้ากรมธรรม์', en: 'Go to Policy' },
+    reply: 'นี่คือหน้ากรมธรรม์ของคุณค่ะ',
+    ctaLabel: 'ไปที่หน้ากรมธรรม์',
     screen: 'Policy',
-    source: {
-      th: 'แหล่งข้อมูล: สรุปเงื่อนไขกรมธรรม์ (Policy Summary)',
-      en: 'Source: Policy Terms Summary',
-    },
   },
   {
     keywords: ['vitality'],
-    reply: {
-      th: 'ตรวจสอบสถานะ AIA Vitality และส่วนลดของคุณได้ที่นี่ค่ะ',
-      en: 'Check your AIA Vitality status and discounts here.',
-    },
-    ctaLabel: { th: 'ไปที่ AIA Vitality', en: 'Go to AIA Vitality' },
+    reply: 'ตรวจสอบสถานะ AIA Vitality และส่วนลดของคุณได้ที่นี่ค่ะ',
+    ctaLabel: 'ไปที่ AIA Vitality',
     screen: 'Vitality',
-    source: {
-      th: 'แหล่งข้อมูล: คู่มือสมาชิก AIA Vitality',
-      en: 'Source: AIA Vitality Member Handbook',
-    },
   },
   {
     keywords: ['ติดต่อ', 'agent', 'เจ้าหน้าที่'],
-    reply: {
-      th: 'ติดต่อตัวแทนของคุณได้ที่นี่ค่ะ',
-      en: 'You can contact your agent here.',
-    },
-    ctaLabel: { th: 'ติดต่อเจ้าหน้าที่', en: 'Contact Agent' },
+    reply: 'ติดต่อตัวแทนของคุณได้ที่นี่ค่ะ',
+    ctaLabel: 'ติดต่อเจ้าหน้าที่',
     screen: 'ContactAgent',
   },
   {
     keywords: ['คำถาม', 'faq', 'ถามตอบ'],
-    reply: {
-      th: 'ดูคำถามที่พบบ่อยได้ที่นี่ค่ะ',
-      en: 'You can view frequently asked questions here.',
-    },
-    ctaLabel: { th: 'ดูคำถามที่พบบ่อย', en: 'View FAQ' },
+    reply: 'ดูคำถามที่พบบ่อยได้ที่นี่ค่ะ',
+    ctaLabel: 'ดูคำถามที่พบบ่อย',
     screen: 'FaqList',
-    source: {
-      th: 'แหล่งข้อมูล: ฐานข้อมูลคำถามที่พบบ่อย AIA+',
-      en: 'Source: AIA+ FAQ Knowledge Base',
-    },
   },
   {
     keywords: ['ประวัติ', 'history'],
-    reply: {
-      th: 'ดูประวัติการชำระเบี้ยของคุณได้ที่นี่ค่ะ',
-      en: 'You can view your payment history here.',
-    },
-    ctaLabel: { th: 'ดูประวัติการชำระ', en: 'View Payment History' },
+    reply: 'ดูประวัติการชำระเบี้ยของคุณได้ที่นี่ค่ะ',
+    ctaLabel: 'ดูประวัติการชำระ',
     screen: 'History',
   },
 ];
@@ -139,38 +87,6 @@ const INTENTS: {
 function findIntent(text: string) {
   const lower = text.toLowerCase();
   return INTENTS.find((intent) => intent.keywords.some((kw) => lower.includes(kw.toLowerCase())));
-}
-
-// Thai script occupies U+0E00–U+0E7F. If the message has no Thai and no Latin
-// letters either (e.g. just digits/emoji), fall back to the app-wide language.
-function detectMessageLanguage(text: string, fallback: 'th' | 'en'): 'th' | 'en' {
-  if (/[฀-๿]/.test(text)) return 'th';
-  if (/[a-zA-Z]/.test(text)) return 'en';
-  return fallback;
-}
-
-// Assistant is mounted inside both HomeStack and AccountStack (see navigation/types.ts),
-// so every destination must be reached via its owning tab rather than a bare
-// navigation.navigate(screen) — that only resolves for screens in whichever stack
-// happens to be hosting the assistant at the time, and silently no-ops otherwise.
-const SCREEN_TABS: Record<string, string> = {
-  PaySelect: 'HomeTab',
-  History: 'HomeTab',
-  ClaimStart: 'CenterTab',
-  CoverageDetail: 'PolicyTab',
-  Policy: 'PolicyTab',
-  Vitality: 'PolicyTab',
-  ContactAgent: 'AccountTab',
-  FaqList: 'AccountTab',
-};
-
-function navigateToScreen(navigation: Nav, screen: string) {
-  const tab = SCREEN_TABS[screen];
-  if (tab) {
-    navigation.navigate(tab, { screen });
-  } else {
-    navigation.navigate(screen);
-  }
 }
 
 function TypingDots() {
@@ -273,23 +189,20 @@ export function AssistantScreen() {
     setInput('');
     setIsTyping(true);
 
-    const replyLang = detectMessageLanguage(trimmed, language);
-
     setTimeout(() => {
       const intent = findIntent(trimmed);
       const botMsg: ChatMessage = intent
         ? {
             id: `${Date.now()}-b`,
             role: 'bot',
-            text: intent.reply[replyLang],
-            ctaLabel: intent.ctaLabel[replyLang],
+            text: intent.reply,
+            ctaLabel: intent.ctaLabel,
             screen: intent.screen,
-            source: intent.source?.[replyLang],
           }
         : {
             id: `${Date.now()}-b`,
             role: 'bot',
-            text: replyLang === 'en'
+            text: language === 'en'
               ? "Sorry, I'm not sure what you mean. Try one of the options below."
               : 'ขออภัยค่ะ ดิฉันไม่แน่ใจว่าคุณหมายถึงอะไร ลองเลือกจากตัวเลือกด้านล่างนะคะ',
             showFallbackChips: true,
@@ -313,18 +226,19 @@ export function AssistantScreen() {
           backgroundColor: colors.screenBg,
         }}
       >
-        {/* Robot icon — red rounded square */}
+        {/* AIA logo avatar */}
         <View
           style={{
             width: 40,
             height: 40,
             borderRadius: 12,
-            backgroundColor: colors.primary,
+            backgroundColor: colors.card,
             alignItems: 'center',
             justifyContent: 'center',
+            ...cardShadow,
           }}
         >
-          <MaterialIcons name="smart-toy" size={22} color={colors.white} />
+          <AiaLogo size={28} />
         </View>
 
         {/* Title + online pill stacked */}
@@ -392,6 +306,11 @@ export function AssistantScreen() {
           keyboardShouldPersistTaps="handled"
           onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
         >
+          {/* Welcome illustration */}
+          <View style={{ alignItems: 'center', paddingVertical: 4 }}>
+            <IllustrationMedicalApp width={160} height={130} />
+          </View>
+
           {/* Bot greeting bubble */}
           <View style={{ alignItems: 'flex-start' }}>
             <View
@@ -441,7 +360,7 @@ export function AssistantScreen() {
                 <ChipButton
                   key={reply.screen}
                   label={reply.label}
-                  onPress={() => navigateToScreen(navigation, reply.screen)}
+                  onPress={() => navigation.navigate(reply.screen)}
                 />
               ))}
             </View>
@@ -499,33 +418,10 @@ export function AssistantScreen() {
                   </Text>
                 </View>
 
-                {/* Fake document citation — cosmetic only, no real retrieval behind it */}
-                {msg.source && (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      gap: 5,
-                      paddingHorizontal: 4,
-                    }}
-                  >
-                    <MaterialIcons name="description" size={13} color={colors.textTertiary} />
-                    <Text
-                      style={{
-                        fontFamily: fontFamily.mono.regular,
-                        fontSize: fontSize.xs,
-                        color: colors.textTertiary,
-                      }}
-                    >
-                      {msg.source}
-                    </Text>
-                  </View>
-                )}
-
                 {/* Inline action card — the reply itself is the navigation trigger */}
                 {msg.ctaLabel && msg.screen && (
                   <TouchableOpacity
-                    onPress={() => navigateToScreen(navigation, msg.screen!)}
+                    onPress={() => navigation.navigate(msg.screen!)}
                     activeOpacity={0.82}
                     style={{
                       backgroundColor: colors.primary,
@@ -561,7 +457,7 @@ export function AssistantScreen() {
                       <ChipButton
                         key={reply.screen}
                         label={reply.label}
-                        onPress={() => navigateToScreen(navigation, reply.screen)}
+                        onPress={() => navigation.navigate(reply.screen)}
                       />
                     ))}
                   </View>

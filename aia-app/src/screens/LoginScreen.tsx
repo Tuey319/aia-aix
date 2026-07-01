@@ -11,9 +11,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors, fontFamily, fontSize, radius, screenPadding } from '../tokens';
-import { primaryButtonShadow } from '../tokens/shadows';
+import { cardShadow, primaryButtonShadow } from '../tokens/shadows';
 import { useAppStore } from '../store';
 import { useStrings } from '../i18n';
+import { AiaLogo } from '../components/AiaLogo';
 
 export function LoginScreen() {
   const [phone, setPhone] = useState('081 234 5678');
@@ -44,23 +45,14 @@ export function LoginScreen() {
                 width: 72,
                 height: 72,
                 borderRadius: 20,
-                backgroundColor: colors.primary,
+                backgroundColor: colors.card,
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: 20,
-                ...primaryButtonShadow,
+                ...cardShadow,
               }}
             >
-              <Text
-                style={{
-                  color: colors.white,
-                  fontFamily: fontFamily.jakarta.extraBold,
-                  fontSize: 24,
-                  letterSpacing: 1.5,
-                }}
-              >
-                AIA
-              </Text>
+              <AiaLogo size={52} />
             </View>
 
             <Text

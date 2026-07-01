@@ -1,11 +1,13 @@
 # AIA+ App
 
-High-fidelity AIA+ insurance super-app built with React Native + Expo.
+High-fidelity AIA+ insurance super-app built with React Native + Expo, plus a proactive call-intent prediction model for the call center.
 
 ## Structure
 
 ```
-aia-app/    ← Expo app (React Native, TypeScript)
+aia-app/                     ← Expo app (React Native, TypeScript)
+AIA-CallIntent-Prediction/   ← ML project: predicts proactive-outreach call topics from policy/payment/login data
+design_handoff_aia_app/      ← Original design handoff spec (prototype HTML, screenshots, screen-by-screen reference)
 ```
 
 ## Quick start
@@ -18,6 +20,8 @@ npx expo start --web  # browser preview
 ```
 
 See [aia-app/README.md](aia-app/README.md) for the full guide — screen inventory, design tokens, known gaps, and how to connect real APIs.
+
+See [AIA-CallIntent-Prediction/README.md](AIA-CallIntent-Prediction/README.md) for the call-intent prediction model — data generation, feature pipeline, and the analysis notebook.
 
 ## Contributing
 

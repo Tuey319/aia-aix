@@ -9,6 +9,7 @@ import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
 import { useStrings } from '../../i18n';
 import { useAppStore } from '../../store';
+import { IllustrationDataAnalysis } from '../../components/illustrations';
 
 interface RecommendCard {
   icon: keyof typeof MaterialIcons.glyphMap;
@@ -46,7 +47,7 @@ export function RecommendScreen() {
       pillVariant: 'amber',
       buttonLabel: 'ดำเนินการ',
       buttonColor: colors.amber,
-      onPress: () => navigation.navigate('AdjustPlan'),
+      onPress: () => navigation.navigate('LifestyleCheck'),
     },
     {
       icon: 'swap-horiz',
@@ -56,7 +57,7 @@ export function RecommendScreen() {
       pillVariant: 'success',
       buttonLabel: 'ดูแผน',
       buttonColor: colors.success,
-      onPress: () => navigation.navigate('AdjustPlan'),
+      onPress: () => navigation.navigate('LifestyleCheck'),
     },
     {
       icon: 'favorite',
@@ -66,7 +67,7 @@ export function RecommendScreen() {
       pillVariant: 'mono',
       buttonLabel: 'เริ่มเลย',
       buttonColor: colors.gold,
-      onPress: () => {},
+      onPress: () => navigation.navigate('PolicyTab', { screen: 'Vitality' }),
     },
   ];
 
@@ -162,6 +163,11 @@ export function RecommendScreen() {
               </Text>
             </View>
           </View>
+        </View>
+
+        {/* Data-driven recommendation illustration */}
+        <View style={{ alignItems: 'center', paddingVertical: 4 }}>
+          <IllustrationDataAnalysis width={200} height={160} />
         </View>
 
         {/* Recommendation cards */}

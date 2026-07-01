@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding } from '../../tokens';
 import { primaryButtonShadow } from '../../tokens/shadows';
-import { IllustrationError } from '../../components/illustrations';
 import { useStrings } from '../../i18n';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -18,7 +18,9 @@ export function GenericErrorScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top', 'bottom']}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenPadding, gap: 16 }}>
-        <IllustrationError width={220} height={180} color={colors.primary} variant="error" />
+        <View style={{ width: 88, height: 88, borderRadius: 44, backgroundColor: colors.primaryTint, alignItems: 'center', justifyContent: 'center' }}>
+          <MaterialIcons name="error-outline" size={48} color={colors.primary} />
+        </View>
         <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: colors.ink2, textAlign: 'center' }}>
           {s.system.genericErrorTitle}
         </Text>

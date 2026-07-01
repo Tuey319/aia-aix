@@ -10,6 +10,7 @@ import { AccountStack } from './AccountStack';
 import { PlaceholderScreen } from '../screens/PlaceholderScreen';
 import { BenefitsScreen } from '../screens/benefits/BenefitsScreen';
 import { colors, fontFamily } from '../tokens';
+import { primaryButtonShadow } from '../tokens/shadows';
 import { useStrings } from '../i18n';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -24,7 +25,19 @@ function TabLabel({ label, focused }: { label: string; focused: boolean }) {
 
 function CenterTabIcon({ focused }: { focused: boolean }) {
   return (
-    <View style={{ width: 44, height: 44, borderRadius: 13, backgroundColor: focused ? colors.primary : colors.hairline2, alignItems: 'center', justifyContent: 'center', marginBottom: 2 }}>
+    <View
+      style={{
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: focused ? colors.primary : colors.hairline2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: -18,
+        marginBottom: 0,
+        ...(focused ? primaryButtonShadow : {}),
+      }}
+    >
       <MaterialIcons name="favorite" size={20} color={focused ? colors.white : colors.textSecondary} />
     </View>
   );
@@ -41,9 +54,9 @@ export function TabNavigator() {
           backgroundColor: colors.card,
           borderTopColor: colors.hairline,
           borderTopWidth: 0.5,
-          height: Platform.OS === 'ios' ? 84 : 64,
+          height: Platform.OS === 'ios' ? 94 : 74,
           paddingBottom: Platform.OS === 'ios' ? 24 : 8,
-          paddingTop: 10,
+          paddingTop: 18,
           // Subtle shadow above tab bar
           shadowColor: '#14141E',
           shadowOffset: { width: 0, height: -4 },

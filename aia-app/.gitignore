@@ -43,3 +43,6 @@ yarn-error.*
 .expo-home/
 AGENTS.md
 CLAUDE.md
+
+# Internal docs (not for repo)
+docs/
