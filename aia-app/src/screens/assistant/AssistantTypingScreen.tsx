@@ -17,6 +17,7 @@ import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '..
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { useStrings } from '../../i18n';
 import { useAppStore } from '../../store';
+import { AiaLogo } from '../../components/AiaLogo';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -92,12 +93,13 @@ export function AssistantTypingScreen() {
             width: 40,
             height: 40,
             borderRadius: 12,
-            backgroundColor: colors.primary,
+            backgroundColor: colors.card,
             alignItems: 'center',
             justifyContent: 'center',
+            ...cardShadow,
           }}
         >
-          <MaterialIcons name="smart-toy" size={22} color={colors.white} />
+          <AiaLogo size={28} />
         </View>
 
         <Text

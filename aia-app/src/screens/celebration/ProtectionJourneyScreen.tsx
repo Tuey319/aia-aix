@@ -13,6 +13,7 @@ import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '..
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { BarChart } from '../../components/BarChart';
 import { useAppStore } from '../../store';
+import { IllustrationHealthInsurance } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -31,7 +32,7 @@ const PROTECTION_EVENTS = [
   { month: 'มีนาคม', icon: 'check-circle' as const, iconColor: colors.success, title: 'ชำระตรงเวลา + รับ Badge 🏅', sub: '17 มี.ค. 2569 · ฿4,250 · Consistent Payer unlocked', status: 'done' as const },
   { month: 'เมษายน', icon: 'check-circle' as const, iconColor: colors.success, title: 'ชำระตรงเวลา', sub: '17 เม.ย. 2569 · ฿4,250', status: 'done' as const },
   { month: 'พฤษภาคม', icon: 'check-circle' as const, iconColor: colors.success, title: 'ชำระตรงเวลา', sub: '17 พ.ค. 2569 · ฿4,250', status: 'done' as const },
-  { month: 'มิถุนายน', icon: 'emoji-events' as const, iconColor: colors.gold, title: 'Milestone 6 งวด! 🎉', sub: '17 มิ.ย. 2569 · ฿4,250 · Always On Time unlocked', status: 'done' as const },
+  { month: 'มิถุนายน', icon: 'emoji-events' as const, iconColor: colors.gold, title: 'Milestone 12 งวด! 🎉', sub: '17 มิ.ย. 2569 · ฿4,250 · Always On Time unlocked', status: 'done' as const },
 ];
 
 export function ProtectionJourneyScreen() {
@@ -53,6 +54,11 @@ export function ProtectionJourneyScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 32, gap: cardGap }}>
+        {/* Illustration */}
+        <View style={{ alignItems: 'center', marginBottom: -4 }}>
+          <IllustrationHealthInsurance width={240} height={200} />
+        </View>
+
         {/* Hero stats card */}
         <LinearGradient
           colors={[colors.primary, colors.primaryDeep]}
@@ -70,7 +76,7 @@ export function ProtectionJourneyScreen() {
             <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 14, gap: 4 }}>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Paid this year' : 'ชำระแล้วปีนี้'}</Text>
               <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 22, color: '#fff', letterSpacing: -0.5 }}>฿25,500</Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.5)' }}>{language === 'en' ? '6 instalments, all on time' : '6 งวด ตรงเวลาทั้งหมด'}</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.5)' }}>{language === 'en' ? '12 instalments, all on time' : '12 งวด ตรงเวลาทั้งหมด'}</Text>
             </View>
             <View style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: 14, gap: 4 }}>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Coverage' : 'ความคุ้มครอง'}</Text>

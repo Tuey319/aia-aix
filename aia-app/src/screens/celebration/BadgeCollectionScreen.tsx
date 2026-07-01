@@ -11,6 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
 import { useAppStore } from '../../store';
+import { IllustrationBeHealthy } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -32,7 +33,7 @@ const BADGES: Badge[] = [
     id: 'always-on-time',
     name: 'Always On Time',
     nameTh: 'ชำระตรงเวลา',
-    desc: 'ชำระเบี้ยตรงเวลาต่อเนื่อง 6 งวด',
+    desc: 'ชำระเบี้ยตรงเวลาต่อเนื่อง 12 งวด',
     icon: 'schedule',
     color: colors.success,
     bg: colors.successTint,
@@ -206,6 +207,11 @@ export function BadgeCollectionScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 32, gap: cardGap }}>
+        {/* unDraw illustration */}
+        <View style={{ alignItems: 'center', marginBottom: -8 }}>
+          <IllustrationBeHealthy width={260} height={200} />
+        </View>
+
         {/* Progress banner */}
         <View style={{ backgroundColor: colors.ink, borderRadius: radius.card, padding: 18, gap: 12 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

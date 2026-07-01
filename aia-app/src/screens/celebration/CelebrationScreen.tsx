@@ -3,16 +3,18 @@
  * "Every payment is a promise." — Delight Mak concept doc
  */
 import React, { useEffect, useRef } from 'react';
+import { Platform 
+} from 'react-native';
 import {
   View, Text, TouchableOpacity, Animated, Dimensions,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
-import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { IllustrationSuccess, AIRobotMascot } from '../../components/illustrations';
+import { primaryButtonShadow, heroShadow } from '../../tokens/shadows';
 import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -28,10 +30,10 @@ function ConfettiDot({ x, delay, color: c, size }: { x: number; delay: number; c
     Animated.sequence([
       Animated.delay(delay),
       Animated.parallel([
-        Animated.timing(opacity, { toValue: 1, duration: 200, useNativeDriver: true }),
-        Animated.timing(y, { toValue: 300, duration: 2000, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 1, duration: 200, useNativeDriver: Platform.OS !== "web" }),
+        Animated.timing(y, { toValue: 300, duration: 2000, useNativeDriver: Platform.OS !== "web" }),
       ]),
-      Animated.timing(opacity, { toValue: 0, duration: 400, useNativeDriver: true }),
+      Animated.timing(opacity, { toValue: 0, duration: 400, useNativeDriver: Platform.OS !== "web" }),
     ]).start();
   }, []);
 
@@ -70,7 +72,6 @@ const CONFETTI = [
   { x: 355, delay: 320, color: colors.info,         size: 8  },
 ];
 
-// Robot is now the proper SVG mascot from AIRobotMascot component
 
 export function CelebrationScreen() {
   const navigation = useNavigation<Nav>();
@@ -80,8 +81,8 @@ export function CelebrationScreen() {
   const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true, bounciness: 12 }).start();
-    Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== "web", bounciness: 12 }).start();
+    Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: Platform.OS !== "web" }).start();
   }, []);
 
   return (
@@ -93,56 +94,72 @@ export function CelebrationScreen() {
 
       <Animated.View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenPadding, opacity: opacityAnim, transform: [{ scale: scaleAnim }] }}>
         {/* Main card */}
-        <View style={{ backgroundColor: colors.card, borderRadius: 24, padding: 28, alignItems: 'center', width: '100%', gap: 16, ...cardShadow }}>
-          <AIRobotMascot size={100} animated />
-
-          {/* Headline */}
-          <View style={{ alignItems: 'center', gap: 6 }}>
-            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 26, color: colors.ink, textAlign: 'center' }}>
-              {language === 'en' ? 'Well done! 🎉' : 'ดีมากเลย! 🎉'}
-            </Text>
-            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 14, color: colors.textSecondary, textAlign: 'center', lineHeight: 20 }}>
-              {language === 'en' ? 'Your insurance premium is fully paid.' : 'คุณชำระเบี้ยประกันครบแล้ว'}
-            </Text>
+        <View style={{ width: '100%', marginTop: 30 }}>
+          {/* Floating trophy badge */}
+          <View style={{ position: 'absolute', top: -30, left: 0, right: 0, alignItems: 'center', zIndex: 2 }}>
+            <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', ...heroShadow }}>
+              <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: colors.primaryTint, alignItems: 'center', justifyContent: 'center' }}>
+                <MaterialIcons name="emoji-events" size={26} color={colors.primary} />
+              </View>
+            </View>
           </View>
 
-          {/* Milestone badge */}
-          <View style={{ backgroundColor: colors.primaryTint, borderRadius: radius.card, paddingHorizontal: 20, paddingVertical: 12, alignItems: 'center', width: '100%', gap: 4 }}>
-            <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: colors.primary, letterSpacing: 1.5, textTransform: 'uppercase' }}>Milestone</Text>
-            <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 36, color: colors.primary, letterSpacing: -1 }}>6 งวด</Text>
-            <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 13, color: colors.primaryDeep }}>{language === 'en' ? 'On-time streak 🔥' : 'ชำระตรงเวลาต่อเนื่อง 🔥'}</Text>
-          </View>
-
-          {/* Payment amount */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <MaterialIcons name="check-circle" size={20} color={colors.success} />
-            <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 14, color: colors.inkBody }}>
-              {language === 'en' ? 'Payment complete ·' : 'ชำระเสร็จสิ้น ·'}{' '}
-              <Text style={{ fontFamily: fontFamily.jakarta.bold, color: colors.ink }}>฿4,250.00</Text>
-            </Text>
-          </View>
-
-          {/* Action buttons */}
-          <View style={{ width: '100%', gap: 10 }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('CelebrationDetail')}
-              activeOpacity={0.82}
-              style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 50, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}
+          <View style={{ borderRadius: radius.cardLg, overflow: 'hidden', ...heroShadow }}>
+            {/* Gradient hero */}
+            <LinearGradient
+              colors={[colors.primary, '#8B0030']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{ paddingTop: 40, paddingBottom: 26, paddingHorizontal: 24, alignItems: 'center', gap: 10 }}
             >
-              <MaterialIcons name="celebration" size={18} color={colors.white} />
-              <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>{language === 'en' ? 'View Celebration Details' : 'ดูรายละเอียดการฉลอง'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('RewardPrivilege')}
-              activeOpacity={0.82}
-              style={{ borderWidth: 1.5, borderColor: colors.primary, borderRadius: radius.button, height: 46, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }}
-            >
-              <MaterialIcons name="card-giftcard" size={18} color={colors.primary} />
-              <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold, fontSize: 14 }}>{language === 'en' ? 'View Your Privileges 🎁' : 'ดูสิทธิพิเศษของคุณ 🎁'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.7} style={{ paddingVertical: 8, alignItems: 'center' }}>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.textSecondary }}>{language === 'en' ? 'Back to Home' : 'กลับหน้าหลัก'}</Text>
-            </TouchableOpacity>
+              <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: colors.white, textAlign: 'center' }}>
+                {language === 'en' ? 'Well done! 🎉' : 'ดีมากเลย! 🎉'}
+              </Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: 'rgba(255,255,255,0.78)', textAlign: 'center' }}>
+                {language === 'en' ? 'Your insurance premium is fully paid.' : 'คุณชำระเบี้ยประกันครบแล้ว'}
+              </Text>
+
+              <View style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: radius.pill, paddingHorizontal: 14, paddingVertical: 5, marginTop: 6 }}>
+                <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: colors.white, letterSpacing: 1.5, textTransform: 'uppercase' }}>Milestone</Text>
+              </View>
+              <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 44, color: colors.white, letterSpacing: -1 }}>12 งวด</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>{language === 'en' ? 'On-time streak 🔥' : 'ชำระตรงเวลาต่อเนื่อง 🔥'}</Text>
+            </LinearGradient>
+
+            {/* Body */}
+            <View style={{ backgroundColor: colors.card, padding: 24, alignItems: 'center', gap: 18 }}>
+              {/* Payment amount */}
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: colors.successTint, borderRadius: radius.card, paddingVertical: 11, paddingHorizontal: 16, width: '100%' }}>
+                <MaterialIcons name="check-circle" size={20} color={colors.success} />
+                <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 14, color: colors.successDeep }}>
+                  {language === 'en' ? 'Payment complete ·' : 'ชำระเสร็จสิ้น ·'}{' '}
+                  <Text style={{ fontFamily: fontFamily.jakarta.bold, color: colors.successDeep }}>฿4,250.00</Text>
+                </Text>
+              </View>
+
+              {/* Action buttons */}
+              <View style={{ width: '100%', gap: 10 }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('CelebrationDetail')}
+                  activeOpacity={0.82}
+                  style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 50, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}
+                >
+                  <MaterialIcons name="celebration" size={18} color={colors.white} />
+                  <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>{language === 'en' ? 'View Celebration Details' : 'ดูรายละเอียดการฉลอง'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('RewardPrivilege')}
+                  activeOpacity={0.82}
+                  style={{ borderWidth: 1.5, borderColor: colors.primary, borderRadius: radius.button, height: 48, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }}
+                >
+                  <MaterialIcons name="card-giftcard" size={18} color={colors.primary} />
+                  <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold, fontSize: 14 }}>{language === 'en' ? 'View Your Privileges 🎁' : 'ดูสิทธิพิเศษของคุณ 🎁'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.7} hitSlop={8} style={{ minHeight: 44, alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.textSecondary }}>{language === 'en' ? 'Back to Home' : 'กลับหน้าหลัก'}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </View>
       </Animated.View>

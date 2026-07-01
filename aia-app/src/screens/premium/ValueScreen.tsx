@@ -8,6 +8,7 @@ import { cardShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
 import { useAppStore } from '../../store';
 import { useStrings } from '../../i18n';
+import { IllustrationCoinsDrop } from '../../components/illustrations';
 
 export function ValueScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -18,8 +19,8 @@ export function ValueScreen() {
 
   const paidToDate = 148000;
   const multiplier = Math.round(policy.sumAssured / paidToDate);
-  const claimReceived = 18400;
-  const claimPct = Math.round((claimReceived / policy.annualPremium) * 100);
+  const cashValueToDate = 92000;
+  const cashValuePct = Math.round((cashValueToDate / paidToDate) * 100);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -179,7 +180,7 @@ export function ValueScreen() {
           <View style={{ height: 8 }} />
         </View>
 
-        {/* Green claims card */}
+        {/* Green money-returns card */}
         <View
           style={{
             backgroundColor: colors.successTint,
@@ -201,9 +202,18 @@ export function ValueScreen() {
               justifyContent: 'center',
             }}
           >
-            <MaterialIcons name="check-circle" size={26} color={colors.success} />
+            <MaterialIcons name="savings" size={26} color={colors.success} />
           </View>
           <View style={{ flex: 1, gap: 4 }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.anuphan.semiBold,
+                fontSize: fontSize.caption,
+                color: colors.success,
+              }}
+            >
+              มูลค่าเงินสดสะสม
+            </Text>
             <Text
               style={{
                 fontFamily: fontFamily.jakarta.extraBold,
@@ -212,10 +222,15 @@ export function ValueScreen() {
                 letterSpacing: -0.5,
               }}
             >
-              ฿{claimReceived.toLocaleString('en-US')}
+              ฿{cashValueToDate.toLocaleString('en-US')}
             </Text>
-            <StatusPill label={`${claimPct}% ${language === 'en' ? 'of this year\'s premium' : 'ของเบี้ยปีนี้'}`} variant="success" />
+            <StatusPill label={`${cashValuePct}% ${language === 'en' ? 'of total premiums paid' : 'ของเบี้ยที่จ่ายสะสม'}`} variant="success" />
           </View>
+        </View>
+
+        {/* Value illustration */}
+        <View style={{ alignItems: 'center', paddingVertical: 4 }}>
+          <IllustrationCoinsDrop width={200} height={160} />
         </View>
 
         {/* Motivational footer note */}

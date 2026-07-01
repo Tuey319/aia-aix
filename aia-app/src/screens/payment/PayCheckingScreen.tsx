@@ -20,6 +20,7 @@ import {
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { useStrings } from '../../i18n';
 import { useAppStore } from '../../store';
+import { IllustrationCoinsDrop } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -86,20 +87,9 @@ export function PayCheckingScreen() {
           alignItems: 'center',
         }}
       >
-        {/* Amber hourglass icon */}
-        <View
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: 40,
-            backgroundColor: colors.amberTint,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 8,
-            marginBottom: 4,
-          }}
-        >
-          <MaterialIcons name="hourglass-top" size={44} color={colors.amber} />
+        {/* Verifying illustration */}
+        <View style={{ marginTop: 4, marginBottom: 4 }}>
+          <IllustrationCoinsDrop width={180} height={150} />
         </View>
 
         {/* Title */}

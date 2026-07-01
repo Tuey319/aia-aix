@@ -4,7 +4,7 @@
  * Delight Mak doc: Screen 3 "ตัวอย่างหน้า AI Celebration"
  */
 import React, { useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
+import { View, Platform, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { AIRobotMascot } from '../../components/illustrations';
+
 import { BarChart } from '../../components/BarChart';
 import { useAppStore } from '../../store';
 
@@ -34,7 +34,7 @@ interface ChatBubble {
 }
 
 const CHAT: ChatBubble[] = [
-  { from: 'ai', text: 'สวัสดีคุณสมชาย! 🎉 วันนี้คุณชำระเบี้ยครบ 6 งวดแล้ว', delay: 0 },
+  { from: 'ai', text: 'สวัสดีคุณสมชาย! 🎉 วันนี้คุณชำระเบี้ยครบ 12 งวดแล้ว', delay: 0 },
   { from: 'user', text: 'ใช่ค่ะ รู้สึกดีมากเลย!', delay: 400 },
   { from: 'ai', text: 'คุณคือ "Always On Time" ไม่เคยขาดสักงวด 🏆\nAIA ภูมิใจที่ได้ดูแลคุณมาตลอด ❤️', delay: 800 },
 ];
@@ -46,8 +46,8 @@ function ChatMessage({ bubble, index }: { bubble: ChatBubble; index: number }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       Animated.parallel([
-        Animated.timing(opacity, { toValue: 1, duration: 350, useNativeDriver: true }),
-        Animated.timing(translateY, { toValue: 0, duration: 350, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 1, duration: 350, useNativeDriver: Platform.OS !== "web" }),
+        Animated.timing(translateY, { toValue: 0, duration: 350, useNativeDriver: Platform.OS !== "web" }),
       ]).start();
     }, bubble.delay + index * 100);
     return () => clearTimeout(timer);
@@ -95,33 +95,44 @@ export function CelebrationDetailScreen() {
           <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>{language === 'en' ? 'Celebration Details' : 'รายละเอียดการฉลอง'}</Text>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.textSecondary }}>AI Celebration Detail</Text>
         </View>
-        <AIRobotMascot size={44} animated={false} />
+        
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 100, gap: cardGap }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 150, gap: cardGap }}>
         {/* Milestone hero */}
-        <LinearGradient colors={[colors.primary, '#8B0030']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-          style={{ borderRadius: radius.cardLg, padding: 20, alignItems: 'center', gap: 12 }}>
-          <View style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 99, paddingHorizontal: 14, paddingVertical: 5 }}>
-            <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: '#fff', letterSpacing: 1.5, textTransform: 'uppercase' }}>
-              🎉 Milestone Reached
+        <View style={{ borderRadius: radius.cardLg, overflow: 'hidden' }}>
+          <LinearGradient colors={[colors.primary, '#7A0029']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+            style={{ padding: 22, alignItems: 'center', gap: 14 }}>
+            {/* Decorative glow accents */}
+            <View style={{ position: 'absolute', top: -50, right: -40, width: 160, height: 160, borderRadius: 80, backgroundColor: 'rgba(255,255,255,0.07)' }} />
+            <View style={{ position: 'absolute', bottom: -60, left: -40, width: 130, height: 130, borderRadius: 65, backgroundColor: 'rgba(255,255,255,0.05)' }} />
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'rgba(255,205,90,0.18)', borderRadius: 99, paddingHorizontal: 14, paddingVertical: 6 }}>
+              <MaterialIcons name="military-tech" size={14} color={colors.gold} />
+              <Text style={{ fontFamily: fontFamily.mono.semiBold, fontSize: 10, color: colors.gold, letterSpacing: 1.5, textTransform: 'uppercase' }}>
+                Milestone Reached
+              </Text>
+            </View>
+            <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 42, color: '#fff', letterSpacing: -1 }}>12 งวด</Text>
+            <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 14, color: 'rgba(255,255,255,0.8)', textAlign: 'center' }}>
+              ชำระตรงเวลาต่อเนื่อง · ไม่มีค่าปรับสักครั้ง
             </Text>
-          </View>
-          <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 40, color: '#fff', letterSpacing: -1 }}>{language === 'en' ? '6 Instalments' : '6 งวด'}</Text>
-          <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 14, color: 'rgba(255,255,255,0.8)', textAlign: 'center' }}>
-            {language === 'en' ? 'On-time streak · Zero late fees' : 'ชำระตรงเวลาต่อเนื่อง · ไม่มีค่าปรับสักครั้ง'}
-          </Text>
-          <View style={{ flexDirection: 'row', gap: 10, marginTop: 4 }}>
-            <View style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 10, padding: 12, alignItems: 'center', flex: 1 }}>
-              <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿25,500</Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Paid' : 'ชำระแล้ว'}</Text>
+
+            <View style={{ flexDirection: 'row', backgroundColor: 'rgba(255,255,255,0.10)', borderRadius: 14, width: '100%' }}>
+              <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, gap: 4 }}>
+                <MaterialIcons name="account-balance-wallet" size={16} color="rgba(255,255,255,0.7)" />
+                <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿25,500</Text>
+                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Paid' : 'ชำระแล้ว'}</Text>
+              </View>
+              <View style={{ width: 1, backgroundColor: 'rgba(255,255,255,0.15)' }} />
+              <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, gap: 4 }}>
+                <MaterialIcons name="verified-user" size={16} color="rgba(255,255,255,0.7)" />
+                <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿2.0M</Text>
+                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Coverage active' : 'คุ้มครองอยู่'}</Text>
+              </View>
             </View>
-            <View style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 10, padding: 12, alignItems: 'center', flex: 1 }}>
-              <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿2.0M</Text>
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Coverage active' : 'คุ้มครองอยู่'}</Text>
-            </View>
-          </View>
-        </LinearGradient>
+          </LinearGradient>
+        </View>
 
         {/* AI Chat */}
         <View style={{ backgroundColor: colors.screenBg }}>
@@ -153,8 +164,8 @@ export function CelebrationDetailScreen() {
           </View>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.success, lineHeight: 20 }}>
             {language === 'en'
-              ? 'Every baht you pay = ฿784 coverage per ฿1 paid\nYou and your family have been protected for 6 months ❤️'
-              : `ทุกบาทที่คุณชำระ = ความคุ้มครอง ฿784 ต่อ ฿1 ที่จ่าย\nคุณและครอบครัวปลอดภัยตลอด 6 เดือนที่ผ่านมา ❤️`}
+              ? 'Every baht you pay = ฿784 coverage per ฿1 paid\nYou and your family have been protected for 12 months ❤️'
+              : `ทุกบาทที่คุณชำระ = ความคุ้มครอง ฿784 ต่อ ฿1 ที่จ่าย\nคุณและครอบครัวปลอดภัยตลอด 12 เดือนที่ผ่านมา ❤️`}
           </Text>
         </View>
       </ScrollView>

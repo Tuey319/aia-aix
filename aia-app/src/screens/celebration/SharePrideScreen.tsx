@@ -5,15 +5,16 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Share, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome6 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { IllustrationSuccess } from '../../components/illustrations';
+import { IllustrationFamilyInsurance } from '../../components/illustrations';
 import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
+
 
 export function SharePrideScreen() {
   const navigation = useNavigation<Nav>();
@@ -57,11 +58,11 @@ export function SharePrideScreen() {
           {/* Top AIA label */}
           <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 13, color: colors.primary, letterSpacing: 2 }}>AIA+ · CELEBRATION</Text>
 
-          <IllustrationSuccess width={180} height={140} color={colors.primary} />
+          <IllustrationFamilyInsurance width={200} height={200} />
 
           <View style={{ alignItems: 'center', gap: 6 }}>
             <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: '#fff', textAlign: 'center' }}>
-              {language === 'en' ? '6 instalments paid on time! 🎉' : 'ชำระตรงเวลา 6 งวดแล้ว! 🎉'}
+              {language === 'en' ? '12 instalments paid on time! 🎉' : 'ชำระตรงเวลา 12 งวดแล้ว! 🎉'}
             </Text>
             <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: 'rgba(255,255,255,0.65)', textAlign: 'center' }}>
               {language === 'en' ? 'Every payment protects those you love ❤️' : 'ทุกการชำระคือการปกป้องคนที่รัก ❤️'}
@@ -94,7 +95,9 @@ export function SharePrideScreen() {
           {SHARE_CHANNELS.map((ch) => (
             <TouchableOpacity key={ch.name} onPress={handleShare} activeOpacity={0.8}
               style={{ flex: 1, backgroundColor: ch.bg, borderRadius: 14, paddingVertical: 14, alignItems: 'center', gap: 6 }}>
-              <MaterialIcons name={ch.icon} size={22} color={ch.color} />
+              {ch.lib === 'fa6'
+                ? <FontAwesome6 name={ch.icon} size={20} color={ch.color} />
+                : <MaterialIcons name={ch.icon} size={22} color={ch.color} />}
               <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 10, color: ch.color }}>{ch.name}</Text>
             </TouchableOpacity>
           ))}

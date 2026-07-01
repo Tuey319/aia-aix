@@ -20,6 +20,8 @@ export function PremiumMgmtScreen() {
   const insets = useSafeAreaInsets();
   const policy = useAppStore((s) => s.selectedPolicy);
   const income = useAppStore((s) => s.income);
+  const language = useAppStore((s) => s.language);
+  const setLanguage = useAppStore((s) => s.setLanguage);
   const s = useStrings();
 
   const pctOfIncome = ((policy.monthlyPremium * 12) / (income * 12) * 100).toFixed(0);
@@ -34,6 +36,26 @@ export function PremiumMgmtScreen() {
         <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink, flex: 1 }}>
           {s.premiumMgmt.title}
         </Text>
+
+        {/* Language toggle */}
+        <View style={{ flexDirection: 'row', backgroundColor: colors.hairline2, borderRadius: radius.pill, padding: 3, gap: 2 }}>
+          <TouchableOpacity
+            onPress={() => setLanguage('th')}
+            style={{ paddingHorizontal: 12, paddingVertical: 5, borderRadius: radius.pill, backgroundColor: language === 'th' ? colors.primary : 'transparent' }}
+          >
+            <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 12, color: language === 'th' ? colors.white : colors.textSecondary }}>
+              ไทย
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setLanguage('en')}
+            style={{ paddingHorizontal: 12, paddingVertical: 5, borderRadius: radius.pill, backgroundColor: language === 'en' ? colors.primary : 'transparent' }}
+          >
+            <Text style={{ fontFamily: fontFamily.jakarta.semiBold, fontSize: 12, color: language === 'en' ? colors.white : colors.textSecondary }}>
+              EN
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 32, gap: cardGap }}>
@@ -41,7 +63,7 @@ export function PremiumMgmtScreen() {
         <View style={{ backgroundColor: colors.card, borderRadius: radius.cardLg, padding: 18, gap: 12, ...cardShadow }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 13, color: colors.textSecondary }}>{s.premiumMgmt.nextDue}</Text>
-            <StatusPill label={`ครบกำหนด ${policy.dueDate}`} variant="amber" />
+            <StatusPill label={`${s.premiumMgmt.dueLabel} ${policy.dueDate}`} variant="amber" />
           </View>
           <View>
             <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 40, color: colors.ink, letterSpacing: -1.2, lineHeight: 44 }}>
@@ -49,7 +71,7 @@ export function PremiumMgmtScreen() {
               <Text style={{ fontFamily: fontFamily.jakarta.regular, fontSize: 16, color: colors.textSecondary, letterSpacing: 0 }}>.00</Text>
             </Text>
             <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.textSecondary, marginTop: 4 }}>
-              {policy.nameTh} · รายเดือน · เบี้ยรวมต่อปี ฿{policy.annualPremium.toLocaleString('en-US')}
+              {policy.nameTh} · {s.premiumMgmt.billingMonthly} · {s.premiumMgmt.annualPremiumLabel} ฿{policy.annualPremium.toLocaleString('en-US')}
             </Text>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate('PaySelect')} activeOpacity={0.82}
@@ -80,16 +102,16 @@ export function PremiumMgmtScreen() {
         {/* 3. Understand group */}
         <SectionGroup label={s.premiumMgmt.groupUnderstand}>
           <ListRow icon="verified-user" title={s.premiumMgmt.rowValue}
-            subtitle={`จ่ายสะสม ฿148k → คุ้มครอง ฿${(policy.sumAssured / 1000000).toFixed(0)}M`}
+            subtitle={s.premiumMgmt.rowValueSub('148k', `${(policy.sumAssured / 1000000).toFixed(0)}M`)}
             onPress={() => navigation.navigate('Value')} />
           <ListRow icon="description" title={s.premiumMgmt.rowIllustration}
-            subtitle="มูลค่าเงินสด บุกเบิกเงื่อนไข กรมธรรม์"
+            subtitle={s.premiumMgmt.rowIllustrationSub}
             onPress={() => navigation.navigate('Illustration')} />
         </SectionGroup>
 
         {/* 4. Adjust group */}
         <SectionGroup label={s.premiumMgmt.groupAdjust}>
-          <ListRow icon="tune" title={s.premiumMgmt.rowAdjustPlan} subtitle={s.premiumMgmt.rowAdjustPlanSub} onPress={() => navigation.navigate('AdjustPlan')} />
+          <ListRow icon="tune" title={s.premiumMgmt.rowAdjustPlan} subtitle={s.premiumMgmt.rowAdjustPlanSub} onPress={() => navigation.navigate('CoverageOverview')} />
           <ListRow icon="show-chart" title={s.premiumMgmt.rowCosts} subtitle={s.premiumMgmt.rowCostsSub} onPress={() => navigation.navigate('Costs')} />
           <ListRow icon="auto-awesome" title={s.premiumMgmt.rowRecommend} subtitle={s.premiumMgmt.rowRecommendSub} onPress={() => navigation.navigate('Recommend')} badge={s.premiumMgmt.badgeNew} />
         </SectionGroup>

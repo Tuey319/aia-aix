@@ -14,6 +14,7 @@ import { cardShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
 import { useStrings } from '../../i18n';
 import { useAppStore } from '../../store';
+import { IllustrationMedicine } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -130,6 +131,10 @@ export function ClaimStartScreen() {
 
           <MaterialIcons name="arrow-forward" size={22} color="rgba(255,255,255,0.8)" />
         </TouchableOpacity>
+
+        <View style={{ alignItems: 'center', paddingVertical: 4 }}>
+          <IllustrationMedicine width={180} height={150} />
+        </View>
 
         {/* History Section */}
         <Text

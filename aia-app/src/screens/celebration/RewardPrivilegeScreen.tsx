@@ -4,7 +4,7 @@
  * Shows: 5% discount, AIA Thank You 💌, +100 Vitality points
  */
 import React, { useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
+import { View, Platform, Text, TouchableOpacity, ScrollView, Animated } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
-import { AIRobotMascot } from '../../components/illustrations';
+import { IllustrationGiftPremium } from '../../components/illustrations';
 import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -83,7 +83,7 @@ export function RewardPrivilegeScreen() {
   ];
 
   useEffect(() => {
-    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true, bounciness: 10 }).start();
+    Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: Platform.OS !== "web", bounciness: 10 }).start();
   }, []);
 
   return (
@@ -99,7 +99,7 @@ export function RewardPrivilegeScreen() {
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 100, gap: cardGap }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 150, gap: cardGap }}>
         {/* Hero congratulation card */}
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
           <LinearGradient
@@ -107,13 +107,13 @@ export function RewardPrivilegeScreen() {
             start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
             style={{ borderRadius: 20, padding: 20, alignItems: 'center', gap: 12 }}
           >
-            <AIRobotMascot size={80} animated />
+            <IllustrationGiftPremium width={200} height={200} />
             <View style={{ alignItems: 'center', gap: 4 }}>
               <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: '#fff', textAlign: 'center' }}>
                 {language === 'en' ? 'You have earned privileges! 🎁' : 'คุณได้รับสิทธิพิเศษ! 🎁'}
               </Text>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: 'rgba(255,255,255,0.75)', textAlign: 'center' }}>
-                {language === 'en' ? 'From your 6-instalment on-time Milestone' : 'จาก Milestone การชำระตรงเวลา 6 งวด'}
+                {language === 'en' ? 'From your 12-instalment on-time Milestone' : 'จาก Milestone การชำระตรงเวลา 12 งวด'}
               </Text>
             </View>
             {/* 5% big highlight */}
@@ -160,8 +160,8 @@ export function RewardPrivilegeScreen() {
           </View>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: '#B0003A', lineHeight: 20 }}>
             {language === 'en'
-              ? '"Thank you for trusting AIA for 6 months. Every time you pay on time, that is keeping a promise..."'
-              : '"ขอบคุณที่ไว้วางใจ AIA มาตลอด 6 เดือน ทุกครั้งที่คุณชำระเบี้ยตรงเวลา นั่นคือการรักษาคำสัญญา..."'}
+              ? '"Thank you for trusting AIA for 12 months. Every time you pay on time, that is keeping a promise..."'
+              : '"ขอบคุณที่ไว้วางใจ AIA มาตลอด 12 เดือน ทุกครั้งที่คุณชำระเบี้ยตรงเวลา นั่นคือการรักษาคำสัญญา..."'}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 12, color: '#E91E8C' }}>{language === 'en' ? 'Read full letter' : 'อ่านจดหมายทั้งหมด'}</Text>

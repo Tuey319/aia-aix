@@ -66,10 +66,8 @@ export function CostsScreen() {
   const insets = useSafeAreaInsets();
   const s = useStrings();
   const language = useAppStore((state) => state.language);
-  const { billingFrequency, setBillingFrequency } = useAppStore((st) => ({
-    billingFrequency: st.billingFrequency,
-    setBillingFrequency: st.setBillingFrequency,
-  }));
+  const billingFrequency = useAppStore((st) => st.billingFrequency);
+  const setBillingFrequency = useAppStore((st) => st.setBillingFrequency);
 
   const [localFreq, setLocalFreq] = useState<BillingFreq>(billingFrequency);
 
@@ -173,7 +171,9 @@ export function CostsScreen() {
                 lineHeight: 18,
               }}
             >
-              {s.costs.forecastNote}
+              {language === 'en'
+                ? 'Premiums increase by age as set at contract time — this is a pre-designed structure, not a surprise hike. Planning ahead helps you manage it.'
+                : 'เบี้ยประกันเพิ่มขึ้นตามช่วงอายุที่กำหนดไว้ตั้งแต่ทำสัญญา — เป็นโครงสร้างเบี้ยที่ออกแบบไว้ล่วงหน้าตามแบบประกัน ไม่ใช่การปรับขึ้นแบบไม่ทันตั้งตัว วางแผนงบล่วงหน้าช่วยให้จัดการได้ง่ายขึ้น'}
             </Text>
           </View>
         </View>
