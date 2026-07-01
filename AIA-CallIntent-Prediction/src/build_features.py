@@ -32,9 +32,11 @@ WINDOW_START = pd.Timestamp("2026-01-01")
 WINDOW_END = pd.Timestamp("2026-06-30")
 LABEL_HORIZON_DAYS = 7
 LAST_SNAPSHOT = WINDOW_END - pd.Timedelta(days=LABEL_HORIZON_DAYS)  # 2026-06-23
+SCHEDULE_START = WINDOW_START - pd.DateOffset(months=3)  # 2025-10-01: matches generate_data.py -- earliest date call history can exist
 
 INTENTS = ["due_date_amount", "payment_status", "autopay", "loan_repayment", "tax_consent"]
 SENTINEL = 999  # "not applicable / unknown" for days-since / days-to features
+FREQ_DAYS = {"monthly": 30, "quarterly": 90, "semi-annual": 180, "annual": 365}
 
 
 def load_raw():
@@ -84,8 +86,10 @@ def build_customer_timeseries(customers, logins, calls, snap_dates):
                                         (snap_dates - call_dates[np.clip(idx_last_call, 0, None)]).astype("timedelta64[D]").astype(int),
                                         SENTINEL)
             idx_90d_lo = np.searchsorted(call_dates, snap_dates - pd.Timedelta(days=90), side="left")
+            idx_30d_lo = np.searchsorted(call_dates, snap_dates - pd.Timedelta(days=30), side="left")
             idx_90d_hi = np.searchsorted(call_dates, snap_dates, side="right")
             calls_90d_total = idx_90d_hi - idx_90d_lo
+            calls_30d_total = idx_90d_hi - idx_30d_lo
             calls_90d_by_intent = {}
             for intent in INTENTS:
                 intent_dates = call_dates[call_intents == intent]
@@ -95,11 +99,13 @@ def build_customer_timeseries(customers, logins, calls, snap_dates):
         else:
             days_since_call = np.full(n, SENTINEL)
             calls_90d_total = np.zeros(n, dtype=int)
+            calls_30d_total = np.zeros(n, dtype=int)
             calls_90d_by_intent = {intent: np.zeros(n, dtype=int) for intent in INTENTS}
 
         out[cid] = dict(days_since_login=days_since_login, login_count_30d=login_count_30d,
                          login_count_90d=login_count_90d, days_since_call=days_since_call,
-                         calls_90d_total=calls_90d_total, calls_90d_by_intent=calls_90d_by_intent)
+                         calls_90d_total=calls_90d_total, calls_30d_total=calls_30d_total,
+                         calls_90d_by_intent=calls_90d_by_intent)
     return out
 
 
@@ -117,6 +123,8 @@ def build_policy_block(pol, payments_by_pol, autopay_by_pol, repay_by_pol, loan_
     days_to_next_due = np.where(has_next, (due_arr[np.clip(idx_next, 0, len(due_arr) - 1)] - snap_dates).astype("timedelta64[D]").astype(int), SENTINEL)
     days_since_last_due = np.where(has_last, (snap_dates - due_arr[np.clip(idx_last, 0, None)]).astype("timedelta64[D]").astype(int), SENTINEL)
     last_payment_status = np.where(has_last, status_arr[np.clip(idx_last, 0, None)], "none")
+    cycle_days = FREQ_DAYS[pol.premium_frequency]
+    premium_cycle_position = np.where(days_to_next_due < SENTINEL, days_to_next_due / cycle_days, SENTINEL)
 
     ap = autopay_by_pol.get(policy_no)
     if ap is not None and len(ap) > 0:
@@ -159,6 +167,7 @@ def build_policy_block(pol, payments_by_pol, autopay_by_pol, repay_by_pol, loan_
 
     calls_sub = calls_by_pol.get(policy_no)
     label = np.full(n, "no_call", dtype=object)
+    calls_lifetime_total = np.zeros(n, dtype=int)
     if calls_sub is not None and len(calls_sub) > 0:
         call_dates = calls_sub["call_date"].values
         call_intents = calls_sub["intent"].values
@@ -167,6 +176,15 @@ def build_policy_block(pol, payments_by_pol, autopay_by_pol, repay_by_pol, loan_
         idx_hi = np.searchsorted(call_dates, upper, side="right")
         has_future_call = idx_hi > idx_lo
         label = np.where(has_future_call, call_intents[np.clip(idx_lo, 0, len(call_dates) - 1)], "no_call")
+        # calls strictly before the snapshot date -- this policy's track record so far
+        calls_lifetime_total = np.searchsorted(call_dates, snap_dates, side="left")
+
+    # how long we've been able to observe whether this policy generates calls at all,
+    # bounded by both data availability (SCHEDULE_START) and the policy's own start date --
+    # this is what lets the model tell "genuinely never calls" apart from "too new to know yet"
+    observed_start = max(np.datetime64(SCHEDULE_START), np.datetime64(pol.policy_start_date))
+    calls_observed_days = np.clip((snap_dates - observed_start).astype("timedelta64[D]").astype(int), 0, None)
+    calls_lifetime_rate = calls_lifetime_total / np.maximum(calls_observed_days / 365.0, 30 / 365.0)
 
     ts = cust_ts[cust]
     block = {
@@ -176,6 +194,7 @@ def build_policy_block(pol, payments_by_pol, autopay_by_pol, repay_by_pol, loan_
         "policy_tenure_days": (snap_dates - np.datetime64(pol.policy_start_date)).astype("timedelta64[D]").astype(int),
         "autopay_enrolled": np.full(n, pol.autopay_enrolled),
         "days_to_next_due": days_to_next_due, "days_since_last_due": days_since_last_due,
+        "premium_cycle_position": premium_cycle_position,
         "last_payment_status": last_payment_status, "days_since_autopay_fail": days_since_autopay_fail,
         "has_loan": np.full(n, pol.has_loan), "loan_balance": loan_balance,
         "days_to_next_loan_repayment": days_to_next_repay, "days_since_last_loan_repayment": days_since_last_repay,
@@ -183,7 +202,9 @@ def build_policy_block(pol, payments_by_pol, autopay_by_pol, repay_by_pol, loan_
         "days_since_tax_request": days_since_request,
         "days_since_last_login": ts["days_since_login"], "login_count_30d": ts["login_count_30d"],
         "login_count_90d": ts["login_count_90d"], "days_since_last_call_any": ts["days_since_call"],
-        "calls_90d_total": ts["calls_90d_total"],
+        "calls_90d_total": ts["calls_90d_total"], "calls_30d_total": ts["calls_30d_total"],
+        "calls_lifetime_total": calls_lifetime_total, "calls_observed_days": calls_observed_days,
+        "calls_lifetime_rate": calls_lifetime_rate,
     }
     for intent in INTENTS:
         block[f"calls_90d_{intent}"] = ts["calls_90d_by_intent"][intent]
