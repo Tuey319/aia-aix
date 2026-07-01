@@ -230,8 +230,8 @@ export function NotificationsScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{ flexGrow: 0, backgroundColor: '#F5F5F7' }}
-        contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 8, paddingVertical: 10 }}
+        style={{ flexGrow: 0, flexShrink: 0, backgroundColor: '#F5F5F7' }}
+        contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 8, paddingTop: 8, paddingBottom: 12 }}
       >
         {FILTER_CHIPS.map((chip) => {
           const isActive = chip.intent === activeFilter;
@@ -242,7 +242,8 @@ export function NotificationsScreen() {
               onPress={() => setActiveFilter(chip.intent)}
               activeOpacity={0.75}
               style={{
-                height: 34, paddingHorizontal: 14,
+                paddingHorizontal: 16,
+                paddingVertical: 9,
                 borderRadius: 99,
                 backgroundColor: isActive ? colors.primary : '#FFFFFF',
                 borderWidth: 1.5,
