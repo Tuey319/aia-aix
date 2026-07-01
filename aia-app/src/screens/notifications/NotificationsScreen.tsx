@@ -95,7 +95,7 @@ function NotificationCard({
 
           {/* Intent label + policy */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <Text style={{ fontFamily: fontFamily.jakarta.semiBold, fontSize: 10, color: meta.colorIcon }}>
+            <Text style={{ fontFamily: fontFamily.jakarta.semiBold, fontSize: 10, color: colors.primary }}>
               {language === 'en' ? meta.labelEn : meta.labelTh}
             </Text>
             <View style={{ width: 3, height: 3, borderRadius: 2, backgroundColor: '#D1D5DB' }} />
@@ -118,7 +118,7 @@ function NotificationCard({
               onPress={onPress}
               activeOpacity={0.82}
               style={{
-                backgroundColor: meta.colorIcon,
+                backgroundColor: colors.primary,
                 borderRadius: 99,
                 paddingHorizontal: 16,
                 paddingVertical: 8,
@@ -222,7 +222,7 @@ export function NotificationsScreen() {
 
         {/* Row 2: subtitle */}
         <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: '#6B7280', marginTop: 3, marginLeft: 46 }}>
-          {language === 'en' ? 'Personalised alerts from AIA AI' : 'การแจ้งเตือนส่วนตัวจาก AIA AI'}
+          {language === 'en' ? 'Your policy alerts' : 'การแจ้งเตือนกรมธรรม์ของคุณ'}
         </Text>
       </LinearGradient>
 
@@ -236,7 +236,6 @@ export function NotificationsScreen() {
         {FILTER_CHIPS.map((chip) => {
           const isActive = chip.intent === activeFilter;
           const meta     = chip.intent !== 'all' ? INTENT_META[chip.intent] : null;
-          const activeBg = meta?.colorIcon ?? colors.primary;
           return (
             <TouchableOpacity
               key={chip.intent}
@@ -245,14 +244,14 @@ export function NotificationsScreen() {
               style={{
                 height: 34, paddingHorizontal: 14,
                 borderRadius: 99,
-                backgroundColor: isActive ? activeBg : '#FFFFFF',
+                backgroundColor: isActive ? colors.primary : '#FFFFFF',
                 borderWidth: 1.5,
-                borderColor: isActive ? activeBg : '#E5E7EB',
+                borderColor: isActive ? colors.primary : '#E5E7EB',
                 alignItems: 'center', justifyContent: 'center',
                 flexDirection: 'row', gap: 5,
-                shadowColor: isActive ? activeBg : 'transparent',
+                shadowColor: isActive ? colors.primary : 'transparent',
                 shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: isActive ? 0.3 : 0,
+                shadowOpacity: isActive ? 0.25 : 0,
                 shadowRadius: 6,
                 elevation: isActive ? 3 : 0,
               }}
@@ -261,7 +260,7 @@ export function NotificationsScreen() {
                 <MaterialIcons
                   name={meta.icon as any}
                   size={13}
-                  color={isActive ? '#FFFFFF' : meta.colorIcon}
+                  color={isActive ? '#FFFFFF' : '#6B7280'}
                 />
               )}
               <Text style={{
@@ -293,8 +292,8 @@ export function NotificationsScreen() {
             </Text>
             <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: '#9CA3AF', textAlign: 'center', maxWidth: 220, lineHeight: 20 }}>
               {language === 'en'
-                ? 'AIA AI will alert you here when your policies need attention.'
-                : 'AIA AI จะแจ้งเตือนคุณเมื่อมีเรื่องที่ต้องดำเนินการ'}
+                ? "We'll notify you here when your policies need attention."
+                : 'เราจะแจ้งเตือนคุณที่นี่เมื่อมีเรื่องที่ต้องดำเนินการ'}
             </Text>
           </View>
         )}
@@ -330,14 +329,11 @@ export function NotificationsScreen() {
           </>
         )}
 
-        {/* AI footer */}
+        {/* Footer */}
         {filtered.length > 0 && (
-          <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 7, marginTop: 8, paddingHorizontal: 4, opacity: 0.55 }}>
-            <MaterialIcons name="auto-awesome" size={12} color="#9CA3AF" style={{ marginTop: 1 }} />
-            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: '#9CA3AF', flex: 1, lineHeight: 15 }}>
-              {language === 'en'
-                ? 'Powered by AIA AI · Alerts personalised from your policy & behaviour patterns'
-                : 'ขับเคลื่อนโดย AIA AI · แจ้งเตือนจากพฤติกรรมและข้อมูลกรมธรรม์ของคุณ'}
+          <View style={{ alignItems: 'center', marginTop: 8, opacity: 0.45 }}>
+            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: '#9CA3AF' }}>
+              {language === 'en' ? 'AIA Thailand · You\'re up to date' : 'AIA Thailand · คุณรับทราบทุกอย่างแล้ว'}
             </Text>
           </View>
         )}
