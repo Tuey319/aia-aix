@@ -19,6 +19,7 @@ import { useStrings } from '../../i18n';
 import { useAppStore } from '../../store';
 import { AiaLogo } from '../../components/AiaLogo';
 import { IllustrationMedicalApp } from '../../components/illustrations';
+import { fetchAssistantReply, ChatTurn } from '../../api/assistant';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -34,114 +35,31 @@ type ChatMessage = {
 
 type LocalizedText = { th: string; en: string };
 
-// Mocked intent matching — no real LLM/backend. Each intent resolves a typed
-// message to exactly one destination, so the reply uses the action-card pattern.
-// Reply/ctaLabel are localized per-message (see detectMessageLanguage), independent
-// of the app-wide language toggle, so the bot mirrors whichever language the user typed in.
-// `source` is a fake document citation shown under replies that plausibly come from
-// looking something up (policy wording, member handbooks, FAQ base) rather than
-// pure navigation actions — it's cosmetic, there's no real retrieval behind it.
-const INTENTS: {
-  keywords: string[];
-  reply: LocalizedText;
-  ctaLabel: LocalizedText;
-  screen: string;
-  source?: LocalizedText;
-}[] = [
-  {
-    keywords: ['จ่าย', 'ชำระ', 'เบี้ย', 'pay', 'premium'],
-    reply: {
-      th: 'นี่คือหน้าชำระเบี้ยประกันของคุณค่ะ แตะปุ่มด้านล่างเพื่อดำเนินการต่อ',
-      en: "Here's your premium payment page. Tap the button below to continue.",
-    },
-    ctaLabel: { th: 'ไปที่หน้าชำระเงิน', en: 'Go to Payment Page' },
-    screen: 'PaySelect',
+// Every message now goes to Groq (see src/api/assistant.ts) — the model itself decides
+// both the conversational reply and, when relevant, which screen to suggest navigating
+// to, so a question like "what payment methods are there?" gets a real explanatory
+// answer with a helpful next-step button, not just a bare navigation card.
+// `source` is a fake document citation shown for replies that point at one of these
+// "lookup" screens — it's cosmetic, there's no real retrieval behind it, and is kept
+// local (rather than model-generated) so the citation text stays stable and on-brand.
+const SCREEN_SOURCES: Partial<Record<string, LocalizedText>> = {
+  CoverageDetail: {
+    th: 'แหล่งข้อมูล: กรมธรรม์ฉบับเต็ม หมวด 3 — ความคุ้มครอง',
+    en: 'Source: Full Policy Document, Section 3 — Coverage',
   },
-  {
-    keywords: ['เคลม', 'claim', 'ยื่นเรื่อง'],
-    reply: {
-      th: 'เริ่มขั้นตอนยื่นเคลมได้ที่นี่ค่ะ',
-      en: 'You can start your claim process here.',
-    },
-    ctaLabel: { th: 'ไปที่หน้ายื่นเคลม', en: 'Go to Claim' },
-    screen: 'ClaimStart',
+  Policy: {
+    th: 'แหล่งข้อมูล: สรุปเงื่อนไขกรมธรรม์ (Policy Summary)',
+    en: 'Source: Policy Terms Summary',
   },
-  {
-    keywords: ['คุ้มครอง', 'coverage'],
-    reply: {
-      th: 'ดูรายละเอียดความคุ้มครองกรมธรรม์ของคุณได้ที่นี่ค่ะ',
-      en: 'You can view your policy coverage details here.',
-    },
-    ctaLabel: { th: 'ดูความคุ้มครอง', en: 'View Coverage' },
-    screen: 'CoverageDetail',
-    source: {
-      th: 'แหล่งข้อมูล: กรมธรรม์ฉบับเต็ม หมวด 3 — ความคุ้มครอง',
-      en: 'Source: Full Policy Document, Section 3 — Coverage',
-    },
+  Vitality: {
+    th: 'แหล่งข้อมูล: คู่มือสมาชิก AIA Vitality',
+    en: 'Source: AIA Vitality Member Handbook',
   },
-  {
-    keywords: ['กรมธรรม์', 'policy', 'เอกสาร'],
-    reply: {
-      th: 'นี่คือหน้ากรมธรรม์ของคุณค่ะ',
-      en: 'Here is your policy page.',
-    },
-    ctaLabel: { th: 'ไปที่หน้ากรมธรรม์', en: 'Go to Policy' },
-    screen: 'Policy',
-    source: {
-      th: 'แหล่งข้อมูล: สรุปเงื่อนไขกรมธรรม์ (Policy Summary)',
-      en: 'Source: Policy Terms Summary',
-    },
+  FaqList: {
+    th: 'แหล่งข้อมูล: ฐานข้อมูลคำถามที่พบบ่อย AIA+',
+    en: 'Source: AIA+ FAQ Knowledge Base',
   },
-  {
-    keywords: ['vitality'],
-    reply: {
-      th: 'ตรวจสอบสถานะ AIA Vitality และส่วนลดของคุณได้ที่นี่ค่ะ',
-      en: 'Check your AIA Vitality status and discounts here.',
-    },
-    ctaLabel: { th: 'ไปที่ AIA Vitality', en: 'Go to AIA Vitality' },
-    screen: 'Vitality',
-    source: {
-      th: 'แหล่งข้อมูล: คู่มือสมาชิก AIA Vitality',
-      en: 'Source: AIA Vitality Member Handbook',
-    },
-  },
-  {
-    keywords: ['ติดต่อ', 'agent', 'เจ้าหน้าที่'],
-    reply: {
-      th: 'ติดต่อตัวแทนของคุณได้ที่นี่ค่ะ',
-      en: 'You can contact your agent here.',
-    },
-    ctaLabel: { th: 'ติดต่อเจ้าหน้าที่', en: 'Contact Agent' },
-    screen: 'ContactAgent',
-  },
-  {
-    keywords: ['คำถาม', 'faq', 'ถามตอบ'],
-    reply: {
-      th: 'ดูคำถามที่พบบ่อยได้ที่นี่ค่ะ',
-      en: 'You can view frequently asked questions here.',
-    },
-    ctaLabel: { th: 'ดูคำถามที่พบบ่อย', en: 'View FAQ' },
-    screen: 'FaqList',
-    source: {
-      th: 'แหล่งข้อมูล: ฐานข้อมูลคำถามที่พบบ่อย AIA+',
-      en: 'Source: AIA+ FAQ Knowledge Base',
-    },
-  },
-  {
-    keywords: ['ประวัติ', 'history'],
-    reply: {
-      th: 'ดูประวัติการชำระเบี้ยของคุณได้ที่นี่ค่ะ',
-      en: 'You can view your payment history here.',
-    },
-    ctaLabel: { th: 'ดูประวัติการชำระ', en: 'View Payment History' },
-    screen: 'History',
-  },
-];
-
-function findIntent(text: string) {
-  const lower = text.toLowerCase();
-  return INTENTS.find((intent) => intent.keywords.some((kw) => lower.includes(kw.toLowerCase())));
-}
+};
 
 // Thai script occupies U+0E00–U+0E7F. If the message has no Thai and no Latin
 // letters either (e.g. just digits/emoji), fall back to the app-wide language.
@@ -266,39 +184,52 @@ export function AssistantScreen() {
     { label: s.assistant.quickClaim, screen: 'ClaimStart' },
   ];
 
-  const sendMessage = (text: string) => {
+  const sendMessage = async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed) return;
 
     const userMsg: ChatMessage = { id: `${Date.now()}-u`, role: 'user', text: trimmed };
+    const priorMessages = messages;
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setIsTyping(true);
 
     const replyLang = detectMessageLanguage(trimmed, language);
 
-    setTimeout(() => {
-      const intent = findIntent(trimmed);
-      const botMsg: ChatMessage = intent
-        ? {
-            id: `${Date.now()}-b`,
-            role: 'bot',
-            text: intent.reply[replyLang],
-            ctaLabel: intent.ctaLabel[replyLang],
-            screen: intent.screen,
-            source: intent.source?.[replyLang],
-          }
-        : {
-            id: `${Date.now()}-b`,
-            role: 'bot',
-            text: replyLang === 'en'
-              ? "Sorry, I'm not sure what you mean. Try one of the options below."
-              : 'ขออภัยค่ะ ดิฉันไม่แน่ใจว่าคุณหมายถึงอะไร ลองเลือกจากตัวเลือกด้านล่างนะคะ',
-            showFallbackChips: true,
-          };
+    // Every message goes to the model — it decides both the explanatory reply
+    // and (optionally) which single screen would help the user next, so an
+    // informational question still gets answered instead of just a bare button.
+    try {
+      const history: ChatTurn[] = [...priorMessages, userMsg]
+        .slice(-10)
+        .map((m) => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
+      const { reply, screen, ctaLabel } = await fetchAssistantReply(history);
       setIsTyping(false);
-      setMessages((prev) => [...prev, botMsg]);
-    }, 900);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `${Date.now()}-b`,
+          role: 'bot',
+          text: reply,
+          ctaLabel: ctaLabel ?? undefined,
+          screen: screen ?? undefined,
+          source: screen ? SCREEN_SOURCES[screen]?.[replyLang] : undefined,
+        },
+      ]);
+    } catch {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `${Date.now()}-b`,
+          role: 'bot',
+          text: replyLang === 'en'
+            ? "Sorry, I'm having trouble connecting right now. Try one of the options below."
+            : 'ขออภัยค่ะ ระบบขัดข้องชั่วคราว ลองเลือกจากตัวเลือกด้านล่างนะคะ',
+          showFallbackChips: true,
+        },
+      ]);
+    }
   };
 
   return (
