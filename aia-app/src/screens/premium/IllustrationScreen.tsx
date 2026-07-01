@@ -9,6 +9,7 @@ import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { BarChart } from '../../components/BarChart';
 import { useAppStore } from '../../store';
+import { useStrings } from '../../i18n';
 
 type Nav = NativeStackNavigationProp<HomeStackParamList, 'Illustration'>;
 
@@ -65,7 +66,8 @@ function ValueRow({ icon, iconColor, label, value }: ValueRowProps) {
 export function IllustrationScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
-  const policy = useAppStore((s) => s.selectedPolicy);
+  const s = useStrings();
+  const policy = useAppStore((st) => st.selectedPolicy);
 
   const totalPremium20yr = policy.annualPremium * 20;
 
@@ -92,7 +94,7 @@ export function IllustrationScreen() {
             color: colors.ink,
           }}
         >
-          ภาพรวมผลประโยชน์
+          {s.illustration.title}
         </Text>
       </View>
 
@@ -136,7 +138,7 @@ export function IllustrationScreen() {
                 color: 'rgba(255,255,255,0.7)',
               }}
             >
-              {policy.nameTh} · แบบประกันสะสมทรัพย์
+              {policy.nameTh} · {s.illustration.productType}
             </Text>
           </View>
 
@@ -152,7 +154,7 @@ export function IllustrationScreen() {
                 letterSpacing: 0.8,
               }}
             >
-              ทุนประกันชีวิต
+              {s.illustration.sumAssured}
             </Text>
             <Text
               style={{
@@ -187,7 +189,7 @@ export function IllustrationScreen() {
                   color: colors.white,
                 }}
               >
-                ชำระเบี้ยถึง อายุ 60 ปี
+                {s.illustration.payUntil('60')}
               </Text>
             </View>
             <View
@@ -209,7 +211,7 @@ export function IllustrationScreen() {
                   color: colors.white,
                 }}
               >
-                ครบกำหนด อายุ 90 ปี
+                {s.illustration.matureAt('90')}
               </Text>
             </View>
           </View>
@@ -234,7 +236,7 @@ export function IllustrationScreen() {
                 letterSpacing: 0.8,
               }}
             >
-              เบี้ยประกัน
+              {s.illustration.premiumSection}
             </Text>
           </View>
           <View style={{ height: 1, backgroundColor: colors.hairline, marginHorizontal: 16 }} />
@@ -242,14 +244,14 @@ export function IllustrationScreen() {
             <ValueRow
               icon="event-repeat"
               iconColor={colors.primary}
-              label="เบี้ยประกันต่อปี"
+              label={s.illustration.annualPremium}
               value={`฿${policy.annualPremium.toLocaleString('en-US')}`}
             />
             <View style={{ height: 1, backgroundColor: colors.hairline }} />
             <ValueRow
               icon="savings"
               iconColor={colors.primary}
-              label="เบี้ยรวมตลอดสัญญา (ชำระ 20 ปี)"
+              label={s.illustration.totalPremium('20')}
               value={`฿${totalPremium20yr.toLocaleString('en-US')}`}
             />
           </View>
@@ -284,7 +286,7 @@ export function IllustrationScreen() {
                 letterSpacing: 0.8,
               }}
             >
-              มูลค่าและผลประโยชน์ (ประมาณการ)
+              {s.illustration.valueSection}
             </Text>
             {/* Amber "Illustration" badge */}
             <View
@@ -314,21 +316,21 @@ export function IllustrationScreen() {
             <ValueRow
               icon="currency-exchange"
               iconColor={colors.info}
-              label="มูลค่าเวนคืนเงินสด ปัจจุบัน"
+              label={s.illustration.cashSurrender}
               value="฿96,000"
             />
             <View style={{ height: 1, backgroundColor: colors.hairline }} />
             <ValueRow
               icon="trending-up"
               iconColor={colors.success}
-              label="มูลค่าเงินสดต่อปี (เฉลี่ย)"
+              label={s.illustration.annualCashValue}
               value="~฿62,000"
             />
             <View style={{ height: 1, backgroundColor: colors.hairline }} />
             <ValueRow
               icon="star"
               iconColor={colors.gold}
-              label="มูลค่าครบกำหนด อายุ 90"
+              label={s.illustration.maturityValue('90')}
               value="฿2,650,000"
             />
           </View>
@@ -354,7 +356,7 @@ export function IllustrationScreen() {
                 marginBottom: 2,
               }}
             >
-              มูลค่าเงินสดสะสมโดยประมาณ
+              {s.illustration.chartTitle}
             </Text>
             <Text
               style={{
@@ -363,7 +365,7 @@ export function IllustrationScreen() {
                 color: colors.textSecondary,
               }}
             >
-              ตามช่วงอายุ (ปี)
+              {s.illustration.chartSub}
             </Text>
           </View>
 
@@ -390,8 +392,7 @@ export function IllustrationScreen() {
                 lineHeight: 16,
               }}
             >
-              * มูลค่าเหล่านี้เป็นการประมาณการจากสัญญากรมธรรม์ ไม่ใช่การรับประกันผลตอบแทน
-              ตัวเลขจริงอาจแตกต่างตามเงื่อนไขกรมธรรม์
+              {s.illustration.disclaimer}
             </Text>
           </View>
         </View>
@@ -431,7 +432,7 @@ export function IllustrationScreen() {
               fontSize: 16,
             }}
           >
-            ปรับความคุ้มครองของฉัน
+            {s.illustration.adjustBtn}
           </Text>
         </TouchableOpacity>
       </View>

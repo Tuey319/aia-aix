@@ -4,41 +4,13 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {
-  colors,
-  fontFamily,
-  fontSize,
-  radius,
-  screenPadding,
-  cardGap,
-} from '../../tokens';
+import { colors, fontFamily, fontSize, radius, screenPadding } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
+import { getFaqItems, FaqItem } from './faqData';
 
 type Nav = NativeStackNavigationProp<any>;
-
-interface FaqResult {
-  id: string;
-  title: string;
-  subtitle: string;
-}
-
-const MOCK_RESULTS: FaqResult[] = [
-  {
-    id: '1',
-    title: 'เปลี่ยนรอบ การชำระอย่างไร?',
-    subtitle: 'การชำระเบี้ย',
-  },
-  {
-    id: '2',
-    title: 'การ เปลี่ยนรอบ มีผลเมื่อไหร่?',
-    subtitle: 'การชำระเบี้ย',
-  },
-  {
-    id: '3',
-    title: 'เปลี่ยนรอบ แล้วเสียส่วนลดไหม?',
-    subtitle: 'เบี้ยประกัน',
-  },
-];
 
 function HighlightedText({
   text,
@@ -51,17 +23,12 @@ function HighlightedText({
   style: object;
   boldStyle: object;
 }) {
-  if (!query) {
-    return <Text style={style}>{text}</Text>;
-  }
+  if (!query) return <Text style={style}>{text}</Text>;
 
-  const lowerText = text.toLowerCase();
-  const lowerQuery = query.toLowerCase();
-  const idx = lowerText.indexOf(lowerQuery);
-
-  if (idx === -1) {
-    return <Text style={style}>{text}</Text>;
-  }
+  const lower = text.toLowerCase();
+  const lowerQ = query.toLowerCase();
+  const idx = lower.indexOf(lowerQ);
+  if (idx === -1) return <Text style={style}>{text}</Text>;
 
   return (
     <Text style={style}>
@@ -75,29 +42,37 @@ function HighlightedText({
 export function FaqSearchScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
-  const [query, setQuery] = useState('เปลี่ยนรอบ');
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const ALL_ITEMS: FaqItem[] = getFaqItems(language);
+
+  const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(true);
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => inputRef.current?.focus(), 100);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => inputRef.current?.focus(), 100);
+    return () => clearTimeout(t);
   }, []);
 
   const trimmed = query.trim();
-  const filtered = trimmed
-    ? MOCK_RESULTS.filter(
-        (r) =>
-          r.title.toLowerCase().includes(trimmed.toLowerCase()) ||
-          r.subtitle.toLowerCase().includes(trimmed.toLowerCase()),
-      )
+  const results = trimmed.length > 0
+    ? ALL_ITEMS.filter((item) => {
+        const q = trimmed.toLowerCase();
+        return (
+          item.question.toLowerCase().includes(q) ||
+          item.answer.toLowerCase().includes(q) ||
+          item.category.toLowerCase().includes(q)
+        );
+      })
     : [];
 
-  const showEmpty = trimmed.length > 0 && filtered.length === 0;
+  const showEmpty = trimmed.length > 0 && results.length === 0;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      {/* Search header row — back + active search input */}
+      {/* Header: back + live search input */}
       <View
         style={{
           flexDirection: 'row',
@@ -141,7 +116,7 @@ export function FaqSearchScreen() {
               color: colors.ink,
               padding: 0,
             }}
-            placeholder="ค้นหา"
+            placeholder={s.support.searchPlaceholder}
             placeholderTextColor={colors.textTertiary}
             value={query}
             onChangeText={setQuery}
@@ -161,12 +136,10 @@ export function FaqSearchScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{
-          paddingBottom: insets.bottom + 32,
-        }}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
       >
-        {/* Result count label */}
-        {filtered.length > 0 && (
+        {/* Result count */}
+        {results.length > 0 && (
           <Text
             style={{
               fontFamily: fontFamily.anuphan.regular,
@@ -176,18 +149,15 @@ export function FaqSearchScreen() {
               paddingBottom: 10,
             }}
           >
-            ผลการค้นหา {filtered.length} รายการ
+            {language === 'en'
+              ? `${results.length} result${results.length !== 1 ? 's' : ''} found`
+              : `ผลการค้นหา ${results.length} รายการ`}
           </Text>
         )}
 
+        {/* Empty state */}
         {showEmpty && (
-          <View
-            style={{
-              alignItems: 'center',
-              paddingVertical: 48,
-              gap: 10,
-            }}
-          >
+          <View style={{ alignItems: 'center', paddingVertical: 48, gap: 10 }}>
             <MaterialIcons name="search-off" size={40} color={colors.textTertiary} />
             <Text
               style={{
@@ -196,7 +166,7 @@ export function FaqSearchScreen() {
                 color: colors.textSecondary,
               }}
             >
-              ไม่พบผลลัพธ์
+              {language === 'en' ? 'No results found' : 'ไม่พบผลลัพธ์'}
             </Text>
             <Text
               style={{
@@ -205,14 +175,14 @@ export function FaqSearchScreen() {
                 color: colors.textTertiary,
               }}
             >
-              ลองค้นหาด้วยคำอื่น
+              {language === 'en' ? 'Try a different search term' : 'ลองค้นหาด้วยคำอื่น'}
             </Text>
           </View>
         )}
 
-        {/* Result rows — plain list with dividers */}
-        {filtered.map((result, index) => (
-          <React.Fragment key={result.id}>
+        {/* Results */}
+        {results.map((item, index) => (
+          <React.Fragment key={item.id}>
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => navigation.navigate('FaqAnswer')}
@@ -226,8 +196,21 @@ export function FaqSearchScreen() {
               }}
             >
               <View style={{ flex: 1, gap: 3 }}>
+                {/* Category badge */}
+                <Text
+                  style={{
+                    fontFamily: fontFamily.jakarta.semiBold,
+                    fontSize: 10,
+                    color: colors.textTertiary,
+                    textTransform: 'uppercase',
+                    letterSpacing: 0.4,
+                    marginBottom: 2,
+                  }}
+                >
+                  {item.category}
+                </Text>
                 <HighlightedText
-                  text={result.title}
+                  text={item.question}
                   query={trimmed}
                   style={{
                     fontFamily: fontFamily.anuphan.medium,
@@ -240,19 +223,10 @@ export function FaqSearchScreen() {
                     color: colors.primary,
                   }}
                 />
-                <Text
-                  style={{
-                    fontFamily: fontFamily.anuphan.regular,
-                    fontSize: fontSize.caption,
-                    color: colors.textSecondary,
-                  }}
-                >
-                  {result.subtitle}
-                </Text>
               </View>
               <MaterialIcons name="chevron-right" size={20} color={colors.textTertiary} />
             </TouchableOpacity>
-            {index < filtered.length - 1 && (
+            {index < results.length - 1 && (
               <View
                 style={{
                   height: 1,

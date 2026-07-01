@@ -11,28 +11,34 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { IllustrationFamilyInsurance } from '../../components/illustrations';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
-const SHARE_CHANNELS = [
-  { name: 'LINE', lib: 'fa6' as const, icon: 'line' as const, color: '#06C755', bg: '#E8F8EE' },
-  { name: 'Facebook', lib: 'fa6' as const, icon: 'facebook' as const, color: '#1877F2', bg: '#EAF1FB' },
-  { name: 'Twitter/X', lib: 'fa6' as const, icon: 'x-twitter' as const, color: '#000', bg: '#F4F4F6' },
-  { name: 'คัดลอก', lib: 'material' as const, icon: 'content-copy' as const, color: colors.textSecondary, bg: colors.hairline2 },
-];
-
-async function handleShare() {
-  try {
-    await Share.share({
-      message: '🎉 ฉันชำระเบี้ยประกัน AIA ครบ 12 งวดตรงเวลา!\n\nHappy ที่ได้รับ "Always On Time" Badge 🏅\nทุกการชำระคือการปกป้องคนที่รัก ❤️\n\n#AIA #AIACelebration #EveryPaymentIsAPromise',
-      title: 'แชร์ความภาคภูมิใจ',
-    });
-  } catch {}
-}
 
 export function SharePrideScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const language = useAppStore((state) => state.language);
+
+  const SHARE_CHANNELS = [
+    { name: 'LINE', icon: 'chat' as const, color: '#06C755', bg: '#E8F8EE' },
+    { name: 'Facebook', icon: 'facebook' as const, color: '#1877F2', bg: '#EAF1FB' },
+    { name: 'Twitter/X', icon: 'alternate-email' as const, color: '#000', bg: '#F4F4F6' },
+    { name: language === 'en' ? 'Copy' : 'คัดลอก', icon: 'content-copy' as const, color: colors.textSecondary, bg: colors.hairline2 },
+  ];
+
+  const shareMessage = language === 'en'
+    ? '🎉 I have paid my AIA insurance premium for 6 consecutive instalments on time!\n\nEarned the "Always On Time" Badge 🏅\nEvery payment is a promise to protect those I love ❤️\n\n#AIA #AIACelebration #EveryPaymentIsAPromise'
+    : '🎉 ฉันชำระเบี้ยประกัน AIA ครบ 6 งวดตรงเวลา!\n\nHappy ที่ได้รับ "Always On Time" Badge 🏅\nทุกการชำระคือการปกป้องคนที่รัก ❤️\n\n#AIA #AIACelebration #EveryPaymentIsAPromise';
+
+  const shareTitle = language === 'en' ? 'Share Your Pride' : 'แชร์ความภาคภูมิใจ';
+
+  async function handleShare() {
+    try {
+      await Share.share({ message: shareMessage, title: shareTitle });
+    } catch {}
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -42,7 +48,7 @@ export function SharePrideScreen() {
           <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
         </TouchableOpacity>
         <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink, flex: 1 }}>
-          แชร์ความภาคภูมิใจ
+          {language === 'en' ? 'Share Your Pride' : 'แชร์ความภาคภูมิใจ'}
         </Text>
       </View>
 
@@ -56,10 +62,10 @@ export function SharePrideScreen() {
 
           <View style={{ alignItems: 'center', gap: 6 }}>
             <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: '#fff', textAlign: 'center' }}>
-              ชำระตรงเวลา 12 งวดแล้ว! 🎉
+              {language === 'en' ? '12 instalments paid on time! 🎉' : 'ชำระตรงเวลา 12 งวดแล้ว! 🎉'}
             </Text>
             <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: 'rgba(255,255,255,0.65)', textAlign: 'center' }}>
-              ทุกการชำระคือการปกป้องคนที่รัก ❤️
+              {language === 'en' ? 'Every payment protects those you love ❤️' : 'ทุกการชำระคือการปกป้องคนที่รัก ❤️'}
             </Text>
           </View>
 
@@ -82,7 +88,7 @@ export function SharePrideScreen() {
 
         {/* Share channels */}
         <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 12, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.8, marginLeft: 4 }}>
-          แชร์ผ่าน
+          {language === 'en' ? 'Share via' : 'แชร์ผ่าน'}
         </Text>
 
         <View style={{ flexDirection: 'row', gap: 12 }}>
@@ -100,13 +106,10 @@ export function SharePrideScreen() {
         {/* Message preview */}
         <View style={{ backgroundColor: colors.card, borderRadius: radius.card, padding: 14, gap: 6, ...cardShadow }}>
           <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 11, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.6 }}>
-            ข้อความที่จะแชร์
+            {language === 'en' ? 'Message to share' : 'ข้อความที่จะแชร์'}
           </Text>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.inkBody, lineHeight: 20 }}>
-            🎉 ฉันชำระเบี้ยประกัน AIA ครบ 6 งวดตรงเวลา!{'\n\n'}
-            Happy ที่ได้รับ "Always On Time" Badge 🏅{'\n'}
-            ทุกการชำระคือการปกป้องคนที่รัก ❤️{'\n\n'}
-            #AIA #AIACelebration #EveryPaymentIsAPromise
+            {shareMessage}
           </Text>
         </View>
       </ScrollView>
@@ -116,7 +119,7 @@ export function SharePrideScreen() {
         <TouchableOpacity onPress={handleShare} activeOpacity={0.82}
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 52, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}>
           <MaterialIcons name="share" size={18} color={colors.white} />
-          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>แชร์เลย</Text>
+          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>{language === 'en' ? 'Share Now' : 'แชร์เลย'}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -4,12 +4,20 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, screenPadding } from '../tokens';
+import { useAppStore } from '../store';
 
-const STEP_SUBTITLES: Record<number, string> = {
+const STEP_SUBTITLES_TH: Record<number, string> = {
   1: 'รายละเอียดการเคลม',
   2: 'เอกสารแนบ/ยืนยันตัวตน',
   3: 'บัญชีรับเงิน',
   4: 'ตรวจสอบก่อนส่ง',
+};
+
+const STEP_SUBTITLES_EN: Record<number, string> = {
+  1: 'Claim Details',
+  2: 'Documents & ID',
+  3: 'Payout Account',
+  4: 'Review & Submit',
 };
 
 interface ClaimStepHeaderProps {
@@ -21,7 +29,9 @@ interface ClaimStepHeaderProps {
 
 export function ClaimStepHeader({ step, total = 4, title, subtitle }: ClaimStepHeaderProps) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const stepSubtitle = subtitle ?? STEP_SUBTITLES[step] ?? '';
+  const language = useAppStore((st) => st.language);
+  const subtitleMap = language === 'en' ? STEP_SUBTITLES_EN : STEP_SUBTITLES_TH;
+  const stepSubtitle = subtitle ?? subtitleMap[step] ?? '';
 
   return (
     <View>
@@ -40,7 +50,7 @@ export function ClaimStepHeader({ step, total = 4, title, subtitle }: ClaimStepH
       <View style={{ paddingHorizontal: screenPadding, paddingBottom: 14, gap: 8 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 13, color: colors.primary }}>
-            ขั้นตอน {step} จาก {total}
+            {language === 'en' ? `Step ${step} of ${total}` : `ขั้นตอน ${step} จาก ${total}`}
           </Text>
           {stepSubtitle ? (
             <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.textSecondary }}>

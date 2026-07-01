@@ -19,12 +19,16 @@ import {
 } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
 export function ClaimSuccessScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top', 'bottom']}>
@@ -76,7 +80,7 @@ export function ClaimSuccessScreen() {
               color: colors.ink,
             }}
           >
-            ส่งเคลมสำเร็จ
+            {s.claims.successTitle}
           </Text>
           <Text
             style={{
@@ -87,7 +91,7 @@ export function ClaimSuccessScreen() {
               lineHeight: 22,
             }}
           >
-            เคลมของคุณถูกส่งแล้ว และจะดำเนินการ{'\n'}ภายใน 5 วันทำการ
+            {s.claims.successSub}
           </Text>
         </View>
 
@@ -110,7 +114,7 @@ export function ClaimSuccessScreen() {
                 color: colors.textSecondary,
               }}
             >
-              เลขที่อ้างอิงเคลม
+              {language === 'en' ? 'Claim Reference' : 'เลขที่อ้างอิงเคลม'}
             </Text>
             <Text
               style={{
@@ -136,7 +140,7 @@ export function ClaimSuccessScreen() {
                 color: colors.textSecondary,
               }}
             >
-              จำนวนที่เคลม
+              {language === 'en' ? 'Amount Claimed' : 'จำนวนที่เคลม'}
             </Text>
             <Text
               style={{
@@ -161,9 +165,12 @@ export function ClaimSuccessScreen() {
                 color: colors.textSecondary,
               }}
             >
-              สถานะ
+              {language === 'en' ? 'Status' : 'สถานะ'}
             </Text>
-            <StatusPill label="AIA กำลังดำเนินการ" variant="amber" />
+            <StatusPill
+              label={language === 'en' ? 'AIA Processing' : 'AIA กำลังดำเนินการ'}
+              variant="amber"
+            />
           </View>
         </View>
 
@@ -180,7 +187,7 @@ export function ClaimSuccessScreen() {
               color: colors.primary,
             }}
           >
-            ติดตามสถานะในประวัติการเคลม
+            {s.claims.trackLink}
           </Text>
           <MaterialIcons name="arrow-forward" size={16} color={colors.primary} />
         </TouchableOpacity>
@@ -214,7 +221,7 @@ export function ClaimSuccessScreen() {
               fontSize: 16,
             }}
           >
-            เสร็จสิ้น
+            {s.common.done}
           </Text>
         </TouchableOpacity>
       </View>

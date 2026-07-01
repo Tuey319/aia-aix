@@ -5,26 +5,31 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
 interface DocRow {
   icon: keyof typeof MaterialIcons.glyphMap;
-  title: string;
+  titleTh: string;
+  titleEn: string;
   format: string;
   size: string;
 }
 
 const DOCS: DocRow[] = [
-  { icon: 'description',    title: 'สรุปผลประโยชน์กรมธรรม์',        format: 'PDF', size: '1.2 MB' },
-  { icon: 'receipt',        title: 'ใบเสร็จรับเงินเบี้ยฯ ปี 2569',   format: 'PDF', size: '328 KB' },
-  { icon: 'verified-user',  title: 'หนังสือรับรองการชำระเบี้ย',      format: 'PDF', size: '210 KB' },
-  { icon: 'attach-file',    title: 'เอกสารแนบท้ายกรมธรรม์',         format: 'PDF', size: '548 KB' },
+  { icon: 'description',   titleTh: 'สรุปผลประโยชน์กรมธรรม์',      titleEn: 'Benefit Summary',           format: 'PDF', size: '1.2 MB' },
+  { icon: 'receipt',       titleTh: 'ใบเสร็จรับเงินเบี้ยฯ ปี 2569', titleEn: 'Premium Receipt 2026',      format: 'PDF', size: '328 KB' },
+  { icon: 'verified-user', titleTh: 'หนังสือรับรองการชำระเบี้ย',    titleEn: 'Tax Deduction Certificate', format: 'PDF', size: '210 KB' },
+  { icon: 'attach-file',   titleTh: 'เอกสารแนบท้ายกรมธรรม์',       titleEn: 'Endorsements',              format: 'PDF', size: '548 KB' },
 ];
 
 export function PolicyDocsScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -43,7 +48,7 @@ export function PolicyDocsScreen() {
           <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
         </TouchableOpacity>
         <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>
-          เอกสารกรมธรรม์
+          {s.policy.docsTitle}
         </Text>
       </View>
 
@@ -57,7 +62,7 @@ export function PolicyDocsScreen() {
           paddingBottom: 16,
         }}
       >
-        ดาวน์โหลดเอกสารของกรมธรรม์ AIA Health Happy · P-8842-0091
+        {language === 'en' ? 'Download documents for AIA Health Happy · P-8842-0091' : 'ดาวน์โหลดเอกสารของกรมธรรม์ AIA Health Happy · P-8842-0091'}
       </Text>
 
       <ScrollView
@@ -114,7 +119,7 @@ export function PolicyDocsScreen() {
                       color: colors.ink2,
                     }}
                   >
-                    {doc.title}
+                    {language === 'en' ? doc.titleEn : doc.titleTh}
                   </Text>
                   <Text
                     style={{
@@ -130,7 +135,7 @@ export function PolicyDocsScreen() {
 
                 {/* Download icon */}
                 <TouchableOpacity
-                  onPress={() => Alert.alert('ดาวน์โหลด', doc.title)}
+                  onPress={() => Alert.alert(s.common.download, language === 'en' ? doc.titleEn : doc.titleTh)}
                   hitSlop={12}
                 >
                   <MaterialIcons name="file-download" size={22} color={colors.primary} />
@@ -161,7 +166,7 @@ export function PolicyDocsScreen() {
               lineHeight: 18,
             }}
           >
-            เอกสารจะถูกส่งไปยังอีเมลที่ลงทะเบียนไว้ด้วย
+            {language === 'en' ? 'Documents will also be sent to your registered email.' : 'เอกสารจะถูกส่งไปยังอีเมลที่ลงทะเบียนไว้ด้วย'}
           </Text>
         </View>
       </ScrollView>

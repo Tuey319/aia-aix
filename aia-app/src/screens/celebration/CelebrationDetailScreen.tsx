@@ -14,6 +14,7 @@ import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '..
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 
 import { BarChart } from '../../components/BarChart';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -81,6 +82,7 @@ function ChatMessage({ bubble, index }: { bubble: ChatBubble; index: number }) {
 export function CelebrationDetailScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -90,7 +92,7 @@ export function CelebrationDetailScreen() {
           <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>รายละเอียดการฉลอง</Text>
+          <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>{language === 'en' ? 'Celebration Details' : 'รายละเอียดการฉลอง'}</Text>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.textSecondary }}>AI Celebration Detail</Text>
         </View>
         
@@ -120,13 +122,13 @@ export function CelebrationDetailScreen() {
               <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, gap: 4 }}>
                 <MaterialIcons name="account-balance-wallet" size={16} color="rgba(255,255,255,0.7)" />
                 <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿25,500</Text>
-                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>ชำระแล้ว</Text>
+                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Paid' : 'ชำระแล้ว'}</Text>
               </View>
               <View style={{ width: 1, backgroundColor: 'rgba(255,255,255,0.15)' }} />
               <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, gap: 4 }}>
                 <MaterialIcons name="verified-user" size={16} color="rgba(255,255,255,0.7)" />
                 <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 18, color: '#fff' }}>฿2.0M</Text>
-                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>คุ้มครองอยู่</Text>
+                <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 10, color: 'rgba(255,255,255,0.65)' }}>{language === 'en' ? 'Coverage active' : 'คุ้มครองอยู่'}</Text>
               </View>
             </View>
           </LinearGradient>
@@ -135,7 +137,7 @@ export function CelebrationDetailScreen() {
         {/* AI Chat */}
         <View style={{ backgroundColor: colors.screenBg }}>
           <Text style={{ fontFamily: fontFamily.jakarta.bold, fontSize: 11, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 12, marginLeft: 2 }}>
-            AI บอกว่า...
+            {language === 'en' ? 'AI says...' : 'AI บอกว่า...'}
           </Text>
           {CHAT.map((b, i) => <ChatMessage key={i} bubble={b} index={i} />)}
         </View>
@@ -143,10 +145,10 @@ export function CelebrationDetailScreen() {
         {/* Payment trend chart */}
         <View style={{ backgroundColor: colors.card, borderRadius: radius.card, padding: 18, gap: 12, ...cardShadow }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.ink2 }}>แนวโน้มการชำระ</Text>
+            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.ink2 }}>{language === 'en' ? 'Payment Trend' : 'แนวโน้มการชำระ'}</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
               <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.success }} />
-              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.success }}>ตรงเวลาทุกงวด</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.success }}>{language === 'en' ? 'On time every instalment' : 'ตรงเวลาทุกงวด'}</Text>
             </View>
           </View>
           <BarChart data={PAYMENT_HISTORY} height={80} formatValue={(v) => `฿${(v / 1000).toFixed(1)}k`} labelColor={colors.primary} />
@@ -157,12 +159,13 @@ export function CelebrationDetailScreen() {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <MaterialIcons name="shield" size={18} color={colors.success} />
             <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.successDeep }}>
-              ขอบคุณที่ไว้วางใจ AIA 🛡️
+              {language === 'en' ? 'Thank you for trusting AIA 🛡️' : 'ขอบคุณที่ไว้วางใจ AIA 🛡️'}
             </Text>
           </View>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 13, color: colors.success, lineHeight: 20 }}>
-            ทุกบาทที่คุณชำระ = ความคุ้มครอง ฿784 ต่อ ฿1 ที่จ่าย{'\n'}
-            คุณและครอบครัวปลอดภัยตลอด 12 เดือนที่ผ่านมา ❤️
+            {language === 'en'
+              ? 'Every baht you pay = ฿784 coverage per ฿1 paid\nYou and your family have been protected for 12 months ❤️'
+              : `ทุกบาทที่คุณชำระ = ความคุ้มครอง ฿784 ต่อ ฿1 ที่จ่าย\nคุณและครอบครัวปลอดภัยตลอด 12 เดือนที่ผ่านมา ❤️`}
           </Text>
         </View>
       </ScrollView>
@@ -172,11 +175,11 @@ export function CelebrationDetailScreen() {
         <TouchableOpacity onPress={() => navigation.navigate('RewardPrivilege')} activeOpacity={0.82}
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 52, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}>
           <MaterialIcons name="card-giftcard" size={18} color={colors.white} />
-          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>ดูสิทธิพิเศษของคุณ 🎁</Text>
+          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>{language === 'en' ? 'View Your Privileges 🎁' : 'ดูสิทธิพิเศษของคุณ 🎁'}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('SharePride')} activeOpacity={0.7}
           style={{ height: 40, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 13, color: colors.primary }}>แชร์ความภาคภูมิใจ →</Text>
+          <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 13, color: colors.primary }}>{language === 'en' ? 'Share your pride →' : 'แชร์ความภาคภูมิใจ →'}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

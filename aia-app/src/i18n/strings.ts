@@ -716,7 +716,7 @@ export const strings = {
       requestDocs: 'Request Policy Documents',
       chatBtn: 'Chat with Assistant',
       callBtn: 'Call 1581',
-      faqTitle: 'Frequently Asked Questions',
+      faqTitle: 'FAQ',
       faqFilterAll: 'All',
       changeFreqTitle: 'Change Billing Frequency',
       confirmTitle: 'Confirm Change',

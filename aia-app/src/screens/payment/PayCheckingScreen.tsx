@@ -18,6 +18,8 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 import { IllustrationCoinsDrop } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -26,6 +28,8 @@ export function PayCheckingScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const [countdown, setCountdown] = useState(3);
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -42,12 +46,12 @@ export function PayCheckingScreen() {
   }, [navigation]);
 
   const infoRows = [
-    { label: 'จำนวนเงิน', value: '17,380.00 บาท' },
-    { label: 'วันที่ทำรายการ', value: '16 พ.ค. 2568' },
-    { label: 'วิธีชำระเงิน', value: 'บัตรเครดิต' },
-    { label: 'เลขกรมธรรม์', value: 'P8842XXXXX' },
-    { label: 'เลขที่อ้างอิง (1/2)', value: '92XXXXXXXX' },
-    { label: 'เลขที่อ้างอิง (2/2)', value: '83XXXXX' },
+    { label: language === 'en' ? 'Amount' : 'จำนวนเงิน', value: language === 'en' ? '฿17,380.00' : '17,380.00 บาท' },
+    { label: language === 'en' ? 'Date' : 'วันที่ทำรายการ', value: language === 'en' ? '16 May 2025' : '16 พ.ค. 2568' },
+    { label: language === 'en' ? 'Payment Method' : 'วิธีชำระเงิน', value: language === 'en' ? 'Credit Card' : 'บัตรเครดิต' },
+    { label: language === 'en' ? 'Policy Number' : 'เลขกรมธรรม์', value: 'P8842XXXXX' },
+    { label: language === 'en' ? 'Reference No. (1/2)' : 'เลขที่อ้างอิง (1/2)', value: '92XXXXXXXX' },
+    { label: language === 'en' ? 'Reference No. (2/2)' : 'เลขที่อ้างอิง (2/2)', value: '83XXXXX' },
   ];
 
   return (
@@ -97,7 +101,7 @@ export function PayCheckingScreen() {
             textAlign: 'center',
           }}
         >
-          ระบบกำลังตรวจสอบ{'\n'}สถานะการชำระเงิน
+          {s.payment.checkingTitle}
         </Text>
 
         {/* Subtitle */}
@@ -111,7 +115,7 @@ export function PayCheckingScreen() {
             paddingHorizontal: 8,
           }}
         >
-          ลูกค้าจะได้รับ SMS แจ้งสถานะเมื่อดำเนินการสำเร็จ
+          {language === 'en' ? 'You will receive an SMS notification when the transaction is complete.' : 'ลูกค้าจะได้รับ SMS แจ้งสถานะเมื่อดำเนินการสำเร็จ'}
         </Text>
 
         {/* Autopay note */}
@@ -136,7 +140,7 @@ export function PayCheckingScreen() {
               lineHeight: fontSize.caption * 1.6,
             }}
           >
-            กรณีสมัครหักบัญชีบัตรเครดิตอัตโนมัติ (Autopay) หากชำระเงินสำเร็จ ระบบจะดำเนินการลงทะเบียนภายใน 3 วันทำการ ท่านจะได้รับการยืนยันทาง SMS และอีเมลหลังสมัคร
+            {language === 'en' ? 'If you enrolled in Auto-debit, registration will complete within 3 business days. You will receive confirmation by SMS and email.' : 'กรณีสมัครหักบัญชีบัตรเครดิตอัตโนมัติ (Autopay) หากชำระเงินสำเร็จ ระบบจะดำเนินการลงทะเบียนภายใน 3 วันทำการ ท่านจะได้รับการยืนยันทาง SMS และอีเมลหลังสมัคร'}
           </Text>
         </View>
 
@@ -222,7 +226,7 @@ export function PayCheckingScreen() {
               fontSize: fontSize.title,
             }}
           >
-            กลับไปยัง AIA+ ({countdown} วินาที)
+            {s.payment.backToApp(String(countdown))}
           </Text>
         </TouchableOpacity>
       </View>

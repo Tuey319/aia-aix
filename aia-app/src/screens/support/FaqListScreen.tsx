@@ -1,80 +1,46 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+﻿import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
+import { getFaqItems, FaqItem } from './faqData';
 
 type Nav = NativeStackNavigationProp<any>;
 
-const FILTER_CHIPS = ['ทั้งหมด', 'AIA Prestige', 'AIA+', 'Vitality', 'AIA+ Point'];
-
-interface FaqItem {
-  id: string;
-  category: string;
-  question: string;
-  answer: string;
-  actionLabel?: string;
-  actionRoute?: string;
-}
-
-const FAQ_ITEMS: FaqItem[] = [
-  {
-    id: '1',
-    category: 'AIA Prestige',
-    question: 'ตรวจสอบประวัติสิทธิประโยชน์ได้อย่างไร?',
-    answer:
-      'ดูรายละเอียดทั้งหมดได้ที่เมนู "คู่ของของฉัน" ในหน้าโปรไฟล์ของคุณ',
-    actionLabel: 'ดูโปรไฟล์ →',
-    actionRoute: 'ProfileEdit',
-  },
-  {
-    id: '2',
-    category: 'AIA+',
-    question: 'ดาวน์โหลดหนังสือรับรองการชำระเบี้ยฯ ได้อย่างไร?',
-    answer:
-      'ไปที่แท็บ "กรมธรรม์" แล้วเลือก "ขอเอกสารกรมธรรม์" คุณสามารถดาวน์โหลด PDF หรือขอให้ส่งทางอีเมลได้',
-  },
-  {
-    id: '3',
-    category: 'AIA+ Point',
-    question: 'AIA+ Point คืออะไร?',
-    answer:
-      'AIA+ Point คือระบบแต้มสะสมจากการใช้งานแอป สามารถแลกเป็นสิทธิพิเศษต่างๆ ได้',
-  },
-  {
-    id: '4',
-    category: 'AIA+',
-    question: 'เปลี่ยนรหัสผ่าน AIA+ อย่างไร?',
-    answer:
-      'ไปที่แท็บ "บัญชี" แล้วเลือก "เปลี่ยนรหัสผ่าน" กรอกรหัสเก่าและรหัสใหม่ จากนั้นกดยืนยัน',
-  },
-  {
-    id: '5',
-    category: 'AIA+ Point',
-    question: 'จะเปลี่ยนงวดชำระเบี้ยฯ ได้อย่างไร?',
-    answer:
-      'คุณสามารถเปลี่ยนงวดการชำระได้ผ่านแอป AIA+ ที่เมนู "การจัดการเบี้ย" → "ค่าใช้จ่าย & การผ่อน"',
-    actionLabel: 'เปลี่ยนได้เลย →',
-    actionRoute: 'ChangeFreq',
-  },
-];
+// Screens outside AccountStack need tab-level navigation
+const CROSS_STACK_ROUTES: Record<string, (nav: any) => void> = {
+  PaySelect:    (nav) => nav.navigate('HomeTab', { screen: 'PaySelect' }),
+  Costs:        (nav) => nav.navigate('HomeTab', { screen: 'Costs' }),
+  Vitality:     (nav) => nav.navigate('PolicyTab', { screen: 'Vitality' }),
+  ClaimHistory: (nav) => nav.navigate('CenterTab', { screen: 'ClaimHistory' }),
+  ClaimStart:   (nav) => nav.navigate('CenterTab', { screen: 'ClaimStart' }),
+  Benefits:     (nav) => nav.navigate('BenefitsTab'),
+};
 
 export function FaqListScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
-  const [activeChip, setActiveChip] = useState('ทั้งหมด');
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const FILTER_CHIPS = [s.support.faqFilterAll, 'AIA Prestige', 'AIA+', 'Vitality', 'AIA+ Point'];
+
+  const FAQ_ITEMS: FaqItem[] = getFaqItems(language);
+  const [activeChip, setActiveChip] = useState<string>(s.support.faqFilterAll);
   const [openId, setOpenId] = useState<string | null>('1');
 
-  const filtered = activeChip === 'ทั้งหมด'
+  const filtered = activeChip === s.support.faqFilterAll
     ? FAQ_ITEMS
     : FAQ_ITEMS.filter((f) => f.category === activeChip);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      {/* Header — centered title + X close */}
+      {/* Header â€” centered title + X close */}
       <View style={{
         flexDirection: 'row',
         alignItems: 'center',
@@ -89,14 +55,14 @@ export function FaqListScreen() {
           fontSize: fontSize.titleLg,
           color: colors.ink,
         }}>
-          คำถามที่พบบ่อย
+          {s.support.faqTitle}
         </Text>
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={16}>
           <MaterialIcons name="close" size={22} color={colors.ink} />
         </TouchableOpacity>
       </View>
 
-      {/* Inline search bar — tapping navigates to FaqSearch */}
+      {/* Inline search bar â€” tapping navigates to FaqSearch */}
       <TouchableOpacity
         onPress={() => navigation.navigate('FaqSearch')}
         activeOpacity={0.8}
@@ -121,7 +87,7 @@ export function FaqListScreen() {
           color: colors.textTertiary,
           flex: 1,
         }}>
-          ค้นหาคำถาม เช่น 'เปลี่ยนรอบชำระ'
+          {s.support.searchPlaceholder}
         </Text>
       </TouchableOpacity>
 
@@ -129,8 +95,8 @@ export function FaqListScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{ flexGrow: 0 }}
-        contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 8, paddingBottom: 14 }}
+        style={{ flexShrink: 0, height: 34, marginBottom: 14 }}
+        contentContainerStyle={{ paddingHorizontal: screenPadding, gap: 8 }}
       >
         {FILTER_CHIPS.map((chip) => {
           const isActive = chip === activeChip;
@@ -223,7 +189,17 @@ export function FaqListScreen() {
                     {item.answer}
                   </Text>
                   {item.actionLabel && item.actionRoute && (
-                    <TouchableOpacity onPress={() => (navigation as any).navigate(item.actionRoute)} activeOpacity={0.7}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        const cross = CROSS_STACK_ROUTES[item.actionRoute!];
+                        if (cross) {
+                          cross(navigation);
+                        } else {
+                          navigation.navigate(item.actionRoute as any);
+                        }
+                      }}
+                      activeOpacity={0.7}
+                    >
                       <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: fontSize.bodyMd, color: colors.primary }}>
                         {item.actionLabel}
                       </Text>

@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
+import { useStrings } from '../../i18n';
 
 type FilterType = 'all' | 'bill' | 'policy';
 
@@ -68,16 +69,18 @@ const PAYMENTS: PaymentRecord[] = [
   },
 ];
 
-const FILTER_LABELS: { key: FilterType; label: string }[] = [
-  { key: 'all', label: 'ทั้งหมด' },
-  { key: 'bill', label: 'บิล' },
-  { key: 'policy', label: 'ใบกรมธรรม์' },
-];
 
 export function HistoryScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+
+  const FILTER_LABELS: { key: FilterType; label: string }[] = [
+    { key: 'all', label: s.history.filterAll },
+    { key: 'bill', label: s.history.filterBill },
+    { key: 'policy', label: s.history.filterPolicy },
+  ];
 
   const filtered = activeFilter === 'all'
     ? PAYMENTS
@@ -121,7 +124,7 @@ export function HistoryScreen() {
             flex: 1,
           }}
         >
-          ประวัติการชำระ
+          {s.history.title}
         </Text>
         <TouchableOpacity hitSlop={12}>
           <MaterialIcons name="filter-list" size={22} color={colors.ink} />
@@ -156,7 +159,7 @@ export function HistoryScreen() {
                 color: colors.textSecondary,
               }}
             >
-              ชำระแล้วปี 2569
+              {s.history.paidThisYear('2569', '')}
             </Text>
             <Text
               style={{
@@ -169,7 +172,7 @@ export function HistoryScreen() {
               ฿{totalPaid.toLocaleString('en-US')}
             </Text>
           </View>
-          <StatusPill label={`ตรงเวลา ${onTimeCount} งวด`} variant="success" />
+          <StatusPill label={s.history.onTimeStreak(String(onTimeCount))} variant="success" />
         </View>
 
         {/* Filter chips */}

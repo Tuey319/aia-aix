@@ -4,8 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SpinnerArc } from '../../components/SpinnerArc';
 import { colors, fontFamily, fontSize, screenPadding } from '../../tokens';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 export function PayProcessingScreen() {
+  const language = useAppStore((state) => state.language);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top', 'bottom']}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: screenPadding, gap: 24 }}>
@@ -16,10 +20,10 @@ export function PayProcessingScreen() {
         {/* Title + subtitle */}
         <View style={{ alignItems: 'center', gap: 8 }}>
           <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 20, color: colors.ink, textAlign: 'center' }}>
-            กำลังดำเนินการชำระเงิน
+            {language === 'en' ? 'Processing payment...' : 'กำลังดำเนินการชำระเงิน'}
           </Text>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 14, color: colors.textSecondary, textAlign: 'center', lineHeight: 21 }}>
-            กรุณาอย่าปิดหน้านี้จนกว่าจะสำเร็จสิ้น
+            {language === 'en' ? 'Please do not close this page.' : 'กรุณาอย่าปิดหน้านี้จนกว่าจะสำเร็จสิ้น'}
           </Text>
         </View>
 
@@ -41,7 +45,7 @@ export function PayProcessingScreen() {
       {/* Bottom security note */}
       <View style={{ paddingBottom: 32, alignItems: 'center' }}>
         <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.textTertiary }}>
-          เชื่อมต่อกับธนาคารอย่างปลอดภัย
+          {language === 'en' ? 'Securely connected to your bank' : 'เชื่อมต่อกับธนาคารอย่างปลอดภัย'}
         </Text>
       </View>
     </SafeAreaView>

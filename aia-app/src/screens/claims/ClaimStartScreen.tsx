@@ -12,36 +12,40 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
 import { StatusPill } from '../../components/StatusPill';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 import { IllustrationMedicine } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
 
-const HISTORY = [
-  {
-    id: '1',
-    icon: 'check-circle' as const,
-    iconColor: colors.success,
-    title: 'ค่ารักษาผู้ป่วยนอก',
-    meta: '12 มิ.ย. 2569 · อนุมัติแล้ว',
-    amount: '฿2,400',
-    pillVariant: 'success' as const,
-    pillLabel: 'อนุมัติแล้ว',
-  },
-  {
-    id: '2',
-    icon: 'pending' as const,
-    iconColor: colors.amber,
-    title: 'ค่ากักตกรรม',
-    meta: '15 มิ.ย. 2569 · กำลังพิจารณา',
-    amount: '฿1,800',
-    pillVariant: 'amber' as const,
-    pillLabel: 'กำลังพิจารณา',
-  },
-];
-
 export function ClaimStartScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const HISTORY = [
+    {
+      id: '1',
+      icon: 'check-circle' as const,
+      iconColor: colors.success,
+      title: language === 'en' ? 'Out-patient Treatment' : 'ค่ารักษาผู้ป่วยนอก',
+      meta: language === 'en' ? '12 Jun 2026 · Approved' : '12 มิ.ย. 2569 · อนุมัติแล้ว',
+      amount: '฿2,400',
+      pillVariant: 'success' as const,
+      pillLabel: s.claims.approved,
+    },
+    {
+      id: '2',
+      icon: 'pending' as const,
+      iconColor: colors.amber,
+      title: language === 'en' ? 'Quarantine Expense' : 'ค่ากักตกรรม',
+      meta: language === 'en' ? '15 Jun 2026 · Under Review' : '15 มิ.ย. 2569 · กำลังพิจารณา',
+      amount: '฿1,800',
+      pillVariant: 'amber' as const,
+      pillLabel: s.claims.pending,
+    },
+  ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -63,7 +67,7 @@ export function ClaimStartScreen() {
             flex: 1,
           }}
         >
-          เคลมของฉัน
+          {s.claims.title}
         </Text>
       </View>
 
@@ -111,7 +115,7 @@ export function ClaimStartScreen() {
                 lineHeight: 22,
               }}
             >
-              ยื่นเคลมใหม่
+              {s.claims.newClaimBtn}
             </Text>
             <Text
               style={{
@@ -121,7 +125,7 @@ export function ClaimStartScreen() {
                 lineHeight: 19,
               }}
             >
-              กรอกรายละเอียดและอัปโหลดเอกสาร{'\n'}ได้รับเงินภายใน 5 วัน
+              {s.claims.newClaimSub}
             </Text>
           </View>
 
@@ -141,7 +145,7 @@ export function ClaimStartScreen() {
             marginTop: 4,
           }}
         >
-          ประวัติการเคลม
+          {s.claims.historySection}
         </Text>
 
         <View

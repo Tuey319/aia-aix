@@ -18,6 +18,8 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 import { AiaLogo } from '../../components/AiaLogo';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -91,6 +93,8 @@ function FakeQrCode() {
 export function PayQrScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   const infoRows = [
     { label: 'บริษัท เอไอเอ จำกัด', value: '' },
@@ -123,7 +127,7 @@ export function PayQrScreen() {
             flex: 1,
           }}
         >
-          ชำระเงิน
+          {language === 'en' ? 'Payment' : 'ชำระเงิน'}
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} hitSlop={16}>
           <MaterialIcons name="close" size={22} color={colors.ink} />
@@ -147,7 +151,7 @@ export function PayQrScreen() {
             textAlign: 'center',
           }}
         >
-          QR เพื่อจ่ายผ่านบัญชีธนาคาร
+          {s.payment.qrTitle}
         </Text>
 
         {/* Dark THAI QR banner */}
@@ -212,7 +216,7 @@ export function PayQrScreen() {
               marginTop: 10,
             }}
           >
-            สแกน QR เพื่อชำระเงิน
+            {language === 'en' ? 'Scan QR to pay' : 'สแกน QR เพื่อชำระเงิน'}
           </Text>
         </View>
 
@@ -242,7 +246,7 @@ export function PayQrScreen() {
                 color: colors.textSecondary,
               }}
             >
-              จำนวนเงิน (บาท)
+              {language === 'en' ? 'Amount (THB)' : 'จำนวนเงิน (บาท)'}
             </Text>
             <Text
               style={{
@@ -258,10 +262,10 @@ export function PayQrScreen() {
 
           {/* Info rows */}
           {[
-            { label: 'บริษัท', value: 'AIA Thailand' },
-            { label: 'ผู้ชำระเงิน', value: 'Somchai Meethong' },
-            { label: 'เลขที่อ้างอิง (1/2)', value: '92XXXXXXXX' },
-            { label: 'เลขที่อ้างอิง (2/2)', value: '83XXXXX' },
+            { label: language === 'en' ? 'Company' : 'บริษัท', value: 'AIA Thailand' },
+            { label: language === 'en' ? 'Payer' : 'ผู้ชำระเงิน', value: 'Somchai Meethong' },
+            { label: language === 'en' ? 'Reference No. (1/2)' : 'เลขที่อ้างอิง (1/2)', value: '92XXXXXXXX' },
+            { label: language === 'en' ? 'Reference No. (2/2)' : 'เลขที่อ้างอิง (2/2)', value: '83XXXXX' },
           ].map((row, i) => (
             <View key={i}>
               <View style={{ height: 1, backgroundColor: colors.hairline, marginHorizontal: 16 }} />
@@ -329,7 +333,7 @@ export function PayQrScreen() {
             textAlign: 'center',
           }}
         >
-          คุณต้องทำการชำระเงินใน 16 พ.ค. 2568, 13:53 น.
+          {language === 'en' ? 'You must complete payment by 16 May 2025, 13:53.' : 'คุณต้องทำการชำระเงินใน 16 พ.ค. 2568, 13:53 น.'}
         </Text>
 
         {/* Disclaimer */}
@@ -342,8 +346,9 @@ export function PayQrScreen() {
             textAlign: 'center',
           }}
         >
-          QR Code นี้ใช้ได้เพียงครั้งเดียวและมีอายุตามที่ระบุด้านบน
-          บริษัทขอสงวนสิทธิ์ยกเลิกรายการหากไม่ได้รับการยืนยันภายในเวลาที่กำหนด
+          {language === 'en'
+            ? 'This QR Code is single-use and valid only until the time shown above. The company reserves the right to cancel the transaction if not confirmed within the specified time.'
+            : 'QR Code นี้ใช้ได้เพียงครั้งเดียวและมีอายุตามที่ระบุด้านบน\n          บริษัทขอสงวนสิทธิ์ยกเลิกรายการหากไม่ได้รับการยืนยันภายในเวลาที่กำหนด'}
         </Text>
       </ScrollView>
 
@@ -384,7 +389,7 @@ export function PayQrScreen() {
               fontSize: fontSize.title,
             }}
           >
-            ยกเลิก
+            {s.common.cancel}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -410,7 +415,7 @@ export function PayQrScreen() {
               fontSize: fontSize.title,
             }}
           >
-            แชร์รูปภาพ
+            {language === 'en' ? 'Share Image' : 'แชร์รูปภาพ'}
           </Text>
         </TouchableOpacity>
       </View>

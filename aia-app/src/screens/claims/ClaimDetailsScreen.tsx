@@ -20,6 +20,8 @@ import {
 } from '../../tokens';
 import { ClaimStepHeader } from '../../components/ClaimStepHeader';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -29,10 +31,12 @@ export function ClaimDetailsScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const [amount, setAmount] = useState('18,500');
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
-      <ClaimStepHeader step={STEP} title="ยื่นเคลมใหม่" />
+      <ClaimStepHeader step={STEP} title={s.claims.detailsTitle} />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -50,7 +54,7 @@ export function ClaimDetailsScreen() {
             color: colors.textSecondary,
           }}
         >
-          กรอกรายละเอียดการเคลม ง่าย เร็ว เต็มเม็ด
+          {language === 'en' ? 'Easy, fast and complete claim filing' : 'กรอกรายละเอียดการเคลม ง่าย เร็ว เต็มเม็ด'}
         </Text>
 
         {/* Form Card */}
@@ -64,7 +68,7 @@ export function ClaimDetailsScreen() {
         >
           {/* วันที่รับบริการ */}
           <DropdownRow
-            label="วันที่รับบริการ"
+            label={s.claims.visitDate}
             value="15 ส.ค. 2569"
             rightIcon="calendar-today"
             onPress={() => {}}
@@ -73,8 +77,8 @@ export function ClaimDetailsScreen() {
 
           {/* ผู้รับเคลม */}
           <DropdownRow
-            label="ผู้รับเคลม"
-            value="สมชาย ใจดี"
+            label={s.claims.claimant}
+            value={language === 'en' ? 'Somchai Jaidee' : 'สมชาย ใจดี'}
             rightIcon="expand-more"
             onPress={() => {}}
           />
@@ -82,8 +86,8 @@ export function ClaimDetailsScreen() {
 
           {/* ประเภทการเคลม */}
           <DropdownRow
-            label="ประเภทการเคลม"
-            value="ค่ารักษาผู้ป่วยนอก"
+            label={s.claims.claimType}
+            value={language === 'en' ? 'Out-patient Treatment' : 'ค่ารักษาผู้ป่วยนอก'}
             rightIcon="expand-more"
             onPress={() => {}}
           />
@@ -91,8 +95,8 @@ export function ClaimDetailsScreen() {
 
           {/* ประกันอะไร */}
           <DropdownRow
-            label="ประกันอะไร"
-            value="ผู้ป่วยนอกเฉพาะทาง"
+            label={language === 'en' ? 'Coverage Type' : 'ประกันอะไร'}
+            value={language === 'en' ? 'Specialist Out-patient' : 'ผู้ป่วยนอกเฉพาะทาง'}
             rightIcon="expand-more"
             onPress={() => {}}
           />
@@ -118,7 +122,7 @@ export function ClaimDetailsScreen() {
                   marginBottom: 2,
                 }}
               >
-                จำนวนเงินที่เคลม
+                {s.claims.claimAmount}
               </Text>
               <Text
                 style={{
@@ -153,7 +157,7 @@ export function ClaimDetailsScreen() {
                 color: colors.ink2,
               }}
             >
-              แนบใบเสร็จ
+              {s.claims.attachReceipts}
             </Text>
             <Text
               style={{
@@ -162,7 +166,7 @@ export function ClaimDetailsScreen() {
                 color: colors.textTertiary,
               }}
             >
-              สูงสุด 5 ใบ · แนบแล้ว
+              {language === 'en' ? 'Max 5 · Attached' : 'สูงสุด 5 ใบ · แนบแล้ว'}
             </Text>
           </View>
 
@@ -218,7 +222,7 @@ export function ClaimDetailsScreen() {
                   color: colors.textTertiary,
                 }}
               >
-                เพิ่ม
+                {language === 'en' ? 'Add' : 'เพิ่ม'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -255,7 +259,7 @@ export function ClaimDetailsScreen() {
               fontSize: 16,
             }}
           >
-            ถัดไป
+            {s.common.next}
           </Text>
         </TouchableOpacity>
       </View>

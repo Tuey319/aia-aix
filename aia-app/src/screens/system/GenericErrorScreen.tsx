@@ -6,12 +6,14 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding } from '../../tokens';
 import { primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
 
 type Nav = NativeStackNavigationProp<any>;
 
 export function GenericErrorScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top', 'bottom']}>
@@ -20,21 +22,21 @@ export function GenericErrorScreen() {
           <MaterialIcons name="error-outline" size={48} color={colors.primary} />
         </View>
         <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 22, color: colors.ink2, textAlign: 'center' }}>
-          เกิดข้อผิดพลาดบางอย่าง
+          {s.system.genericErrorTitle}
         </Text>
         <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: fontSize.bodyMd, color: colors.textSecondary, textAlign: 'center', lineHeight: 22 }}>
-          เราไม่สามารถดำเนินการตามคำขอของคุณได้{'\n'}ในขณะนี้ โปรดลองอีกครั้ง
+          {s.system.genericErrorSub}
         </Text>
       </View>
 
       <View style={{ paddingHorizontal: screenPadding, paddingBottom: insets.bottom + 16, gap: 10 }}>
         <TouchableOpacity activeOpacity={0.82}
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 52, alignItems: 'center', justifyContent: 'center', ...primaryButtonShadow }}>
-          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: fontSize.title }}>ลองอีกครั้ง</Text>
+          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: fontSize.title }}>{s.common.retry}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} activeOpacity={0.7}
           style={{ height: 44, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ color: colors.textSecondary, fontFamily: fontFamily.anuphan.semiBold, fontSize: fontSize.bodyMd }}>กลับหน้าหลัก</Text>
+          <Text style={{ color: colors.textSecondary, fontFamily: fontFamily.anuphan.semiBold, fontSize: fontSize.bodyMd }}>{s.common.backHome}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -19,6 +19,8 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -26,6 +28,8 @@ export function PayCardScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const [autoPaySelected, setAutoPaySelected] = useState<'yes' | 'no'>('yes');
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -51,7 +55,7 @@ export function PayCardScreen() {
             flex: 1,
           }}
         >
-          ชำระเงิน
+          {language === 'en' ? 'Payment' : 'ชำระเงิน'}
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} hitSlop={16}>
           <MaterialIcons name="close" size={22} color={colors.ink} />
@@ -75,7 +79,7 @@ export function PayCardScreen() {
               color: colors.ink,
             }}
           >
-            กรอกข้อมูลการชำระเงินจำนวน
+            {language === 'en' ? 'Enter payment details' : 'กรอกข้อมูลการชำระเงินจำนวน'}
           </Text>
           <Text
             style={{
@@ -84,7 +88,7 @@ export function PayCardScreen() {
               color: colors.textSecondary,
             }}
           >
-            รับบัตรของแบบ Visa, Mastercard และ JCB เท่านั้น
+            {language === 'en' ? 'Accepts Visa, Mastercard and JCB only' : 'รับบัตรของแบบ Visa, Mastercard และ JCB เท่านั้น'}
           </Text>
         </View>
 
@@ -177,7 +181,7 @@ export function PayCardScreen() {
               marginBottom: 2,
             }}
           >
-            ข้อมูลบัตรเครดิต
+            {language === 'en' ? 'Credit Card Details' : 'ข้อมูลบัตรเครดิต'}
           </Text>
 
           {/* Card number */}
@@ -196,7 +200,7 @@ export function PayCardScreen() {
               }}
             >
               <TextInput
-                placeholder="เลขบัตรเครดิต"
+                placeholder={language === 'en' ? 'Card Number' : 'เลขบัตรเครดิต'}
                 placeholderTextColor={colors.textTertiary}
                 keyboardType="numeric"
                 maxLength={19}
@@ -226,7 +230,7 @@ export function PayCardScreen() {
               }}
             >
               <TextInput
-                placeholder="วันที่หมดอายุ"
+                placeholder={language === 'en' ? 'MM/YY' : 'วันที่หมดอายุ'}
                 placeholderTextColor={colors.textTertiary}
                 keyboardType="numeric"
                 maxLength={5}
@@ -250,7 +254,7 @@ export function PayCardScreen() {
               }}
             >
               <TextInput
-                placeholder="เลขหลังบัตร"
+                placeholder={language === 'en' ? 'CVV' : 'เลขหลังบัตร'}
                 placeholderTextColor={colors.textTertiary}
                 keyboardType="numeric"
                 maxLength={4}
@@ -277,7 +281,7 @@ export function PayCardScreen() {
             }}
           >
             <TextInput
-              placeholder="ชื่อ-นามสกุลตามที่ปรากฏบนบัตร (ภาษาอังกฤษ)"
+              placeholder={language === 'en' ? 'Name on card (as printed)' : 'ชื่อ-นามสกุลตามที่ปรากฏบนบัตร (ภาษาอังกฤษ)'}
               placeholderTextColor={colors.textTertiary}
               autoCapitalize="characters"
               style={{
@@ -307,7 +311,7 @@ export function PayCardScreen() {
                 color: colors.ink,
               }}
             >
-              สมัครบริการหักบัญชีบัตรเครดิตอัตโนมัติ
+              {language === 'en' ? 'Auto-debit Service' : 'สมัครบริการหักบัญชีบัตรเครดิตอัตโนมัติ'}
             </Text>
             <Text
               style={{
@@ -316,7 +320,7 @@ export function PayCardScreen() {
                 color: colors.textSecondary,
               }}
             >
-              ไม่พลาดทุกกำหนดชำระเบี้ย
+              {language === 'en' ? 'Never miss a premium payment' : 'ไม่พลาดทุกกำหนดชำระเบี้ย'}
             </Text>
           </View>
 
@@ -355,7 +359,7 @@ export function PayCardScreen() {
                 color: colors.ink,
               }}
             >
-              สมัครบริการในบิลนี้
+              {language === 'en' ? 'Enroll now' : 'สมัครบริการในบิลนี้'}
             </Text>
           </TouchableOpacity>
 
@@ -394,7 +398,7 @@ export function PayCardScreen() {
                 color: colors.inkBody2,
               }}
             >
-              ไม่ต้องการสมัครบริการ*
+              {language === 'en' ? 'Skip for now*' : 'ไม่ต้องการสมัครบริการ*'}
             </Text>
           </TouchableOpacity>
 
@@ -407,7 +411,7 @@ export function PayCardScreen() {
               lineHeight: fontSize.caption * 1.6,
             }}
           >
-            *การสมัครบริการหักบัญชี (CVV) หรือหัก 3 หลักที่อยู่ด้านหลังบัตรเพื่อยืนยันตัวตน ผลในรอบบิล
+            {language === 'en' ? '*Auto-debit enrollment requires CVV (3 digits on back of card) for identity verification. Takes effect from the next billing cycle.' : '*การสมัครบริการหักบัญชี (CVV) หรือหัก 3 หลักที่อยู่ด้านหลังบัตรเพื่อยืนยันตัวตน ผลในรอบบิล'}
           </Text>
         </View>
       </ScrollView>
@@ -437,7 +441,7 @@ export function PayCardScreen() {
               color: colors.textSecondary,
             }}
           >
-            จำนวนเงิน
+            {language === 'en' ? 'Amount' : 'จำนวนเงิน'}
           </Text>
           <Text
             style={{
@@ -447,7 +451,7 @@ export function PayCardScreen() {
               letterSpacing: -0.5,
             }}
           >
-            17,380.00 บาท
+            {language === 'en' ? '฿17,380.00' : '17,380.00 บาท'}
           </Text>
         </View>
 
@@ -472,7 +476,7 @@ export function PayCardScreen() {
                 fontSize: fontSize.title,
               }}
             >
-              ยกเลิก
+              {s.common.cancel}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -495,7 +499,7 @@ export function PayCardScreen() {
                 fontSize: fontSize.title,
               }}
             >
-              ชำระเงิน
+              {s.payment.pay}
             </Text>
           </TouchableOpacity>
         </View>

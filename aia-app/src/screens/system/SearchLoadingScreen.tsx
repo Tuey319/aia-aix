@@ -3,6 +3,7 @@ import { View, Text, Animated, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
+import { useAppStore } from '../../store';
 
 // Widths of skeleton lines (mimics 3 FAQ result cards)
 const SKELETON_ROWS = [
@@ -38,6 +39,7 @@ function SkeletonCard({ shimmerOpacity }: { shimmerOpacity: Animated.AnimatedInt
 }
 
 export function SearchLoadingScreen() {
+  const language = useAppStore((state) => state.language);
   const shimmer = useRef(new Animated.Value(0.45)).current;
 
   useEffect(() => {
@@ -69,7 +71,7 @@ export function SearchLoadingScreen() {
         }}>
           <MaterialIcons name="search" size={18} color={colors.textTertiary} />
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: fontSize.body, color: colors.inkBody2, flex: 1 }}>
-            เปลี่ยนรอบ
+            {language === 'en' ? 'Searching...' : 'เปลี่ยนรอบ'}
           </Text>
         </View>
       </View>
@@ -87,7 +89,7 @@ export function SearchLoadingScreen() {
           }} />
         </Animated.View>
         <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: fontSize.body, color: colors.textSecondary }}>
-          กำลังค้นหา...
+          {language === 'en' ? 'Searching...' : 'กำลังค้นหา...'}
         </Text>
       </View>
 

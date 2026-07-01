@@ -9,6 +9,7 @@ import { HomeStackParamList } from '../../navigation/types';
 import { colors, fontFamily, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { useAppStore } from '../../store';
+import { useStrings } from '../../i18n';
 import { getCoverageCategory } from './coverageCategories';
 
 type Nav = NativeStackNavigationProp<HomeStackParamList, 'AdjustPlan'>;
@@ -71,6 +72,9 @@ export function AdjustPlanScreen() {
   const route = useRoute<Route>();
   const insets = useSafeAreaInsets();
   const income = useAppStore((s) => s.income);
+  const policy = useAppStore((s) => s.selectedPolicy);
+  const language = useAppStore((state) => state.language);
+  const s = useStrings();
 
   const category = getCoverageCategory(route.params?.category);
   const isLife = category.id === 'life';
@@ -107,7 +111,9 @@ export function AdjustPlanScreen() {
             color: colors.ink,
           }}
         >
-          {isLife ? 'ปรับแผนให้พอดี' : `ปรับความคุ้มครอง · ${category.label}`}
+          {language === 'en'
+            ? (isLife ? 'Adjust Your Plan' : `Adjust Coverage · ${category.label}`)
+            : (isLife ? 'ปรับแผนให้พอดี' : `ปรับความคุ้มครอง · ${category.label}`)}
         </Text>
       </View>
 
@@ -140,7 +146,7 @@ export function AdjustPlanScreen() {
               lineHeight: 18,
             }}
           >
-            ปรับความคุ้มครองด้วยตัวเองหรือเลือกแผนที่เบากว่า — เห็นเบี้ยใหม่ทันที ไม่ต้องโทรหาเจ้าหน้าที่
+            {s.adjustPlan.infoBanner}
           </Text>
         </View>
 
@@ -160,7 +166,7 @@ export function AdjustPlanScreen() {
               color: 'rgba(255,255,255,0.6)',
             }}
           >
-            เบี้ยรายเดือนใหม่
+            {s.adjustPlan.newMonthly}
           </Text>
 
           <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 10 }}>
@@ -189,7 +195,7 @@ export function AdjustPlanScreen() {
           </View>
           {delta === 0 && (
             <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
-              เท่ากับปัจจุบัน
+              {s.adjustPlan.sameCurrent}
             </Text>
           )}
 
@@ -210,7 +216,7 @@ export function AdjustPlanScreen() {
                   color: 'rgba(255,255,255,0.5)',
                 }}
               >
-                ความคุ้มครอง
+                {s.adjustPlan.coverage}
               </Text>
               <Text
                 style={{
@@ -238,7 +244,7 @@ export function AdjustPlanScreen() {
                   color: 'rgba(255,255,255,0.5)',
                 }}
               >
-                % ของรายได้
+                {s.adjustPlan.pctIncome}
               </Text>
               <Text
                 style={{
@@ -271,7 +277,7 @@ export function AdjustPlanScreen() {
                 color: colors.ink2,
               }}
             >
-              เลื่อนปรับความคุ้มครอง
+              {s.adjustPlan.sliderLabel}
             </Text>
             <Text
               style={{
@@ -304,7 +310,7 @@ export function AdjustPlanScreen() {
               {formatCoverage(category.sliderMin, category.unit)}
             </Text>
             <Text style={{ fontFamily: fontFamily.jakarta.medium, fontSize: 11, color: colors.textTertiary }}>
-              {formatCoverage(category.amount, category.unit)} (ปัจจุบัน)
+              {formatCoverage(category.amount, category.unit)} ({language === 'en' ? 'current' : 'ปัจจุบัน'})
             </Text>
             <Text style={{ fontFamily: fontFamily.jakarta.medium, fontSize: 11, color: colors.textSecondary }}>
               {formatCoverage(category.sliderMax, category.unit)}
@@ -336,10 +342,10 @@ export function AdjustPlanScreen() {
               }}
             >
               {verdict === 'safe'
-                ? 'ปลอดภัย: ตามส่วนของรายได้ของคุณ'
+                ? s.adjustPlan.verdictSafe
                 : verdict === 'caution'
-                ? 'ควรระวัง: เบี้ยเริ่มสูงเทียบกับรายได้'
-                : 'เสี่ยง: เบี้ยสูงเกินส่วนที่แนะนำ'}
+                ? s.adjustPlan.verdictCaution
+                : s.adjustPlan.verdictRisk}
             </Text>
           </View>
         </View>
@@ -355,7 +361,7 @@ export function AdjustPlanScreen() {
             marginLeft: 2,
           }}
         >
-          หรือเปลี่ยนเป็นแผนที่เบากว่า — ไม่ด้อยกว่า
+          {s.adjustPlan.lighterPlans}
         </Text>
         )}
 
@@ -393,7 +399,7 @@ export function AdjustPlanScreen() {
                       color: colors.textSecondary,
                     }}
                   >
-                    ความคุ้มครอง ฿{plan.coverage}M
+                    {s.adjustPlan.coverage} ฿{plan.coverage}M
                   </Text>
                 </View>
                 <View style={{ alignItems: 'flex-end', gap: 3 }}>
@@ -406,7 +412,7 @@ export function AdjustPlanScreen() {
                   >
                     ฿{plan.monthly.toLocaleString('en-US')}
                     <Text style={{ fontSize: 12, color: colors.textSecondary, fontFamily: fontFamily.jakarta.regular }}>
-                      /เดือน
+                      /{language === 'en' ? 'mo' : 'เดือน'}
                     </Text>
                   </Text>
                   <View
@@ -424,7 +430,7 @@ export function AdjustPlanScreen() {
                         color: colors.success,
                       }}
                     >
-                      ประหยัด ฿{plan.savings.toLocaleString('en-US')}/เดือน
+                      {s.adjustPlan.savingLabel(plan.savings.toLocaleString('en-US'))}
                     </Text>
                   </View>
                 </View>
@@ -449,7 +455,7 @@ export function AdjustPlanScreen() {
                         marginBottom: 8,
                       }}
                     >
-                      ✓ สิ่งที่คุณยังได้รับ
+                      ✓ {s.adjustPlan.keeps}
                     </Text>
                     {plan.keeps.map((k, i) => (
                       <Text
@@ -475,7 +481,7 @@ export function AdjustPlanScreen() {
                         marginBottom: 8,
                       }}
                     >
-                      ↓ สิ่งที่เปลี่ยนไป
+                      ↓ {s.adjustPlan.changes}
                     </Text>
                     {plan.changes.map((c, i) => (
                       <Text
@@ -527,7 +533,7 @@ export function AdjustPlanScreen() {
           }}
         >
           <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 16 }}>
-            ดำเนินการปรับแผน
+            {s.adjustPlan.actionBtn}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -536,7 +542,7 @@ export function AdjustPlanScreen() {
           style={{ alignItems: 'center', paddingVertical: 6 }}
         >
           <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold, fontSize: 14 }}>
-            ดูคำแนะนำเฉพาะคุณจาก AI
+            {s.adjustPlan.recommendLink}
           </Text>
         </TouchableOpacity>
       </View>

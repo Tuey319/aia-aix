@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
+import { useAppStore } from '../../store';
 import { IllustrationBeHealthy } from '../../components/illustrations';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -186,6 +187,7 @@ function BadgeCard({ badge }: { badge: Badge }) {
 export function BadgeCollectionScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const language = useAppStore((state) => state.language);
   const earned = BADGES.filter((b) => b.earned).length;
 
   return (
@@ -196,7 +198,7 @@ export function BadgeCollectionScreen() {
           <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>เหรียญรางวัลของฉัน</Text>
+          <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>{language === 'en' ? 'My Badges' : 'เหรียญรางวัลของฉัน'}</Text>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.textSecondary }}>Badge Collection</Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('ProtectionJourney')} hitSlop={12}>
@@ -214,7 +216,7 @@ export function BadgeCollectionScreen() {
         <View style={{ backgroundColor: colors.ink, borderRadius: radius.card, padding: 18, gap: 12 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <View>
-              <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>สะสมแล้ว</Text>
+              <Text style={{ fontFamily: fontFamily.anuphan.medium, fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{language === 'en' ? 'Collected' : 'สะสมแล้ว'}</Text>
               <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 32, color: '#fff', letterSpacing: -0.5 }}>
                 {earned} <Text style={{ fontSize: 16, fontFamily: fontFamily.jakarta.regular, color: 'rgba(255,255,255,0.6)' }}>/ {BADGES.length} Badges</Text>
               </Text>
@@ -226,7 +228,7 @@ export function BadgeCollectionScreen() {
             <View style={{ height: 6, width: `${(earned / BADGES.length) * 100}%` as any, backgroundColor: colors.gold, borderRadius: 3 }} />
           </View>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>
-            อีก {BADGES.length - earned} badges เพื่อปลดล็อคทั้งหมด
+            {language === 'en' ? `${BADGES.length - earned} more badges to unlock all` : `อีก ${BADGES.length - earned} badges เพื่อปลดล็อคทั้งหมด`}
           </Text>
         </View>
 
@@ -244,8 +246,8 @@ export function BadgeCollectionScreen() {
             <MaterialIcons name="timeline" size={22} color={colors.white} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.primaryDeep }}>ดูการเดินทางของคุณ</Text>
-            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.primary }}>Protection Journey · ปี 2569</Text>
+            <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.primaryDeep }}>{language === 'en' ? 'View Your Journey' : 'ดูการเดินทางของคุณ'}</Text>
+            <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.primary }}>Protection Journey · {language === 'en' ? 'Year 2026' : 'ปี 2569'}</Text>
           </View>
           <MaterialIcons name="chevron-right" size={20} color={colors.primary} />
         </TouchableOpacity>

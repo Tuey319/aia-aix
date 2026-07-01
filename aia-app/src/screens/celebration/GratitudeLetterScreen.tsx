@@ -11,24 +11,37 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useAppStore } from '../../store';
 import { AiaLogo } from '../../components/AiaLogo';
 
 type Nav = NativeStackNavigationProp<any>;
 
-const LETTER_TEXT = `สวัสดีคุณสมชาย 💌
+const LETTER_TEXT_TH = `สวัสดีคุณสมชาย 💌
 
 ขอบคุณที่ไว้วางใจ AIA ดูแลคุณและครอบครัวมาตลอด 12 เดือน ทุกครั้งที่คุณชำระเบี้ยตรงเวลา นั่นคือการรักษาคำสัญญาที่มีต่อคนที่คุณรัก
 
-เราเห็นว่าคุณไม่เคยพลาดสักงวดเดียว นั่นไม่ใช่แค่การจ่ายเงิน — แต่คือความรับผิดชอบและความห่วงใยที่คุณมอบให้กับทุกคนในชีวิตของคุณ
+เราเห็นว่าคุณไม่เคยพลาดสักงวดเดียว นั่นไม่ใช่แค่การจ่าย เงิน — แต่คือความรับผิดชอบและความห่วงใยที่คุณมอบให้กับทุกคนในชีวิตของคุณ
 
 AIA ภูมิใจที่ได้เป็นส่วนหนึ่งในการเดินทางนี้ และจะยืนอยู่เคียงข้างคุณเสมอ 🛡️
 
 ด้วยความขอบคุณ
 ทีม AIA ✨`;
 
+const LETTER_TEXT_EN = `Dear Khun Somchai 💌
+
+Thank you for trusting AIA to take care of you and your family for the past 6 months. Every time you pay your premium on time, that is keeping a promise to the people you love.
+
+We have seen that you have never missed a single instalment. That is not just a payment — it is the responsibility and care you give to everyone in your life.
+
+AIA is proud to be part of this journey and will always stand by your side 🛡️
+
+With gratitude,
+The AIA Team ✨`;
+
 export function GratitudeLetterScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const language = useAppStore((state) => state.language);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
 
@@ -47,7 +60,7 @@ export function GratitudeLetterScreen() {
           <MaterialIcons name="arrow-back-ios" size={20} color={colors.ink} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>จดหมายจาก AIA</Text>
+          <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 17, color: colors.ink }}>{language === 'en' ? 'Letter from AIA' : 'จดหมายจาก AIA'}</Text>
           <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 11, color: colors.textSecondary }}>AI Gratitude Letter 💌</Text>
         </View>
         <View style={{ backgroundColor: colors.primaryTint, borderRadius: 99, paddingHorizontal: 8, paddingVertical: 3 }}>
@@ -88,7 +101,7 @@ export function GratitudeLetterScreen() {
               <View>
                 <MaterialIcons name="format-quote" size={64} color={colors.primaryTint} style={{ position: 'absolute', top: -20, left: -10 }} />
                 <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 15, color: colors.ink2, lineHeight: 26 }}>
-                  {LETTER_TEXT}
+                  {language === 'en' ? LETTER_TEXT_EN : LETTER_TEXT_TH}
                 </Text>
               </View>
 
@@ -111,10 +124,10 @@ export function GratitudeLetterScreen() {
             <MaterialIcons name="emoji-events" size={28} color={colors.gold} />
             <View style={{ flex: 1 }}>
               <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.successDeep }}>
-                Always On Time Badge ปลดล็อคแล้ว! 🏅
+                {language === 'en' ? 'Always On Time Badge Unlocked! 🏅' : 'Always On Time Badge ปลดล็อคแล้ว! 🏅'}
               </Text>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.success }}>
-                ชำระตรงเวลา 12 งวดต่อเนื่อง
+                {language === 'en' ? '12 consecutive on-time payments' : 'ชำระตรงเวลา 12 งวดต่อเนื่อง'}
               </Text>
             </View>
           </View>
@@ -124,10 +137,10 @@ export function GratitudeLetterScreen() {
             <MaterialIcons name="card-giftcard" size={26} color={colors.gold} />
             <View style={{ flex: 1 }}>
               <Text style={{ fontFamily: fontFamily.anuphan.bold, fontSize: 14, color: colors.amberDeeper }}>
-                สิทธิพิเศษจาก AIA
+                {language === 'en' ? 'Privileges from AIA' : 'สิทธิพิเศษจาก AIA'}
               </Text>
               <Text style={{ fontFamily: fontFamily.anuphan.regular, fontSize: 12, color: colors.amberDeep }}>
-                ส่วนลดเบี้ย 5% · AIA Vitality +100 คะแนน
+                {language === 'en' ? '5% premium discount · AIA Vitality +100 pts' : 'ส่วนลดเบี้ย 5% · AIA Vitality +100 คะแนน'}
               </Text>
             </View>
             <Text style={{ fontFamily: fontFamily.jakarta.extraBold, fontSize: 20, color: colors.gold }}>5%</Text>
@@ -140,11 +153,11 @@ export function GratitudeLetterScreen() {
         <TouchableOpacity onPress={() => navigation.navigate('SharePride')} activeOpacity={0.82}
           style={{ backgroundColor: colors.primary, borderRadius: radius.button, height: 50, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8, ...primaryButtonShadow }}>
           <MaterialIcons name="share" size={18} color={colors.white} />
-          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>แชร์ความภาคภูมิใจ</Text>
+          <Text style={{ color: colors.white, fontFamily: fontFamily.anuphan.bold, fontSize: 15 }}>{language === 'en' ? 'Share Your Pride' : 'แชร์ความภาคภูมิใจ'}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('BadgeCollection')} activeOpacity={0.7}
           style={{ height: 40, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 13, color: colors.primary }}>ดู Badges ทั้งหมด →</Text>
+          <Text style={{ fontFamily: fontFamily.anuphan.semiBold, fontSize: 13, color: colors.primary }}>{language === 'en' ? 'View All Badges →' : 'ดู Badges ทั้งหมด →'}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

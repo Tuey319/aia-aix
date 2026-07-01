@@ -18,12 +18,16 @@ import {
   cardGap,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
 export function PayReviewScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -49,7 +53,7 @@ export function PayReviewScreen() {
             flex: 1,
           }}
         >
-          ชำระเงิน
+          {language === 'en' ? 'Payment' : 'ชำระเงิน'}
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Home')} hitSlop={16}>
           <MaterialIcons name="close" size={22} color={colors.ink} />
@@ -74,7 +78,7 @@ export function PayReviewScreen() {
             marginBottom: 4,
           }}
         >
-          3/7
+          {s.payment.step('3', '7')}
         </Text>
 
         {/* Section title */}
@@ -85,7 +89,7 @@ export function PayReviewScreen() {
             color: colors.ink,
           }}
         >
-          ยืนยันรายละเอียดการชำระเงิน
+          {s.payment.reviewTitle}
         </Text>
 
         {/* Review card */}
@@ -114,7 +118,7 @@ export function PayReviewScreen() {
                 color: colors.inkBody,
               }}
             >
-              เบี้ยประกันชีวิตต่อปี
+              {s.payment.lifePremium}
             </Text>
             <Text
               style={{
@@ -123,7 +127,7 @@ export function PayReviewScreen() {
                 color: colors.ink2,
               }}
             >
-              14,380.00 บาท
+              {language === 'en' ? '฿14,380.00' : '14,380.00 บาท'}
             </Text>
           </View>
 
@@ -146,7 +150,7 @@ export function PayReviewScreen() {
                 color: colors.inkBody,
               }}
             >
-              เบี้ยเพิ่มเติม
+              {s.payment.riderPremium}
             </Text>
             <Text
               style={{
@@ -155,7 +159,7 @@ export function PayReviewScreen() {
                 color: colors.ink2,
               }}
             >
-              3,000.00 บาท
+              {language === 'en' ? '฿3,000.00' : '3,000.00 บาท'}
             </Text>
           </View>
 
@@ -179,7 +183,7 @@ export function PayReviewScreen() {
                 color: colors.ink,
               }}
             >
-              จำนวนเงินทั้งหมด
+              {s.payment.totalAmount}
             </Text>
             <Text
               style={{
@@ -189,7 +193,7 @@ export function PayReviewScreen() {
                 letterSpacing: -0.5,
               }}
             >
-              17,380.00 บาท
+              {language === 'en' ? '฿17,380.00' : '17,380.00 บาท'}
             </Text>
           </View>
         </View>
@@ -229,7 +233,7 @@ export function PayReviewScreen() {
               fontSize: fontSize.title,
             }}
           >
-            ยืนยัน
+            {s.common.confirm}
           </Text>
         </TouchableOpacity>
       </View>

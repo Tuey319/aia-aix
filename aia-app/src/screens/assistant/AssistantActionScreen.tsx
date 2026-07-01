@@ -14,6 +14,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 import { AiaLogo } from '../../components/AiaLogo';
 
 type Nav = NativeStackNavigationProp<any>;
@@ -21,6 +23,8 @@ type Nav = NativeStackNavigationProp<any>;
 export function AssistantActionScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -58,7 +62,7 @@ export function AssistantActionScreen() {
             flex: 1,
           }}
         >
-          ผู้ช่วย AIA
+          {s.assistant.title}
         </Text>
 
         <View
@@ -87,7 +91,7 @@ export function AssistantActionScreen() {
               color: colors.success,
             }}
           >
-            ออนไลน์
+            {s.assistant.online}
           </Text>
         </View>
       </View>
@@ -129,7 +133,7 @@ export function AssistantActionScreen() {
                   lineHeight: 22,
                 }}
               >
-                เช็คว่าฉันต้องจ่ายเท่าไหร่
+                {language === 'en' ? 'How much do I need to pay?' : 'เช็คว่าฉันต้องจ่ายเท่าไหร่'}
               </Text>
             </View>
           </View>
@@ -155,7 +159,7 @@ export function AssistantActionScreen() {
                   lineHeight: 22,
                 }}
               >
-                ฉันพบหน้าชำระเงินสำหรับคุณแล้ว แตะปุ่มด้านล่างเพื่อดำเนินการต่อ
+                {language === 'en' ? "I've found the payment page for you. Tap the button below to continue." : 'ฉันพบหน้าชำระเงินสำหรับคุณแล้ว แตะปุ่มด้านล่างเพื่อดำเนินการต่อ'}
               </Text>
             </View>
 
@@ -185,7 +189,7 @@ export function AssistantActionScreen() {
                   flex: 1,
                 }}
               >
-                ไปที่หน้าชำระเงิน
+                {language === 'en' ? 'Go to Payment Page' : 'ไปที่หน้าชำระเงิน'}
               </Text>
               <MaterialIcons name="chevron-right" size={18} color="rgba(255,255,255,0.7)" />
             </TouchableOpacity>
@@ -207,7 +211,7 @@ export function AssistantActionScreen() {
           }}
         >
           <TextInput
-            placeholder="พิมพ์ข้อความ..."
+            placeholder={s.assistant.placeholder}
             placeholderTextColor={colors.textTertiary}
             style={{
               flex: 1,

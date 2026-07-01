@@ -22,12 +22,16 @@ import {
   cardPadding,
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
 export function ProfileEditScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   const [phone, setPhone] = useState('081-234-5678');
   const [email, setEmail] = useState('somchai@email.com');
@@ -59,7 +63,7 @@ export function ProfileEditScreen() {
             flex: 1,
           }}
         >
-          ข้อมูลส่วนตัว
+          {s.account.profileTitle}
         </Text>
       </View>
 
@@ -118,7 +122,7 @@ export function ProfileEditScreen() {
               paddingBottom: 8,
             }}
           >
-            ข้อมูลติดต่อ
+            {language === 'en' ? 'Contact Information' : 'ข้อมูลติดต่อ'}
           </Text>
 
           {/* Form card */}
@@ -150,7 +154,7 @@ export function ProfileEditScreen() {
                     marginBottom: 2,
                   }}
                 >
-                  หมายเลขโทรศัพท์
+                  {s.account.phone}
                 </Text>
                 <Text
                   style={{
@@ -184,7 +188,7 @@ export function ProfileEditScreen() {
                   marginBottom: 6,
                 }}
               >
-                อีเมล
+                {s.account.email}
               </Text>
               <View
                 style={{
@@ -236,7 +240,7 @@ export function ProfileEditScreen() {
                     marginBottom: 2,
                   }}
                 >
-                  ที่อยู่จัดส่งเอกสาร
+                  {s.account.address}
                 </Text>
                 <Text
                   style={{
@@ -278,7 +282,7 @@ export function ProfileEditScreen() {
                 lineHeight: 18,
               }}
             >
-              การเปลี่ยนข้อมูลจะต้องยืนยันที่ทุกกรมธรรม์ของคุณ
+              {language === 'en' ? 'Changes will need to be confirmed across all your policies.' : 'การเปลี่ยนข้อมูลจะต้องยืนยันที่ทุกกรมธรรม์ของคุณ'}
             </Text>
           </View>
         </ScrollView>
@@ -313,7 +317,7 @@ export function ProfileEditScreen() {
                 fontSize: fontSize.title,
               }}
             >
-              บันทึก
+              {s.account.saveBtn}
             </Text>
           </TouchableOpacity>
         </View>

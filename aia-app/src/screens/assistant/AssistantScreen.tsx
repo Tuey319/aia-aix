@@ -15,6 +15,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 import { AiaLogo } from '../../components/AiaLogo';
 import { IllustrationMedicalApp } from '../../components/illustrations';
 
@@ -165,15 +167,17 @@ export function AssistantScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const scrollRef = useRef<ScrollView>(null);
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
 
   const QUICK_REPLIES: { label: string; screen: string }[] = [
-    { label: 'จ่ายเบี้ยฯ เลย', screen: 'PaySelect' },
-    { label: 'ดูความคุ้มครอง', screen: 'CoverageDetail' },
-    { label: 'ยื่นเคลม', screen: 'ClaimStart' },
+    { label: s.assistant.quickPay, screen: 'PaySelect' },
+    { label: s.assistant.quickCoverage, screen: 'CoverageDetail' },
+    { label: s.assistant.quickClaim, screen: 'ClaimStart' },
   ];
 
   const sendMessage = (text: string) => {
@@ -198,7 +202,9 @@ export function AssistantScreen() {
         : {
             id: `${Date.now()}-b`,
             role: 'bot',
-            text: 'ขออภัยค่ะ ดิฉันไม่แน่ใจว่าคุณหมายถึงอะไร ลองเลือกจากตัวเลือกด้านล่างนะคะ',
+            text: language === 'en'
+              ? "Sorry, I'm not sure what you mean. Try one of the options below."
+              : 'ขออภัยค่ะ ดิฉันไม่แน่ใจว่าคุณหมายถึงอะไร ลองเลือกจากตัวเลือกด้านล่างนะคะ',
             showFallbackChips: true,
           };
       setIsTyping(false);
@@ -245,7 +251,7 @@ export function AssistantScreen() {
               lineHeight: fontSize.titleLg * 1.2,
             }}
           >
-            ผู้ช่วย AIA
+            {s.assistant.title}
           </Text>
           {/* Online pill */}
           <View
@@ -275,7 +281,7 @@ export function AssistantScreen() {
                 color: colors.success,
               }}
             >
-              ออนไลน์
+              {s.assistant.online}
             </Text>
           </View>
         </View>
@@ -326,7 +332,7 @@ export function AssistantScreen() {
                   lineHeight: 22,
                 }}
               >
-                สวัสดีค่ะ คุณสบาย 👋 มีอะไรให้ช่วยไหมคะ?
+                {language === 'en' ? 'Hello! 👋 How can I help you today?' : 'สวัสดีค่ะ คุณสบาย 👋 มีอะไรให้ช่วยไหมคะ?'}
               </Text>
             </View>
 
@@ -348,7 +354,7 @@ export function AssistantScreen() {
                   marginBottom: 2,
                 }}
               >
-                คำแนะนำ
+                {language === 'en' ? 'Suggestions' : 'คำแนะนำ'}
               </Text>
               {QUICK_REPLIES.map((reply) => (
                 <ChipButton
@@ -498,7 +504,7 @@ export function AssistantScreen() {
             onChangeText={setInput}
             onSubmitEditing={() => sendMessage(input)}
             returnKeyType="send"
-            placeholder="พิมพ์ข้อความ..."
+            placeholder={s.assistant.placeholder}
             placeholderTextColor={colors.textTertiary}
             style={{
               flex: 1,

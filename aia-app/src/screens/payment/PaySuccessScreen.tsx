@@ -19,6 +19,8 @@ import {
 } from '../../tokens';
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { IllustrationGiftPremium } from '../../components/illustrations';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -26,6 +28,8 @@ export function PaySuccessScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const [countdown, setCountdown] = useState(3);
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
 
   useEffect(() => {
     // After 2s auto-launch AI Celebration popup
@@ -45,12 +49,12 @@ export function PaySuccessScreen() {
   }, [navigation]);
 
   const infoRows = [
-    { label: 'จำนวนเงิน', value: '17,380.00 บาท' },
-    { label: 'วันที่ทำรายการ', value: '16 พ.ค. 2568' },
-    { label: 'วิธีชำระเงิน', value: 'QR code' },
-    { label: 'เลขกรมธรรม์', value: 'P8842XXXXX' },
-    { label: 'เลขที่อ้างอิง (1/2)', value: '92XXXXXXXX' },
-    { label: 'เลขที่อ้างอิง (2/2)', value: '83XXXXX' },
+    { label: language === 'en' ? 'Amount' : 'จำนวนเงิน', value: language === 'en' ? '฿17,380.00' : '17,380.00 บาท' },
+    { label: language === 'en' ? 'Date' : 'วันที่ทำรายการ', value: language === 'en' ? '16 May 2025' : '16 พ.ค. 2568' },
+    { label: language === 'en' ? 'Payment Method' : 'วิธีชำระเงิน', value: language === 'en' ? 'QR Code' : 'QR code' },
+    { label: language === 'en' ? 'Policy Number' : 'เลขกรมธรรม์', value: 'P8842XXXXX' },
+    { label: language === 'en' ? 'Reference No. (1/2)' : 'เลขที่อ้างอิง (1/2)', value: '92XXXXXXXX' },
+    { label: language === 'en' ? 'Reference No. (2/2)' : 'เลขที่อ้างอิง (2/2)', value: '83XXXXX' },
   ];
 
   return (
@@ -73,7 +77,7 @@ export function PaySuccessScreen() {
             flex: 1,
           }}
         >
-          ชำระเงิน
+          {language === 'en' ? 'Payment' : 'ชำระเงิน'}
         </Text>
       </View>
 
@@ -98,7 +102,7 @@ export function PaySuccessScreen() {
             textAlign: 'center',
           }}
         >
-          ชำระเงินสำเร็จ
+          {s.payment.successTitle}
         </Text>
 
         {/* Subtitle */}
@@ -112,7 +116,7 @@ export function PaySuccessScreen() {
             paddingHorizontal: 16,
           }}
         >
-          ลูกค้าจะได้รับใบเสร็จชั่วคราวผ่านทาง SMS{'\n'}และอีเมลที่ลงทะเบียนไว้
+          {language === 'en' ? 'A temporary receipt will be sent to you via SMS and your registered email.' : 'ลูกค้าจะได้รับใบเสร็จชั่วคราวผ่านทาง SMS\nและอีเมลที่ลงทะเบียนไว้'}
         </Text>
 
         {/* Info card */}
@@ -197,7 +201,7 @@ export function PaySuccessScreen() {
               fontSize: fontSize.title,
             }}
           >
-            กลับไปยัง AIA+ ({countdown} วินาที)
+            {s.payment.backToApp(String(countdown))}
           </Text>
         </TouchableOpacity>
       </View>

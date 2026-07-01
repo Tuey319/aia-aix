@@ -7,12 +7,15 @@ import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '..
 import { cardShadow, primaryButtonShadow } from '../../tokens/shadows';
 import { ListRow } from '../../components/ListRow';
 import { useAppStore } from '../../store';
+import { useStrings } from '../../i18n';
 
 export function AffordabilityScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const insets = useSafeAreaInsets();
   const policy = useAppStore((s) => s.selectedPolicy);
   const income = useAppStore((s) => s.income);
+  const language = useAppStore((state) => state.language);
+  const s = useStrings();
 
   const annualIncome = income * 12;
   const annualPremium = policy.annualPremium;
@@ -42,7 +45,7 @@ export function AffordabilityScreen() {
             flex: 1,
           }}
         >
-          สุขภาพการเงิน
+          {s.affordability.title}
         </Text>
       </View>
 
@@ -74,7 +77,7 @@ export function AffordabilityScreen() {
                 flex: 1,
               }}
             >
-              ตัวชี้วัดเบี้ยฯ สัดส่วนของรายได้ไม่ได้
+              {s.affordability.indicator}
             </Text>
             <View
               style={{
@@ -92,7 +95,7 @@ export function AffordabilityScreen() {
                   color: colors.amberDeep,
                 }}
               >
-                พอเหมาะ
+                {language === 'en' ? 'OK' : 'พอเหมาะ'}
               </Text>
             </View>
           </View>
@@ -111,11 +114,11 @@ export function AffordabilityScreen() {
           </Text>
 
           {/* Colored track bar */}
-          <TrackBar currentPct={parseFloat(currentPct)} />
+          <TrackBar currentPct={parseFloat(currentPct)} language={language} />
 
           {/* Legend dots */}
           <View style={{ flexDirection: 'row', gap: 16 }}>
-            <ZoneLegend color={colors.success} label={`คงอยู่ ${currentPct}%`} />
+            <ZoneLegend color={colors.success} label={`${language === 'en' ? 'Current' : 'คงอยู่'} ${currentPct}%`} />
             <ZoneLegend color={colors.amber} label="ช่วง 7.4 - 15.2%" />
           </View>
         </View>
@@ -141,9 +144,9 @@ export function AffordabilityScreen() {
               lineHeight: 18,
             }}
           >
-            เบี้ยตัวชี้วัดนี้แสดงแบบไม่ใช่วิธีคำนวณเบี้ยจริง — เป็นเครื่องมือช่วยวางแผนงบประมาณ{' '}
+            {s.affordability.infoNote}{' '}
             <Text style={{ color: colors.primary, fontFamily: fontFamily.anuphan.semiBold }}>
-              ดูรายละเอียดกรมธรรม์
+              {language === 'en' ? 'View Policy Details' : 'ดูรายละเอียดกรมธรรม์'}
             </Text>
           </Text>
         </View>
@@ -159,13 +162,13 @@ export function AffordabilityScreen() {
         >
           <DataRow
             icon="person"
-            label="รายได้ต่อปี (ประมาณ)"
+            label={s.affordability.annualIncome}
             value={`฿${annualIncome.toLocaleString('en-US')}`}
           />
           <View style={{ height: 1, backgroundColor: colors.hairline, marginLeft: 50 }} />
           <DataRow
             icon="favorite-border"
-            label="เบี้ยประกันต่อปี"
+            label={s.affordability.annualPremium}
             value={`฿${annualPremium.toLocaleString('en-US')}`}
           />
         </View>
@@ -191,7 +194,7 @@ export function AffordabilityScreen() {
                 color: colors.amberDeeper,
               }}
             >
-              ภายในปี 2574 เบี้ยจะเป็น 15.2% ของรายได้
+              {language === 'en' ? 'By 2031 your premium will reach 15.2% of income' : 'ภายในปี 2574 เบี้ยจะเป็น 15.2% ของรายได้'}
             </Text>
             <Text
               style={{
@@ -201,8 +204,9 @@ export function AffordabilityScreen() {
                 lineHeight: 18,
               }}
             >
-              หากรายได้เพิ่มขึ้นช้ากว่าเบี้ย อัตราส่วนจะเข้าสู่โซนระวัง
-              แนะนำให้ปรับแผนก่อนถึงจุดนั้น — แต่ยังมีหลายทางเลือก
+              {language === 'en'
+                ? 'If income grows slower than premiums, the ratio will enter the caution zone — adjust now while you have options.'
+                : 'หากรายได้เพิ่มขึ้นช้ากว่าเบี้ย อัตราส่วนจะเข้าสู่โซนระวัง แนะนำให้ปรับแผนก่อนถึงจุดนั้น — แต่ยังมีหลายทางเลือก'}
             </Text>
           </View>
         </View>
@@ -219,7 +223,7 @@ export function AffordabilityScreen() {
               marginLeft: 4,
             }}
           >
-            ทางเลือกสำหรับคุณ — ปรับได้ดีกว่าเลิกกรมธรรม์
+            {language === 'en' ? 'Your options — adjust rather than cancel' : 'ทางเลือกสำหรับคุณ — ปรับได้ดีกว่าเลิกกรมธรรม์'}
           </Text>
           <View
             style={{
@@ -231,15 +235,15 @@ export function AffordabilityScreen() {
           >
             <ListRow
               icon="tune"
-              title="ปรับแผนความคุ้มครองให้พอดี"
-              subtitle="ลดเบี้ยโดยยังคงความคุ้มครองที่จำเป็น"
+              title={language === 'en' ? 'Adjust Coverage to Budget' : 'ปรับแผนความคุ้มครองให้พอดี'}
+              subtitle={language === 'en' ? 'Lower premium while keeping essential coverage' : 'ลดเบี้ยโดยยังคงความคุ้มครองที่จำเป็น'}
               onPress={() => navigation.navigate('CoverageOverview')}
             />
             <View style={{ height: 1, backgroundColor: colors.hairline, marginLeft: 50 }} />
             <ListRow
               icon="event-repeat"
-              title="เปลี่ยนงวดการชำระ"
-              subtitle="ชำระรายปีแทนรายเดือน ประหยัดสูงสุด ฿1,530/ปี"
+              title={language === 'en' ? 'Change Billing Frequency' : 'เปลี่ยนงวดการชำระ'}
+              subtitle={language === 'en' ? 'Switch to annual billing, save up to ฿1,530/yr' : 'ชำระรายปีแทนรายเดือน ประหยัดสูงสุด ฿1,530/ปี'}
               onPress={() => navigation.navigate('Costs')}
             />
           </View>
@@ -280,7 +284,7 @@ export function AffordabilityScreen() {
               fontSize: 16,
             }}
           >
-            ปรับแผนให้พอดีงบ
+            {s.affordability.adjustBtn}
           </Text>
         </TouchableOpacity>
       </View>
@@ -290,7 +294,7 @@ export function AffordabilityScreen() {
 
 /* ─── Sub-components ─── */
 
-function TrackBar({ currentPct }: { currentPct: number }) {
+function TrackBar({ currentPct, language }: { currentPct: number; language: string }) {
   const clampedPct = Math.min(Math.max(currentPct, 0), 20);
   const dotPositionPct = (clampedPct / 20) * 100;
 
@@ -325,8 +329,8 @@ function TrackBar({ currentPct }: { currentPct: number }) {
       {/* Axis labels */}
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text style={labelStyle}>0%</Text>
-        <Text style={labelStyle}>ปลอดภัย≤10%</Text>
-        <Text style={labelStyle}>เสี่ยง≥15%</Text>
+        <Text style={labelStyle}>{language === 'en' ? 'Safe≤10%' : 'ปลอดภัย≤10%'}</Text>
+        <Text style={labelStyle}>{language === 'en' ? 'Risk≥15%' : 'เสี่ยง≥15%'}</Text>
         <Text style={labelStyle}>20%</Text>
       </View>
     </View>

@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { colors, fontFamily, fontSize, radius, screenPadding, cardGap } from '../../tokens';
 import { cardShadow } from '../../tokens/shadows';
+import { useStrings } from '../../i18n';
+import { useAppStore } from '../../store';
 
 type Nav = NativeStackNavigationProp<any>;
 
@@ -14,12 +16,6 @@ interface TimelineStep {
   sub: string;
   status: 'done' | 'active' | 'pending';
 }
-
-const STEPS: TimelineStep[] = [
-  { label: 'ได้รับคำขอเคลมแล้ว', sub: '18 มิ.ย. 2569 · CH-41ย.', status: 'done' },
-  { label: 'AIA กำลังพิจารณา', sub: 'ดำเนินการภายใน 5 วันทำการ', status: 'active' },
-  { label: 'อนุมัติและโอนเงิน', sub: 'รอดำเนินการ', status: 'pending' },
-];
 
 function StepDot({ status }: { status: TimelineStep['status'] }) {
   if (status === 'done') {
@@ -74,6 +70,14 @@ function StepDot({ status }: { status: TimelineStep['status'] }) {
 export function ClaimHistoryScreen() {
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
+  const s = useStrings();
+  const language = useAppStore((state) => state.language);
+
+  const STEPS: TimelineStep[] = [
+    { label: s.claims.statusReceived, sub: '18 มิ.ย. 2569 · CH-41ย.', status: 'done' },
+    { label: s.claims.statusReview, sub: s.claims.statusReviewSub, status: 'active' },
+    { label: s.claims.statusPaid, sub: language === 'en' ? 'Pending' : 'รอดำเนินการ', status: 'pending' },
+  ];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.screenBg }} edges={['top']}>
@@ -99,7 +103,7 @@ export function ClaimHistoryScreen() {
             flex: 1,
           }}
         >
-          ประวัติการเคลม
+          {s.claims.historyTitle}
         </Text>
       </View>
 
@@ -130,7 +134,7 @@ export function ClaimHistoryScreen() {
                   color: colors.amberDeep,
                 }}
               >
-                กำลังดำเนินการ
+                {language === 'en' ? 'Processing' : 'กำลังดำเนินการ'}
               </Text>
             </View>
             <Text
@@ -151,7 +155,9 @@ export function ClaimHistoryScreen() {
               color: colors.amberDeeper,
             }}
           >
-            ค่ารักษาผู้ป่วยนอก · สมชาย มีทอง · 01 มิ.ย. 2569
+            {language === 'en'
+              ? 'Out-patient Treatment · Somchai Meethong · 01 Jun 2026'
+              : 'ค่ารักษาผู้ป่วยนอก · สมชาย มีทอง · 01 มิ.ย. 2569'}
           </Text>
         </View>
 
@@ -172,7 +178,7 @@ export function ClaimHistoryScreen() {
               marginBottom: 6,
             }}
           >
-            ค่ารักษาผู้ป่วยนอก
+            {language === 'en' ? 'Out-patient Treatment' : 'ค่ารักษาผู้ป่วยนอก'}
           </Text>
           <Text
             style={{
@@ -182,9 +188,9 @@ export function ClaimHistoryScreen() {
               marginBottom: 2,
             }}
           >
-            สถานะใบแจ้ง ใน{' '}
+            {language === 'en' ? 'Statement status as of' : 'สถานะใบแจ้ง ใน'}{' '}
             <Text style={{ color: colors.amberDeep }}>
-              01 มิ.ย. 2569
+              {language === 'en' ? '01 Jun 2026' : '01 มิ.ย. 2569'}
             </Text>
           </Text>
           <Text
@@ -217,7 +223,7 @@ export function ClaimHistoryScreen() {
               marginBottom: 16,
             }}
           >
-            สถานะการดำเนินการ
+            {language === 'en' ? 'Processing Status' : 'สถานะการดำเนินการ'}
           </Text>
 
           {STEPS.map((step, i) => (
@@ -279,7 +285,7 @@ export function ClaimHistoryScreen() {
               color: colors.primary,
             }}
           >
-            กลับหน้าหลัก
+            {s.common.backHome}
           </Text>
         </TouchableOpacity>
       </ScrollView>
